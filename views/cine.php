@@ -5,19 +5,20 @@
 
     connect();
 
-    $SESSION["inscrit"]=0;
+    $_SESSION["inscrit"]=0;
 
     if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
         if(ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$projection)){
-            $SESSION["inscrit"]=1;
+            $_SESSION["inscrit"]=1;
             $mail = protect($_POST["mail"]);
-            $SESSION["mail"]=$mail;
+            $_SESSION["mail"]=$mail;
         }
     }
 
     if(!empty($_POST["del_mail"])){
         if(supprInscrit($_POST["del_mail"],$projection)){
-            $SESSION["inscrit"]=0;
+            $_SESSION["inscrit"]=0;
+            unset($_SESSION["mail"]);
         }
     }
 ?>
@@ -56,14 +57,14 @@
             -->
             
             <?php
-            if(!$SESSION["inscrit"] && empty($SESSION["mail"])){
+            if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){
                 
                 echo('<h1>S\'inscrire pour la projection</h1>
             <p>Merci de renseigner tout les champs</p>
 			<form method="post" action="cine.php" id="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1"/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="prenom">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1"/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1"/></div>
                 
                 <input type="submit" class="btn btn-success" value="S\'inscrire pour le film"/>
@@ -74,7 +75,7 @@
             else{
                 echo('<h1>Se désinscrire de la projection</h1>
             <form method="post" action="cine.php" id="form-register">
-                <input type="hidden" name="del_mail" id="del_mail" value="'.$SESSION["mail"].'"/>
+                <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'"/>
                 <input type="submit" class="btn btn-danger" value="Se désinscrire"/>
             </form>');
                 

@@ -21,6 +21,7 @@
         $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO projections_inscrits VALUES (?, ?)");
         $query2->bind_param('ss', $mail, $projection);
         $query2->execute();
+        $query->close();
         return true;
     }
 
@@ -31,6 +32,7 @@
         $ancien_mail = protect($ancien_mail);
         $query->bind_param('sss', $mail, $prenom, $ancien_mail);
         $query->execute();
+        $query->close();
         return true;
     }
 
@@ -40,6 +42,7 @@
         $projection = protect($projection);
         $query->bind_param('ss', $mail,$projection);
         $query->execute();
+        $query->close();
         return true;
     }
 
@@ -52,12 +55,14 @@
         $classe = protect($classe);
         $query->bind_param('sssss', $nom,$prenom,$tel,$mail,$classe);
         $query->execute();
+        $query->close();
         $lots = protect($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
         $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
         $query2->bind_param('ssss', $mail,$lots,$date_emprunt,$date_retour);
         $query2->execute();
+        $query2->close();
         return true;
     }
 
@@ -69,6 +74,7 @@
         $mail = protect($mail);
         $query->bind_param('ssss', $lots, $date_emprunt, $date_retour, $mail);
         $query->execute();
+        $query->close();
         return true;
     }
 
@@ -76,6 +82,23 @@
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=?");
         $mail = protect($mail);
         $query->bind_param('s',$mail);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    function recupID($identifiant){
+        $identifiant = protect($identifiant);
+        $query = "SELECT * FROM admin WHERE identifiant=".$identifiant;
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+    function addAdmin($identifiant,$mdp){
+        $identifiant = protect($identifiant);
+        $mdp = protect($mdp);
+        $mdp = password_hash($mdp,PASSWORD_DEFAULT);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?)");
+        $query->bind_param('ss',$identifiant,$mdp);
         $query->execute();
         return true;
     }

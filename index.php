@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!doctype html>
 <html>
 <head>
@@ -16,6 +19,7 @@
 						<li class="active"><a href="index.php">Présentation du club</a></li>
 						<li><a href="views/cine.php">Coté Ciné de l'ISEN</a></li>
                         <li><a href="views/emprunt.php">Emprunt de matériel</a></li>
+                        <li><a href="views/admin.php">Espace Administrateur</a></li>
 					</ul>
 				</div>
 			</div>
