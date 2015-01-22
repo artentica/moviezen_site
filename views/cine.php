@@ -10,6 +10,8 @@
     if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
         if(ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$projection)){
             $SESSION["inscrit"]=1;
+            $mail = protect($_POST["mail"]);
+            $SESSION["mail"]=$mail;
         }
     }
 
@@ -18,7 +20,6 @@
             $SESSION["inscrit"]=0;
         }
     }
-
 ?>
 <!doctype html>
 <html>
@@ -38,6 +39,7 @@
 						<li><a href="../index.php">Présentation du club</a></li>
 						<li class="active"><a href="cine.php">Coté Ciné de l'ISEN</a></li>
                         <li><a href="emprunt.php">Emprunt de matériel</a></li>
+                        <li><a href="admin.php">Espace Administrateur</a></li>
 					</ul>
 				</div>
 			</div>
@@ -54,7 +56,7 @@
             -->
             
             <?php
-            if(!$SESSION["inscrit"]){
+            if(!$SESSION["inscrit"] && empty($SESSION["mail"])){
                 
                 echo('<h1>S\'inscrire pour la projection</h1>
             <p>Merci de renseigner tout les champs</p>
@@ -72,8 +74,7 @@
             else{
                 echo('<h1>Se désinscrire de la projection</h1>
             <form method="post" action="cine.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="del_mail" id="del_mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1"/></div>
-                
+                <input type="hidden" name="del_mail" id="del_mail" value="'.$SESSION["mail"].'"/>
                 <input type="submit" class="btn btn-danger" value="Se désinscrire"/>
             </form>');
                 
