@@ -103,6 +103,28 @@
         return true;
     }
 
+    function supprAdmin($identifiant){
+        $identifiant = protect($identifiant);
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM admin WHERE identifiant=?");
+        $query->bind_param('s',$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    function supprProj($nom){
+        $nom = protect($nom);
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections WHERE nom=?");
+        $query->bind_param('s',$nom);
+        $query->execute();
+        $query->close();
+        $query2 = $GLOBALS["bdd"]->prepare("DELETE FROM projections_inscrits WHERE projection=?");
+        $query2->bind_param('s',$nom);
+        $query2->execute();
+        $query2->close();
+        return true;
+    }
+
     function protect($chaine){
         $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes($chaine));	 
         return $protect;

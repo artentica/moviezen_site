@@ -53,14 +53,14 @@
                 echo('<h1>Emprunter du matériel</h1>
             <p>Merci de renseigner tout les champs</p>
             <form method="post" action="emprunt.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="tel">Tel : </label></span><input type="tel" name="tel" id="tel" placeholder="0600000000" class="form-control" aria-describedby="basic-addon1"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="classe">Classe : </label></span><input type="tel" name="classe" id="classe" placeholder="CIR3" class="form-control" aria-describedby="basic-addon1"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="tel">Tel : </label></span><input type="tel" name="tel" id="tel" placeholder="0600000000" class="form-control" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="classe">Classe : </label></span><input type="tel" name="classe" id="classe" placeholder="CIR3" class="form-control" aria-describedby="basic-addon1" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="lots">Lots : </label></span><input type="text" name="lots" id="lots" placeholder="A,K,L,C,...." class="form-control" aria-describedby="basic-addon1"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_emprunt">Date d\'emprunt : </label></span><input type="date" name="date_emprunt" id="date_emprunt" placeholder="18/05/1993" class="form-control" aria-describedby="basic-addon1"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_retour">Date de retour : </label></span><input type="date" name="date_retour" id="date_retour" placeholder="29/01/2015" class="form-control" aria-describedby="basic-addon1"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_emprunt">Date d\'emprunt : </label></span><input type="date" name="date_emprunt" id="date_emprunt" placeholder="18/05/1993" class="form-control" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_retour">Date de retour : </label></span><input type="date" name="date_retour" id="date_retour" placeholder="29/01/2015" class="form-control" aria-describedby="basic-addon1" required/></div>
                 <input type="submit" class="btn btn-success" value="S\'inscrire"/>
             </form>
             
@@ -80,7 +80,7 @@
                 
                 <h1>Annuler un emprunt</h1>
             <form method="post" action="emprunt.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="del_mail">@ ISEN : </label></span><input type="email" name="del_mail" id="del_mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="del_mail">@ ISEN : </label></span><input type="email" name="del_mail" id="del_mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1" required/></div>
                 
                 <input type="submit" class="btn btn-danger" value="Se désinscrire"/>
             </form>');
