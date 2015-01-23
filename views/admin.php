@@ -18,6 +18,7 @@
         $result->free();
         if(password_verify($mdp, $hash) && strcmp($id,$temp)==0){
             $_SESSION["authentifie"]=true;
+            $_SESSION["id"] = $id;
         }
         else{
             unset($_SESSION["authentifie"]);
@@ -42,6 +43,10 @@
 
     if(!empty($_POST["suppr_lot"]) && $_SESSION["authentifie"]){
         supprProj($_POST["suppr_lot"]);
+    }
+
+    if(!empty($_POST["modif_mdp"]) && $_SESSION["authentifie"]){
+        modifMDP($_POST["modif_id"],$_POST["modif_mdp"]);
     }
 
 ?>
@@ -87,6 +92,14 @@
                             <input type="submit" class="btn btn-danger" value="Se déconnecter"/>
                         </form>
                     <h1>Gestion des administrateurs</h1>
+                    
+                        <h3>Modifier votre mot de passe :</h3>
+                            <form method="post" action="admin.php" id="form-register">
+                                <input type="hidden" name="modif_id" id="modif_id" value="'.$_SESSION["id"].'"></input>
+                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_mdp">Nouveau mot de passe : </label></span><input type="text" name="modif_mdp" id="modif_mdp" placeholder="azertyU²&io$p" class="form-control" aria-describedby="basic-addon1" required/></div>
+                                <input type="submit" class="btn btn-success" value="Modifier votre mot de passe"/>
+                            </form>
+                            
                         <h3>Ajouter un administrateur</h3>
                             <form method="post" action="admin.php" id="form-register">
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
@@ -94,6 +107,8 @@
 
                                 <input type="submit" class="btn btn-info" value="Ajouter un administrateur"/>
                             </form>
+                            
+                            
                             
                         <h3>Supprimer un administrateur</h3>
                             <p>Attention, cette action est irréversible</p>

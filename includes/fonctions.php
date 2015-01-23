@@ -125,6 +125,17 @@
         return true;
     }
 
+    function modifMDP($identifiant, $mdp){
+        $identifiant = protect($identifiant);
+        $mdp = protect($mdp);
+        $mdp = password_hash($mdp,PASSWORD_DEFAULT);
+        $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET mdp=? WHERE identifiant=?");
+        $query->bind_param('ss',$mdp,$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
     function protect($chaine){
         $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes($chaine));	 
         return $protect;
