@@ -6,11 +6,14 @@
 
     $_SESSION["emprunteur"]=0;
     
-     if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"]){
-         if(ajoutEmprunt($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
-            $_SESSION["mail"]=protect($_POST["mail"]);
-            $_SESSION["emprunteur"]=1;
-         }
+     if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
+     {
+        
+             if(ajoutEmprunt($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
+                $_SESSION["mail"]=protect($_POST["mail"]);
+                $_SESSION["emprunteur"]=1;
+             }
+        
      }
 
     if(!empty($_POST["del_mail"])){
@@ -18,14 +21,6 @@
             $_SESSION["emprunteur"]=0;
             unset($_SESSION["mail"]);
         }
-    }
-
-    if(!empty($_POST["conn_mail"])){
-        if(recupEmprunt($_POST["conn_mail"])){
-            $_SESSION["conn_mail"]=protect($_POST["conn_mail"]);
-            $_SESSION["emprunteur"]=1;
-        }
-        
     }
 
     
@@ -59,6 +54,8 @@
 						<li><a href="cine.php">Coté Ciné de l'ISEN</a></li>
                         <li class="active"><a href="emprunt.php">Emprunt de matériel</a></li>
 					    <li><a href="admin.php">Espace Administrateur</a></li>
+                        <li><a href="calendrier.php">Calendrier des emprunts</a></li>
+                        <li><a href="projection.php">Espace liste de projection</a></li>
                     </ul>
 				</div>
 			</div>
@@ -98,6 +95,22 @@
             </form>
             
             ');
+                
+            if(!empty($_POST["conn_mail"])){
+                echo('Vous avez emprunté : <ol>');
+                $result = recupEmprunt($_POST["conn_mail"]);
+                $_SESSION["conn_mail"]=protect($_POST["conn_mail"]);
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $lot = $row["lots"];
+                    $date_emprunt = $row["date_emprunt"];
+                    $date_retour = $row["date_retour"];
+                    echo('<li>Lot '.$lot.' ');
+                    echo('du '.$date_emprunt.' au '.$date_retour.'</li>');
+                }
+                echo('</ol>');
+                $result->close();
+            }
                 
             }
             else{

@@ -85,6 +85,8 @@
 						<li><a href="cine.php">Coté Ciné de l'ISEN</a></li>
                         <li><a href="emprunt.php">Emprunt de matériel</a></li>
                         <li class="active"><a href="admin.php">Espace Administrateur</a></li>
+                        <li><a href="calendrier.php">Calendrier des emprunts</a></li>
+                        <li><a href="projection.php">Espace liste de projection</a></li>
 					</ul>
 				</div>
 			</div>

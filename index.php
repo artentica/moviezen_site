@@ -20,6 +20,8 @@ session_start();
 						<li><a href="views/cine.php">Coté Ciné de l'ISEN</a></li>
                         <li><a href="views/emprunt.php">Emprunt de matériel</a></li>
                         <li><a href="views/admin.php">Espace Administrateur</a></li>
+                        <li><a href="views/calendrier.php">Calendrier des emprunts</a></li>
+                        <li><a href="views/projection.php">Espace liste de projection</a></li>
 					</ul>
 				</div>
 			</div>

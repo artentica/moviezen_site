@@ -1,4 +1,5 @@
 <?php 
+
     function connect(){
 		$GLOBALS["bdd"] = new mysqli('localhost', 'utilisateur', 'azerty', 'moviezen');
 		$GLOBALS["bdd"]->set_charset("utf8");
@@ -127,10 +128,49 @@
 
     function recupEmprunt($mail){
         $mail = protect($mail);
-        $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail=".$mail;
+        $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail='".$mail."'";
         return $GLOBALS["bdd"]->query($query);
     }
 
+
+    function recupInscrit($projection){
+        $projection = protect($projection);
+        $query = "SELECT * from projections_inscrits WHERE projection='".$projection."'";
+        $result = $GLOBALS["bdd"]->query($query);
+        
+        $table = "<html><body><table><tr><td><b>Nom</b></td><td><b>Prenom</b></td><td><b>Classe</b></td></tr>";
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            
+            $mail = $row["inscrit_mail"];
+            $query = "SELECT * from inscrits WHERE mail='".$mail."'";
+            $result2 = $GLOBALS["bdd"]->query($query);
+            while ($row2 = $result2->fetch_array(MYSQLI_ASSOC))
+            {
+                $nom = $row2["nom"];
+                $prenom = $row2["prenom"];
+                $classe = $row2["classe"];
+                $table = $table."<tr>";
+                $table = $table."<td>".$nom."</td><td>".$prenom."</td><td>".$classe."</td>";
+                $table = $table."</tr>";
+            }
+            $result2->close();
+            
+        }
+        $table = $table."</table></body></html>";
+        fopen("inscrits.xls","w+"); 
+        $file = ("inscrits.xls"); 
+        if(!$myfile = fopen($file, "w+"))     
+        {
+            print("erreur: ");
+            print("le fichier n'existe pas!\n");
+            exit;
+        }
+        fwrite($myfile,$table,strlen($table));
+        fclose($myfile);
+        $result->close();
+        return true;
+    }
 
 
 
