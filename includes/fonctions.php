@@ -9,6 +9,12 @@
 		return true;
 	}
 
+
+
+
+
+
+
     function ajoutInscrit($nom,$prenom,$mail,$classe,$projection){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
         $nom = protect($nom);
@@ -46,6 +52,16 @@
         return true;
     }
 
+
+
+
+
+
+
+
+
+
+
     function ajoutEmprunt($nom,$prenom,$tel,$mail, $classe,$lots,$date_emprunt,$date_retour){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, ?, ?, ?)");
         $nom = protect($nom);
@@ -59,10 +75,30 @@
         $lots = protect($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
-        $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
-        $query2->bind_param('ssss', $mail,$lots,$date_emprunt,$date_retour);
-        $query2->execute();
-        $query2->close();
+        $date_emprunt = date("Y-m-d", strtotime($date_emprunt));
+        $date_retour = date("Y-m-d", strtotime($date_retour));
+        if(strpos($lots, ",")!=false){
+            $liste = explode(",", $lots);
+        }
+        else if(strpos($lots, "-")!=false){
+            $liste = explode("-", $lots);
+        }
+        else if(strpos($lots, "/")!=false){
+            $liste = explode("/", $lots);
+        }
+        else if(strpos($lots, " ")!=false){
+            $liste = explode(" ", $lots); 
+        }
+        else{
+            $liste = str_split($lots);
+        }
+        foreach($liste as $liste){
+            $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
+            $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
+            $query2->execute();
+            $query2->close();
+        }
+        
         return true;
     }
 
@@ -87,9 +123,29 @@
         return true;
     }
 
+
+
+    function recupEmprunt($mail){
+        $mail = protect($mail);
+        $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail=".$mail;
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+
+
+
+
+
+
+
     function recupID($identifiant){
         $identifiant = protect($identifiant);
         $query = "SELECT * FROM admin WHERE identifiant=".$identifiant;
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+    function recupProj(){
+        $query = "SELECT * from projections";
         return $GLOBALS["bdd"]->query($query);
     }
 
@@ -100,6 +156,7 @@
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?)");
         $query->bind_param('ss',$identifiant,$mdp);
         $query->execute();
+        $query->close();
         return true;
     }
 
@@ -107,6 +164,20 @@
         $identifiant = protect($identifiant);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM admin WHERE identifiant=?");
         $query->bind_param('s',$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+
+    function addProj($nom,$date_release,$date_projection,$description,$commentaires){
+        $nom = protect($nom);
+        $date_release = protect($date_release);
+        $date_projection = protect($date_projection);
+        $description = protect($description);
+        $commentaires = protect($commentaires);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections VALUES(?,?,?,?,?)");
+        $query->bind_param('sssss',$nom,$date_release,$date_projection,$description,$commentaires);
         $query->execute();
         $query->close();
         return true;
@@ -137,7 +208,7 @@
     }
 
     function protect($chaine){
-        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes($chaine));	 
+        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes(html_entity_decode ($chaine)));	 
         return $protect;
     }
 

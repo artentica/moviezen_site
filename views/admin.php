@@ -49,6 +49,22 @@
         modifMDP($_POST["modif_id"],$_POST["modif_mdp"]);
     }
 
+    if(!empty($_POST["projection_nom"]) && !empty($_POST["projection_date"]) && !empty($_POST["projection_description"]) && $_SESSION["authentifie"]){
+        if(empty($_POST["projection_release"])){
+           $date_release = "";
+        }
+        else{
+            $date_release = $_POST["projection_release"];
+        }
+        if(empty($_POST["projection_commentaires"])){
+            $commentaires = "";
+        }
+        else{
+            $commentaires = $_POST["projection_commentaires"];
+        }
+        addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires);
+    }
+
 ?>
 <!doctype html>
 <html>
@@ -122,8 +138,8 @@
                     <h3>Ajouter une Projection</h3>
                         <form method="post" action="admin.php" id="form-register">
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_nom">Nom du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_release">Date de release : </label></span><input type="text" name="projection_release" id="projection_release" placeholder="15-01-2015" class="form-control" aria-describedby="basic-addon1"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_date">Date de projection : </label></span><input type="text" name="projection_date" id="projection_date" placeholder="21-01-2015" class="form-control" aria-describedby="basic-addon1" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_release">Date de release : </label></span><input type="text" name="projection_release" id="projection_release" placeholder="AAAA-MM-JJ" class="form-control" aria-describedby="basic-addon1"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_date">Date de projection : </label></span><input type="text" name="projection_date" id="projection_date" placeholder="AAAA-MM-JJ" class="form-control" aria-describedby="basic-addon1" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_description">Description : </label></span><input type="text" name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" aria-describedby="basic-addon1" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" aria-describedby="basic-addon1"/></div>
 

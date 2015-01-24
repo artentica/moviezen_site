@@ -1,14 +1,13 @@
 <?php
     session_start();
     include_once("../includes/fonctions.php");
-    $projection="";
 
     connect();
-
     $_SESSION["inscrit"]=0;
 
     if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
-        if(ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$projection)){
+        if(ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"])){
+            $_SESSION["select_projection"]=$_POST["select_projection"];
             $_SESSION["inscrit"]=1;
             $mail = protect($_POST["mail"]);
             $_SESSION["mail"]=$mail;
@@ -16,11 +15,12 @@
     }
 
     if(!empty($_POST["del_mail"])){
-        if(supprInscrit($_POST["del_mail"],$projection)){
+        if(supprInscrit($_POST["del_mail"],$_SESSION["select_projection"])){
             $_SESSION["inscrit"]=0;
             unset($_SESSION["mail"]);
         }
     }
+
 ?>
 <!doctype html>
 <html>
@@ -67,8 +67,24 @@
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1" required/></div>
                 
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="select_projection">Projection : </label><select name="select_projection" id="select_projection">
+                    ');
+                
+                $result = recupProj();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    echo $row;
+                    $nom = $row["nom"];
+                    $date = $row["date_projection"];
+                    echo('<option value="'.$nom.'">'.$nom.'</option>');
+                }
+                $result->close();
+                echo('
+                </select></div>
                 <input type="submit" class="btn btn-success" value="S\'inscrire pour le film"/>
-            </form>');
+            </form>
+            
+            ');
                 
             }
 
