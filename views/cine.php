@@ -77,6 +77,7 @@
                 {
                     $nom = $row["nom"];
                     $date = $row["date_projection"];
+                    $date = date("d/m/Y", strtotime($date));
                     echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
                 }
                 $result->close();

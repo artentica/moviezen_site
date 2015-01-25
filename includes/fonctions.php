@@ -1,5 +1,7 @@
 <?php 
 
+
+    //FONCTION DE CONNEXION A LA BDD
     function connect(){
 		$GLOBALS["bdd"] = new mysqli('localhost', 'utilisateur', 'azerty', 'moviezen');
 		$GLOBALS["bdd"]->set_charset("utf8");
@@ -11,11 +13,19 @@
 	}
 
 
+    //FONCTION DE PROTECTION DES CHAINES UTILISATEURS
+    function protect($chaine){
+        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes(html_entity_decode ($chaine)));	 
+        return $protect;
+    }
 
 
+//################################################################################################################################################################
 
+    //FONCTIONS GESTION DES INSCRITS
 
-
+    
+    //AJOUT D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function ajoutInscrit($nom,$prenom,$mail,$classe,$projection){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
         $nom = protect($nom);
@@ -32,6 +42,9 @@
         return true;
     }
 
+
+    
+    //FONCTION MODIFICATION D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function modifInscrit($mail, $projection, $ancien_mail){
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections_inscrits SET  inscrit_mail=?, projection=? WHERE inscrit_mail=?");
         $mail = protect($mail);
@@ -43,6 +56,8 @@
         return true;
     }
 
+
+    //FONCTION SUPPRESSION D'INSCRITS A UNE PROJECTION  (UTILISATEUR)
     function supprInscrit($mail,$projection){
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections_inscrits WHERE inscrit_mail=? and projection=?");
         $mail = protect($mail);
@@ -58,11 +73,12 @@
 
 
 
+//################################################################################################################################################################
 
 
+    //FONCTIONS GESTION DES EMPRUNTS
 
-
-
+    //FONCTION AJOUT D'EMPRUNT
     function ajoutEmprunt($nom,$prenom,$tel,$mail, $classe,$lots,$date_emprunt,$date_retour){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, ?, ?, ?)");
         $nom = protect($nom);
@@ -103,6 +119,9 @@
         return true;
     }
 
+
+
+    //FONCTION MODIFICATION D'EMPRUNT (UTILISATEUR)
     function modifEmprunt($lots,$date_emprunt,$date_retour,$mail){
         $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits_lots SET lots=?, date_emprunt=?, date_retour=?, WHERE inscrit_mail=?");
         $lots = protect($lots);
@@ -115,6 +134,8 @@
         return true;
     }
 
+    
+    //FONCTION SUPPRESSION D'UN EMPRUNT(UTILISATEUR)
     function supprEmprunt($mail){
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=?");
         $mail = protect($mail);
@@ -125,7 +146,7 @@
     }
 
 
-
+    //FONCTION DE RECUPERATION DES EMPRUNTS EFFECTUES PAR UN INSCRIT
     function recupEmprunt($mail){
         $mail = protect($mail);
         $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail='".$mail."'";
@@ -133,6 +154,17 @@
     }
 
 
+
+
+//################################################################################################################################################################
+    
+
+
+    //FONCTIONS GESTION DES PROJECTIONS
+
+
+
+    //FONCTION DE RECUPERATION DES INSCRITS A UNE PROJECTION, CREE UN DOCUMENT XLS TELECHARGEABLE SUR LE SERVEUR
     function recupInscrit($projection){
         $projection = protect($projection);
         $query = "SELECT * from projections_inscrits WHERE projection='".$projection."'";
@@ -173,49 +205,30 @@
     }
 
 
-
-
-
-
-
-    function recupID($identifiant){
-        $identifiant = protect($identifiant);
-        $query = "SELECT * FROM admin WHERE identifiant=".$identifiant;
-        return $GLOBALS["bdd"]->query($query);
-    }
-
+    //FONCTION RECUPERANT TOUTES LES PROJECTIONS EXISTANTES
     function recupProj(){
         $query = "SELECT * from projections";
         return $GLOBALS["bdd"]->query($query);
     }
 
-    function addAdmin($identifiant,$mdp){
-        $identifiant = protect($identifiant);
-        $mdp = protect($mdp);
-        $mdp = password_hash($mdp,PASSWORD_DEFAULT);
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?)");
-        $query->bind_param('ss',$identifiant,$mdp);
-        $query->execute();
-        $query->close();
-        return true;
-    }
-
-    function supprAdmin($identifiant){
-        $identifiant = protect($identifiant);
-        $query = $GLOBALS["bdd"]->prepare("DELETE FROM admin WHERE identifiant=?");
-        $query->bind_param('s',$identifiant);
-        $query->execute();
-        $query->close();
-        return true;
+    //FONCTION RECUPERANT UNE PROJECTION EN PARTICULIER
+    function recupUniqueProj($nom){
+        $nom = protect($nom);
+        $query = "SELECT * from projections WHERE nom='".$nom."'";
+        return $GLOBALS["bdd"]->query($query);
     }
 
 
+
+    //FONCTION D'AJOUT D'UNE PROJECTION A LA BDD
     function addProj($nom,$date_release,$date_projection,$description,$commentaires){
         $nom = protect($nom);
         $date_release = protect($date_release);
         $date_projection = protect($date_projection);
         $description = protect($description);
         $commentaires = protect($commentaires);
+        $date_release = date("Y-m-d", strtotime($date_release));
+        $date_projection = date("Y-m-d", strtotime($date_projection));
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections VALUES(?,?,?,?,?)");
         $query->bind_param('sssss',$nom,$date_release,$date_projection,$description,$commentaires);
         $query->execute();
@@ -223,6 +236,8 @@
         return true;
     }
 
+
+    //FONCTION DE SUPPRESSION D'UNE PROJECTION DE LA BDD
     function supprProj($nom){
         $nom = protect($nom);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections WHERE nom=?");
@@ -236,6 +251,70 @@
         return true;
     }
 
+    //FONCTION DE MODIFICATION D'UNE PROJECTION
+    function modifProj($nom,$date_release,$date_projection,$description,$commentaires,$ancien_nom){
+        $nom = protect($nom);
+        $date_release = protect($date_release);
+        $date_projection = protect($date_projection);
+        $description = protect($description);
+        $commentaires = protect($commentaires);
+        $ancien_nom = protect($ancien_nom);
+        $date_release = date("Y-m-d", strtotime($date_release));
+        $date_projection = date("Y-m-d", strtotime($date_projection));
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, commentaires=? WHERE nom=?");
+        $query->bind_param('ssssss',$nom,$date_release,$date_projection,$description,$commentaires,$ancien_nom);
+        $query->execute();
+        $query->close();
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections_inscrits SET projection=? WHERE projection=?");
+        $query->bind_param('ss',$nom,$ancien_nom);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+
+
+//################################################################################################################################################################
+
+
+
+    //FONCTION GESTION DES ADMINISTRATEURS
+
+
+    //FONCTION VERIFIANT SI L'UTILISATEUR EST CONNU OU NON
+    function recupID($identifiant){
+        $identifiant = protect($identifiant);
+        $query = "SELECT * FROM admin WHERE identifiant=".$identifiant;
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+    
+
+    //FONCTION D'AJOUT D'UN ADMIN DANS LA BASE
+    function addAdmin($identifiant,$mdp){
+        $identifiant = protect($identifiant);
+        $mdp = protect($mdp);
+        $mdp = password_hash($mdp,PASSWORD_DEFAULT);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?)");
+        $query->bind_param('ss',$identifiant,$mdp);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+
+    //FONCTION DE SUPPRESSION D'UN ADMIN DANS LA BASE
+    function supprAdmin($identifiant){
+        $identifiant = protect($identifiant);
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM admin WHERE identifiant=?");
+        $query->bind_param('s',$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+
+    //FONCTION DE CHANGEMENT DE MOT DE PASSE POUR L'ADMINISTRATEUR COURANT
     function modifMDP($identifiant, $mdp){
         $identifiant = protect($identifiant);
         $mdp = protect($mdp);
@@ -247,10 +326,57 @@
         return true;
     }
 
-    function protect($chaine){
-        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes(html_entity_decode ($chaine)));	 
-        return $protect;
+//################################################################################################################################################################
+
+    //FONCTIONS GESTION DES LOTS
+
+    //FONCTION D'AJOUT D'UN LOT
+    function addLot($identifiant, $composition){
+        $identifiant = protect($identifiant);
+        $composition = protect($composition);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?)");
+        $query->bind_param('ss',$identifiant,$composition);
+        $query->execute();
+        $query->close();
+        return true;
     }
 
+
+    //FONCTION DE SUPPRESSION D'UN LOT
+    function supprLot($identifiant){
+        $identifiant = protect($identifiant);
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM lots WHERE id=?");
+        $query->bind_param('s',$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+
+    //FONCTION DE MODIFICATION D'UN LOT
+    function modifLot($identifiant,$composition,$ancien_identifiant){
+        $identifiant = protect($identifiant);
+        $composition = protect($composition);
+        $ancien_identifiant = protect($ancien_identifiant);
+        $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET id=?, composition=? WHERE id=?");
+        $query->bind_param('sss',$identifiant,$composition,$ancien_identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+
+
+    //FONCTION DE RECUPERATION DE TOUT LES LOTS
+    function recupLot(){
+        $query = "SELECT * from lots";
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+    function recupUniqueLot($id){
+        $id = protect($id);
+        $query = "SELECT * from lots WHERE id='".$id."'";
+        return $GLOBALS["bdd"]->query($query);
+    }
 
 ?>

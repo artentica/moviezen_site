@@ -58,7 +58,7 @@
             <?php
             if(!empty($_POST["recup_proj"])){
                 if(recupInscrit($_POST["recup_proj"])){
-                    echo('<a href="inscrits.xls">Lien vers le fichier xls</a>');
+                    echo('<br/><a class="btn btn-success" href="inscrits.xls">Télécharger le fichier xls</a>');
                 }
             
             }
