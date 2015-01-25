@@ -1,6 +1,5 @@
 <?php 
 
-
     //FONCTION DE CONNEXION A LA BDD
     function connect(){
 		$GLOBALS["bdd"] = new mysqli('localhost', 'utilisateur', 'azerty', 'moviezen');
@@ -169,8 +168,9 @@
         $projection = protect($projection);
         $query = "SELECT * from projections_inscrits WHERE projection='".$projection."'";
         $result = $GLOBALS["bdd"]->query($query);
-        
+        echo('<table id="table-style" data-toggle="table"><thead><tr><th>Numéro</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
         $table = "<html><body><table><tr><td><b>Nom</b></td><td><b>Prenom</b></td><td><b>Classe</b></td></tr>";
+        $i=1;
         while ($row = $result->fetch_array(MYSQLI_ASSOC))
         {
             
@@ -185,6 +185,8 @@
                 $table = $table."<tr>";
                 $table = $table."<td>".$nom."</td><td>".$prenom."</td><td>".$classe."</td>";
                 $table = $table."</tr>";
+                echo('<tr><td>'.$i.'</td><td>'.$nom.'</td><td>'.$prenom.'</td><td>'.$classe.'</td></tr>');
+                $i++;
             }
             $result2->close();
             
@@ -201,6 +203,7 @@
         fwrite($myfile,$table,strlen($table));
         fclose($myfile);
         $result->close();
+        echo('</table>');
         return true;
     }
 

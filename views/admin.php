@@ -227,7 +227,7 @@
                     echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
                 }
                 $result->close();
-                  echo('  </select>
+                  echo('  </select></div>
                   
                     <input type="submit" class="btn btn-success" value="Modifier cette projection"/>
                         </form>
@@ -296,7 +296,7 @@
                 }
                 $result->close();
                   echo('
-                                </select>
+                                </select></div>
                                 <input type="submit" class="btn btn-success" value="Modifier ce lot"/>
                             </form>
                             
