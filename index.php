@@ -7,25 +7,25 @@ session_start();
     <meta charset="UTF-8">
 	<title>Site de Moviezen</title>
 	<link rel="stylesheet" type="text/css" href="CSS/index.css">
+	<link rel="stylesheet" type="text/css" href="CSS/menu.css">
 	<link rel="stylesheet" type="text/css" href="CSS/bootstrap.css">
 </head>
 <body>
     <img src="Images/moviezen2.jpg" alt="bannière" id="banniere"/>
     <header>
-        <nav class="navbar navbar-default">
-  			<div class="container-fluid">
-  				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav">
-						<li class="active"><a href="index.php">Présentation du club</a></li>
-						<li><a href="views/cine.php">Coté Ciné de l'ISEN</a></li>
-                        <li><a href="views/emprunt.php">Emprunt de matériel</a></li>
-                        <li><a href="views/admin.php">Espace Administrateur</a></li>
-                        <li><a href="views/calendrier.php">Calendrier des emprunts</a></li>
-                        <li><a href="views/projection.php">Espace liste de projection</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
+       <div id="main-nav-hold">
+            <nav class="main-nav">
+						<a href="index.php" class="nav-btn">Présentation du club</a>
+						<a href="views/cine.php" class="nav-btn">Coté Ciné de l'ISEN</a>
+                        <a href="views/emprunt.php" class="nav-btn">Emprunt de matériel</a>
+                        <a href="views/admin.php" class="nav-btn">Espace Administrateur</a>
+                        <a href="views/calendrier.php" class="nav-btn">Calendrier des emprunts</a>
+                        <a href="views/projection.php" class="nav-btn">Espace liste de projection</a>
+                        <div class="menu-btn"><a><span></span><span></span><span></span></a></div>
+
+		    </nav>
+        </div>
+
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
