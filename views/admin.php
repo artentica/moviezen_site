@@ -18,12 +18,14 @@
             $id = $row["identifiant"];
         }
         $result->free();
-        if(password_verify($mdp, $hash) && strcmp($id,$temp)==0){
-            $_SESSION["authentifie"]=true;
-            $_SESSION["id"] = $id;
-        }
-        else{
-            unset($_SESSION["authentifie"]);
+        if(!empty($hash)){
+            if(password_verify($mdp, $hash) && strcmp($id,$temp)==0){
+                $_SESSION["authentifie"]=true;
+                $_SESSION["id"] = $id;
+            }
+            else{
+                unset($_SESSION["authentifie"]);
+            }
         }
     }
 
