@@ -136,3 +136,30 @@
           top:18px;
       }
   }
+
+.heading-sep {
+  width: 55%;
+height: 2px;
+background: #ffffff;
+margin: 25px 0px;
+margin-left: 35px;
+margin-bottom: 0px; }
+
+.menu-items{
+     text-align: center;
+width: 100%;
+}
+
+.menu-open {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transition: -webkit-transform 0.4s, opacity 0.4s;
+  transition: transform 0.4s, opacity 0.4s; }
+  .menu-open .menu-items {
+    transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+    -webkit-transition: -webkit-transform 0.4s;
+    transition: transform 0.4s; }
+  .menu-open .menu-bottom {
+    bottom: 0px; }
