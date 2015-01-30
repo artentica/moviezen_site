@@ -39,7 +39,10 @@
         $(function(){
             $( ".datepicker" ).datetimepicker({
                 minDate:'-1970/01/01',
-                maxDate:'+1970/03/01'
+                maxDate:'+1970/03/01',
+                showSecond: true, 
+                timeFormat: 'hh:mm:ss:l'
+
             });
         });  
     </script>

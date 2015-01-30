@@ -126,16 +126,17 @@
 	<title>Espace administrateur</title>
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../CSS/jquery-ui.min.css">
-    <link rel="stylesheet" type="text/css" href="../CSS/jquery-ui.structure.min.css">
-    <link rel="stylesheet" type="text/css" href="../CSS/jquery-ui.theme.min.css">
-    <script src="../js/jquery-2.1.3.min.js"></script>
-    <script src="../js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery.datetimepicker.js"></script>
     <script>  
         $(function(){
-            $( ".datepicker" ).datepicker();
+            $( ".datepicker" ).datetimepicker({
+                minDate:'-1970/01/01',
+                
+            });
             $( document ).ready(function() {
-                $( "#datepicker" ).datepicker( "option", "dateFormat", $( this ).val() );    
+                $( "#datepicker" ).datetimepicker( "option", "dateFormat", $( this ).val() );    
             });
         });  
     </script>
@@ -229,6 +230,7 @@
                     echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
                 }
                 $result->close();
+            
                   echo('  </select></div>
                   
                     <input type="submit" class="btn btn-success" value="Modifier cette projection"/>
@@ -270,7 +272,17 @@
                         <h3>Supprimer une projection</h3>
                             <p>Attention, cette action est irréversible</p>
                             <form method="post" action="admin.php" id="form-register">
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="suppr_proj">Nom du film : </label></span><input name="suppr_proj" id="suppr_proj" type="text" placeholder="Le magicien d\'Oz"" class="form-control" aria-describedby="basic-addon1" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="suppr_proj" id="suppr_proj">');
+                    $result = recupProj();
+                    while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                    {
+                        $nom = $row["nom"];
+                        $date = $row["date_projection"];
+                        $date = date("d/m/Y", strtotime($date));
+                        echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                    }
+                    $result->close();
+                    echo('</select></div>
 
                                 <input type="submit" class="btn btn-danger" value="Supprimer cette projection"/>
                             </form>
@@ -296,7 +308,7 @@
                     $composition = $row["composition"];
                     echo('<option value="'.$id.'">'.$id.', composé de '.$composition.'</option>');
                 }
-                $result->close();
+                
                   echo('
                                 </select></div>
                                 <input type="submit" class="btn btn-success" value="Modifier ce lot"/>
@@ -331,7 +343,16 @@
                         <h3>Supprimer un lot</h3>
                             <p>Attention, cette action est irréversible</p>
                             <form method="post" action="admin.php" id="form-register">
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="suppr_lot">Lettre du lot : </label></span><input name="suppr_lot" id="suppr_lot" type="text" placeholder="K" class="form-control" aria-describedby="basic-addon1" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="suppr_lot" id="suppr_lot">');
+                $result = recupLot();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $id = $row["id"];
+                    $composition = $row["composition"];
+                    echo('<option value="'.$id.'">'.$id.', composé de '.$composition.'</option>');
+                }
+                $result->close();
+                    echo('</select></div>
 
                                 <input type="submit" class="btn btn-danger" value="Supprimer ce lot"/>
                             </form>
