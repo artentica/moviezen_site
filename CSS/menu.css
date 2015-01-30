@@ -4,10 +4,8 @@
   height: 90px;
   position: relative;
   text-align: center;
-  text-transform: uppercase; }
-  @media (max-width: 767px) {
-    #main-nav-hold {
-      display: none; } }
+  /*text-transform: uppercase;*/ }
+
   #main-nav-hold .vr-btn {
     height: 35px;
     width: 35px;
@@ -30,11 +28,23 @@
     #main-nav-hold .main-nav a.nav-btn {
      color: #D1DCFF;
       line-height: 90px;
-      margin: 0px 15px; }
-      @media (max-width: 1150px) {
+      width: 16%;
+       }
+      @media (max-width: 1050px) {
+          #main-nav-hold .main-nav a.nav-btn {
+        width: 33%;}
+      }
+      @media (max-width: 1480px) {
         #main-nav-hold .main-nav a.nav-btn {
-          font-size: 14px; } }
-      @media (max-width: 960px) {
+          font-size: 15px;
+            margin: 0px;
+        width: 32%;}
+      #main-nav-hold .main-nav a.nav-btn{
+          line-height: 45px;
+      }
+      }
+
+      @media (max-width: 800px) {
 
         #main-nav-hold .main-nav a.nav-btn {
           font-size: 13px;
@@ -47,7 +57,24 @@
     right: 30px;
     top: 32px;
     display: block; }
+ @media (max-width: 800px) {
+     #main-nav-hold>nav .nav-btn{
+              display: none;
+          }
+     #main-nav-hold .menu-btn{
+              display: block;
+          }
+ }
+ @media (min-width: 800px) {
+          #main-nav-hold .menu-btn{
+              display: none;
+          }
+     #main-nav-hold>nav .nav-btn{
+              display: inline-block;
+          }
 
+
+      }
   #main-nav-hold .menu-btn:hover {
     top: 28px; }
      a.nav-btn:hover{
@@ -56,12 +83,8 @@
 
 
 
-#main-nav-hold .menu-btn {
-    width: 25px;
-    position: absolute;
-    right: 30px;
-    top: 32px;
-    display: block; }
+
+
     #main-nav-hold .menu-btn span {
       display: block;
       height: 2px;
@@ -98,3 +121,18 @@
       color: #ffffff; }
     #main-nav-hold .nav-dark-gray .menu-btn span {
       background: #ffffff; }
+
+  @media (max-width: 767px) {
+        #main-nav-hold .main-nav{
+            height: 70px;
+        }
+      #main-nav-hold {
+           height: 70px;
+      }
+      #main-nav-hold .menu-btn {
+          top:22px;
+      }
+      #main-nav-hold .menu-btn:hover{
+          top:18px;
+      }
+  }
