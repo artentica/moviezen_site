@@ -31,9 +31,10 @@
     <meta charset="UTF-8">
 	<title>Emprunter du matériel</title>
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
+	<link rel="stylesheet" type="text/css" href="../CSS/menu.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
-    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-2.1.3.min.js"></script>
     <script src="../js/jquery.datetimepicker.js"></script>
     <script>  
         $(function(){

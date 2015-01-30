@@ -14,8 +14,9 @@ session_start();
     <img src="Images/moviezen2.jpg" alt="bannière" id="banniere"/>
     <header>
        <?php
-        include 'include/menu-mobile-index.php';
-       include 'include/panel-index.php';?>
+        include 'includes/panel-index.php';
+        include 'includes/menu-mobile-index.php';?>
+
 
     </header>
     <div class="panel panel-default">

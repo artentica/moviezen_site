@@ -2,7 +2,7 @@
 
 
             echo'<div class="menu">
-				<div class="close"><a href="javascript:Artentica.showMenu();"><img src="assets/img/close-btn.svg" alt="close" class="svg-raw"/></a></div>
+				<div class="close"><a href=""><img src="../Images/close-btn.svg" alt="close" class="svg-raw"/></a></div>
 
 				<div class="menu-items">
 
