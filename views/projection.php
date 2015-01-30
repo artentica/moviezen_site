@@ -22,8 +22,8 @@
     <img src="../Images/moviezen2.jpg" alt="bannière" id="banniere"/>
     <header>
         <?php
-        include '../include/menu-mobile.php';
-       include '../include/panel-global.php';?>
+       include '../includes/panel-global.php';
+        include '../includes/menu-mobile.php';?>
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">

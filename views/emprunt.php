@@ -32,16 +32,18 @@
 	<title>Emprunter du matériel</title>
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../CSS/jquery-ui.min.css">
-    <link rel="stylesheet" type="text/css" href="../CSS/menu.css">
-
-    <link rel="stylesheet" type="text/css" href="../CSS/jquery-ui.structure.min.css">
-    <link rel="stylesheet" type="text/css" href="../CSS/jquery-ui.theme.min.css">
-    <script src="../js/jquery-2.1.3.min.js"></script>
-    <script src="../js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery.datetimepicker.js"></script>
     <script>  
         $(function(){
-            $( ".datepicker" ).datepicker();  
+            $( ".datepicker" ).datetimepicker({
+                minDate:'-1970/01/01',
+                maxDate:'+1970/03/01',
+                showSecond: true, 
+                timeFormat: 'hh:mm:ss:l'
+
+            });
         });  
     </script>
 </head>
@@ -49,13 +51,19 @@
     <img src="../Images/moviezen2.jpg" alt="bannière" id="banniere"/>
     <header>
         <?php
-        include '../include/menu-mobile.php';
-       include '../include/panel-global.php';?>
+       include '../includes/panel-global.php';
+        include '../includes/menu-mobile.php';?>
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
             
             <?php
+
+            echo('<table><thead><th>Identifiant de lot</th><th>Composition du lot</th><th>Disponible</th><th>Indisponible jusqu\'au</th></thead>');
+
+            
+            echo('</table>');
+
             if(!$_SESSION["emprunteur"]){
 
                 echo('<h1>Emprunter du matériel</h1>
