@@ -346,7 +346,7 @@
             
             <form method="post" action="admin.php" id="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mdp">Mot de passe : </label></span><input type="text" name="mdp" id="mdp" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
                 
                 <input type="submit" class="btn btn-info" value="Se connecter"/>
             </form>');
