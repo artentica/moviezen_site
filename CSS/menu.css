@@ -1,0 +1,138 @@
+#main-nav-hold {
+  background: #001A98;
+  font-size: 16px;
+  height: 90px;
+  position: relative;
+  text-align: center;
+  /*text-transform: uppercase;*/ }
+
+  #main-nav-hold .vr-btn {
+    height: 35px;
+    width: 35px;
+    position: absolute;
+    left: 25px;
+    top: 27px; }
+  #main-nav-hold .main-nav {
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    -ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    border-bottom: 1px solid #001681;
+    height: 90px;
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    background: #404144; }
+    #main-nav-hold .main-nav a.nav-btn {
+     color: #D1DCFF;
+      line-height: 90px;
+      width: 16%;
+       }
+      @media (max-width: 1050px) {
+          #main-nav-hold .main-nav a.nav-btn {
+        width: 33%;}
+      }
+      @media (max-width: 1480px) {
+        #main-nav-hold .main-nav a.nav-btn {
+          font-size: 15px;
+            margin: 0px;
+        width: 32%;}
+      #main-nav-hold .main-nav a.nav-btn{
+          line-height: 45px;
+      }
+      }
+
+      @media (max-width: 800px) {
+
+        #main-nav-hold .main-nav a.nav-btn {
+          font-size: 13px;
+          margin: 0px 12px; } }
+    #main-nav-hold .main-nav a.active, #main-nav-hold .main-nav a.nav-btn:hover {
+      color: #ffffff; }
+  #main-nav-hold .menu-btn {
+    width: 25px;
+    position: absolute;
+    right: 30px;
+    top: 32px;
+    display: block; }
+ @media (max-width: 800px) {
+     #main-nav-hold>nav .nav-btn{
+              display: none;
+          }
+     #main-nav-hold .menu-btn{
+              display: block;
+          }
+ }
+ @media (min-width: 800px) {
+          #main-nav-hold .menu-btn{
+              display: none;
+          }
+     #main-nav-hold>nav .nav-btn{
+              display: inline-block;
+          }
+
+
+      }
+  #main-nav-hold .menu-btn:hover {
+    top: 28px; }
+     a.nav-btn:hover{
+            text-decoration: none;
+        }
+
+
+
+
+
+    #main-nav-hold .menu-btn span {
+      display: block;
+      height: 2px;
+      background: #ffffff;
+      margin: 4px 0px; }
+  #main-nav-hold .menu-btn:hover {
+    top: 28px; }
+    #main-nav-hold .menu-btn:hover span {
+      margin: 6px 0px; }
+  #main-nav-hold .fixed-nav {
+    position: fixed; }
+  #main-nav-hold .main-nav-open {
+    left: -600px; }
+
+  #main-nav-hold .nav-light-gray {
+    background: #ECECEC;
+    border-bottom: 1px solid #c7c7c7; }
+    #main-nav-hold .nav-light-gray .vr-btn svg path {
+      fill: #424242; }
+    #main-nav-hold .nav-light-gray a.nav-btn {
+      color: #969696; }
+    #main-nav-hold .nav-light-gray a.active, #main-nav-hold .nav-light-gray a.nav-btn:hover {
+      color: #424242; }
+    #main-nav-hold .nav-light-gray .menu-btn span {
+      background: #424242; }
+  #main-nav-hold .nav-dark-gray {
+    background: #2a2a2a;
+    border-bottom: 1px solid #191919; }
+    #main-nav-hold .nav-dark-gray .vr-btn svg path {
+      fill: #ffffff; }
+    #main-nav-hold .nav-dark-gray a.nav-btn {
+      color: #969696; }
+    #main-nav-hold .nav-dark-gray a.active, #main-nav-hold .nav-dark-gray a.nav-btn:hover {
+      color: #ffffff; }
+    #main-nav-hold .nav-dark-gray .menu-btn span {
+      background: #ffffff; }
+
+  @media (max-width: 767px) {
+        #main-nav-hold .main-nav{
+            height: 70px;
+        }
+      #main-nav-hold {
+           height: 70px;
+      }
+      #main-nav-hold .menu-btn {
+          top:22px;
+      }
+      #main-nav-hold .menu-btn:hover{
+          top:18px;
+      }
+  }
