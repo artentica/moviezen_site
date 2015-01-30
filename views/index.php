@@ -31,8 +31,8 @@ session_start();
 		<div class="panel-body">
 			<h1>Moviezen, qu'est-ce que c'est ?</h1>
             <p>Nous sommes un club vidéo affilié à l'ISEN Brest. Passionés de vidéo et d'image, nous participons à la plupart des événements requérant des caméras ou une présence télévisuelle.</p>
-            
-            <p>Nos missions sont diverses et variées : 
+
+            <p>Nos missions sont diverses et variées :
                 <ul>
                     <li>Organisation du Ciné de l'ISEN, des projections de film aux tarifs avantageux en partenariat avec le Multiplexe Liberté de Brest</li>
                     <li>Montage de vidéos de soirées pour promouvoir les soirées Iséniennes</li>
@@ -42,7 +42,7 @@ session_start();
             </p>
 		</div>
 	</div>
-    
-    
+
+
 </body>
 </html>
