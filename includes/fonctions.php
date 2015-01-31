@@ -271,7 +271,7 @@
     }
 
     //FONCTION DE MODIFICATION D'UNE PROJECTION
-    function modifProj($nom,$date_release,$date_projection,$description,$commentaires,$ancien_nom){
+    function modifProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$ancien_nom){
         $nom = protect($nom);
         $date_release = protect($date_release);
         $date_projection = protect($date_projection);
@@ -280,8 +280,8 @@
         $ancien_nom = protect($ancien_nom);
         $date_release = date("Y-m-d", strtotime($date_release));
         $date_projection = date("Y-m-d", strtotime($date_projection));
-        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, commentaires=? WHERE nom=?");
-        $query->bind_param('ssssss',$nom,$date_release,$date_projection,$description,$commentaires,$ancien_nom);
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, commentaires=?, affiche=? WHERE nom=?");
+        $query->bind_param('sssssss',$nom,$date_release,$date_projection,$description,$commentaires,$affiche,$ancien_nom);
         $query->execute();
         $query->close();
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections_inscrits SET projection=? WHERE projection=?");
@@ -350,13 +350,14 @@
     //FONCTIONS GESTION DES LOTS
 
     //FONCTION D'AJOUT D'UN LOT
-    function addLot($identifiant, $composition,$image){
+    function addLot($identifiant, $composition,$image,$caution){
         $identifiant = protect($identifiant);
         $composition = protect($composition);
+        $caution = protect($caution);
         $disponible = 1;
         $image = protect($image);
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?,?,?)");
-        $query->bind_param('ssis',$identifiant,$composition,$disponible,$image);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?,?,?,?)");
+        $query->bind_param('ssisi',$identifiant,$composition,$disponible,$image,$caution);
         $query->execute();
         $query->close();
         return true;
@@ -375,12 +376,13 @@
 
 
     //FONCTION DE MODIFICATION D'UN LOT
-    function modifLot($identifiant,$composition,$ancien_identifiant){
+    function modifLot($identifiant,$composition, $caution, $image,$ancien_identifiant){
         $identifiant = protect($identifiant);
         $composition = protect($composition);
         $ancien_identifiant = protect($ancien_identifiant);
-        $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET id=?, composition=?, image=? WHERE id=?");
-        $query->bind_param('sss',$identifiant,$composition,$image,$ancien_identifiant);
+        $caution = protect($caution);
+        $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET id=?, composition=?, image=?, caution=?  WHERE id=?");
+        $query->bind_param('sssss',$identifiant,$composition,$image,$caution,$ancien_identifiant);
         $query->execute();
         $query->close();
         return true;
