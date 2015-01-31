@@ -95,12 +95,17 @@
         $date_retour = date("Y-m-d H:m:s", strtotime($date_retour));
         $date_ajd = date("Y-m-d H:m:s");
         $date_ajd = new DateTime($date_ajd);
+        $date_futur = date("Y-m-d H:m:s");
+        $date_futur = new DateTime($date_futur);
+        date_add($date_futur, date_interval_create_from_date_string('1 year'));
         $date_ajd = $date_ajd->format('Ymd');
+        $date_futur = $date_futur->format('Ymd');
         $date_emprunt_test = new DateTime($date_emprunt);
         $date_emprunt_test = $date_emprunt_test->format('Ymd');
         $date_retour_test = new DateTime($date_retour);
         $date_retour_test = $date_retour_test->format('Ymd');
-        if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test ){
+        
+        if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             if(strpos($lots, ",")!=false){
                 $liste = explode(",", $lots);
             }
