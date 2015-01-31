@@ -55,13 +55,13 @@
 		<div class="panel-body">
             
             <?php
-
+            $nom_actif = "";
             $result = recupProjActive();
             if(!empty($result)){
                 
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
-                    $nom = $row["nom"];
+                    $nom_actif = $row["nom"];
                     $date_projection = $row["date_projection"];
                     setlocale (LC_TIME, 'fr_FR','fra');
                     $date_projection = utf8_encode(strftime("%d %B %Y",strtotime($date_projection)));
@@ -70,7 +70,7 @@
                     $affiche = $row["affiche"];
                 }
                 $result->close();
-                echo('<h1>'.$nom.'</h1>
+                echo('<h1>'.$nom_actif.'</h1>
                 <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest</h3>    
                 <img src="'.$affiche.'" alt="affiche" style="width:400px;height:400px;"/>
                 <p>'.$description.'</p>
@@ -99,7 +99,11 @@
                     $nom = $row["nom"];
                     $date = $row["date_projection"];
                     $date = date("d/m/Y", strtotime($date));
-                    echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                    echo('<option value="'.$nom.'" ');
+                    if(strcmp($nom_actif,$nom)==0){
+                        echo('selected="selected"');
+                    }
+                    echo('>'.$nom.' projeté le '.$date.'</option>');
                 }
                 $result->close();
                 echo('

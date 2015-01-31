@@ -89,18 +89,24 @@
         $query->execute();
         $query->close();
         $lots = protect($lots);
+        $lots = strtoupper($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
         $date_emprunt = date("Y-m-d H:m:s", strtotime($date_emprunt));
         $date_retour = date("Y-m-d H:m:s", strtotime($date_retour));
         $date_ajd = date("Y-m-d H:m:s");
         $date_ajd = new DateTime($date_ajd);
+        $date_futur = date("Y-m-d H:m:s");
+        $date_futur = new DateTime($date_futur);
+        date_add($date_futur, date_interval_create_from_date_string('1 year'));
         $date_ajd = $date_ajd->format('Ymd');
+        $date_futur = $date_futur->format('Ymd');
         $date_emprunt_test = new DateTime($date_emprunt);
         $date_emprunt_test = $date_emprunt_test->format('Ymd');
         $date_retour_test = new DateTime($date_retour);
         $date_retour_test = $date_retour_test->format('Ymd');
-        if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test ){
+        
+        if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             if(strpos($lots, ",")!=false){
                 $liste = explode(",", $lots);
             }
@@ -114,7 +120,7 @@
                 $liste = explode(" ", $lots); 
             }
             else{
-                $liste = str_split($lots);
+                $liste = str_split($lots,2);
             }
             foreach($liste as $liste){
                 $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
