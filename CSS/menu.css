@@ -249,3 +249,29 @@ transition: all 0.2s ease-out;
     top: 70px;
 }
 }
+
+
+#banniere h1{
+        position: relative;
+        font-size: 100px;
+        margin: auto;
+    padding-top: 12px;
+    letter-spacing: 5px;
+        font-family: 'Lobster', helvetica, arial;
+    }
+
+    #banniere h1{
+        text-decoration: none;
+        color: #666;
+
+        -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), color-stop(50%, rgba(0,0,0,.5)), to(rgba(0,0,0,1)));
+
+text-shadow:0px 0px 0 rgb(230,230,230),1px -1px 0 rgb(216,216,216),2px -2px 0 rgb(202,202,202), 3px -3px 0 rgb(188,188,188),4px -4px 3px rgba(0,0,0,0.45),4px -4px 1px rgba(0,0,0,0.5),0px 0px 3px rgba(0,0,0,.2);
+
+
+    }
+
+
+#banniere{
+    height: 125px;
+}
