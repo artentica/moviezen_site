@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Sam 31 Janvier 2015 à 11:29
+-- Généré le :  Sam 31 Janvier 2015 à 14:12
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `lots` (
   `composition` text COLLATE utf8_bin NOT NULL,
   `disponible` tinyint(1) NOT NULL DEFAULT '1',
   `image` text COLLATE utf8_bin NOT NULL,
+  `caution` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -130,11 +131,13 @@ CREATE TABLE IF NOT EXISTS `lots` (
 -- Contenu de la table `lots`
 --
 
-INSERT INTO `lots` (`id`, `composition`, `disponible`, `image`) VALUES
-('B', 'eqsfsdfsf', 0, '../Images/181184c8ce262cf16aced6b111b31902.jpg'),
-('C', 'qedfsfsdf', 1, ''),
-('D', 'Micro', 1, ''),
-('F', 'Camera essai222', 1, '');
+INSERT INTO `lots` (`id`, `composition`, `disponible`, `image`, `caution`) VALUES
+('B', 'Essai', 0, '../Images/1768be5188fa2306c327c3319d6fedd7.jpg', 125),
+('C', 'qedfsfsdf', 1, '', 100),
+('CC', 'qdsfdfsgdfgfd', 1, '../Images/6065f78cc6338a7b3e0fc4683f937657.jpg', 0),
+('D', 'Micro', 1, '', 0),
+('F', 'Camera essai222', 1, '', 0),
+('K', 'LOL', 1, '../Images/c0b3f30a21fe56d616215407c561db39.jpg', 200);
 
 -- --------------------------------------------------------
 
@@ -149,6 +152,7 @@ CREATE TABLE IF NOT EXISTS `projections` (
   `description` text COLLATE utf8_bin NOT NULL,
   `commentaires` text COLLATE utf8_bin NOT NULL,
   `affiche` text COLLATE utf8_bin NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -156,11 +160,12 @@ CREATE TABLE IF NOT EXISTS `projections` (
 -- Contenu de la table `projections`
 --
 
-INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`) VALUES
-('FAFA', '2015-01-31', '2015-02-12', 'FAFA', 'qddq', '../Images/12b70a583b72d1dee3dd8883779c5650.jpg'),
-('Foxcatcherqedfsdf', '2015-01-14', '2015-01-16', 'Testfzefsdfsf', 'qfsdqfsdfds', ''),
-('TESTETS', '2015-01-15', '2015-01-27', 'ESSSSSSSSSSSSSSSSSSSSAI', '', ''),
-('TTTTTTTTTTTTTTTTTTTTTTTT', '0000-00-00', '0000-00-00', 'TEEEEEEEEEEEEEEEEEE', '', '');
+INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`) VALUES
+('FAFA', '2015-01-31', '2015-02-12', 'FAFA', 'qddq', '../Images/ab839057d16a858b76e202be4b7082f6.jpg', 1),
+('Foxcatcherqedfsdf', '2015-01-14', '2015-01-16', 'TEST', 'qfdsfgdsfd', '../Images/ed94783fc491117c9947c807ce66ab19.jpg', 0),
+('LE magicien d\\''OSSSSSSSSSS', '2015-01-31', '2015-03-13', 'Ceci est un essai particulièrement réussi', '', '../Images/3e7ad375b37dc29ca7f5035191c62127.jpg', 0),
+('TESTETS', '2015-01-15', '2015-01-27', 'ESSSSSSSSSSSSSSSSSSSSAI', '', '', 0),
+('TTTTTTTTTTTTTTTTTTTTTTTT', '0000-00-00', '0000-00-00', 'TEEEEEEEEEEEEEEEEEE', '', '', 0);
 
 -- --------------------------------------------------------
 

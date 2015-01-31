@@ -116,6 +116,11 @@
         modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"]);
     }
 
+    //ACTIVATION DE PROJECTION
+    if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
+        activateProj($_POST["activ_proj"]);
+    }
+
 
 
     //GESTION DES LOTS
@@ -283,7 +288,7 @@
                             $commentaires = $row["commentaires"];
                             echo('<form method="post" action="admin.php" id="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$nom.'" name="old_projection_nom" id="old_projection_nom"/>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required value="'.$nom.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required value="'.str_replace("'"," ",$nom).'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_release">Date de release : </label></span><input type="date" name="new_projection_release" id="new_projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1" value="'.$date_release.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_date">Date de projection : </label></span><input type="date" name="new_projection_date" id="new_projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1" required value="'.$date_projection.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_description">Description : </label></span><input type="text" name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" aria-describedby="basic-addon1" required value="'.$description.'"/></div>
@@ -301,7 +306,24 @@
                     
                     
                     echo('
-                        
+                    
+                        <h3>Rendre une projection active</h3>
+                        <form method="post" action="admin.php" id="form-register">
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="activ_proj" id="activ_proj">
+                                ');
+                            $result = recupProj();
+                            while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                            {
+                                $nom = $row["nom"];
+                                $date = $row["date_projection"];
+                                $date = date("d/m/Y", strtotime($date));
+                                echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                            }
+                            $result->close();
+                    echo('
+                            <input type="submit" class="btn btn-warning" value="Activer cette projection"/>
+                            </select></div>
+                        </form>
                         
                         <h3>Supprimer une projection</h3>
                             <p>Attention, cette action est irréversible</p>

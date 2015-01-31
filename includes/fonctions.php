@@ -232,7 +232,25 @@
     //FONCTION RECUPERANT UNE PROJECTION EN PARTICULIER
     function recupUniqueProj($nom){
         $nom = protect($nom);
-        $query = "SELECT * from projections WHERE nom='".$nom."'";
+        $query = 'SELECT * from projections WHERE nom="'.$nom.'"';
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+    //FONCTION PERMETTANT D'ACTIVER UNE PROJECTION (MET LA PROJECTION AFFICHEE SUR LA PAGE CINE)
+    function activateProj($nom){
+        $nom = protect($nom);
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET active='0' WHERE active='1'");
+        $query->execute();
+        $query->close();
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET active='1' WHERE nom=?");
+        $query->bind_param('s',$nom);
+        $query->execute();
+        $query->close();
+    }
+
+    //FONCTION RECUPERANT LA PROJECTION ACTIVE ACTUELLE
+    function recupProjActive(){
+        $query ="SELECT * FROM projections WHERE active='1'";
         return $GLOBALS["bdd"]->query($query);
     }
 
@@ -290,6 +308,8 @@
         $query->close();
         return true;
     }
+
+    
 
 
 
