@@ -1,3 +1,7 @@
+
+/*  CSS concernant les identifiants */
+/*#########################################################################################################################################################################################################################################################################################"*/
+
 #main-nav-hold {
     background: #001A98;
     font-size: 16px;
@@ -16,7 +20,6 @@
     top: 27px;
 }
 
-
 #main-nav-hold .main-nav {
     -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
@@ -32,50 +35,11 @@
     background: #0C0322;
 }
 
-
-.menu-btn {
-    cursor: pointer;
-}
-
-
 #main-nav-hold .main-nav a.nav-btn {
     color: #D1DCFF;
     line-height: 90px;
     width: 16%;
 }
-
-
-@media (max-width: 1050px) {
-    #main-nav-hold .main-nav a.nav-btn {
-        width: 33%;
-    }
-}
-
-
-@media (max-width: 1480px) {
-    #main-nav-hold .main-nav a.nav-btn {
-        font-size: 15px;
-        margin: 0px;
-        width: 32%;
-    }
-    #main-nav-hold .main-nav a.nav-btn {
-        line-height: 45px;
-    }
-}
-
-
-@media (max-width: 800px) {
-    #main-nav-hold .main-nav a.nav-btn {
-        font-size: 13px;
-        margin: 0px 12px;
-    }
-}
-
-
-a.nav-btn:hover {
-    color: #B193C8;
-}
-
 
 #main-nav-hold .menu-btn {
     width: 25px;
@@ -85,35 +49,10 @@ a.nav-btn:hover {
     display: block;
 }
 
-
-@media (max-width: 800px) {
-    #main-nav-hold>nav .nav-btn {
-        display: none;
-    }
-    #main-nav-hold .menu-btn {
-        display: block;
-    }
-}
-
-
-@media (min-width: 800px) {
-    #main-nav-hold .menu-btn {
-        display: none;
-    }
-    #main-nav-hold>nav .nav-btn {
-        display: inline-block;
-    }
-}
-
-
 #main-nav-hold .menu-btn:hover {
     top: 28px;
 }
 
-
-a.nav-btn:hover {
-    text-decoration: none;
-}
 
 
 #main-nav-hold .menu-btn span {
@@ -191,20 +130,46 @@ a.nav-btn:hover {
 }
 
 
-@media (max-width: 767px) {
-    #main-nav-hold .main-nav {
-        height: 70px;
-    }
-    #main-nav-hold {
-        height: 70px;
-    }
-    #main-nav-hold .menu-btn {
-        top: 22px;
-    }
-    #main-nav-hold .menu-btn:hover {
-        top: 18px;
-    }
+#banniere h1 {
+    position: relative;
+    font-size: 100px;
+    margin: auto;
+    padding-top: 12px;
+    letter-spacing: 5px;
+    font-family: 'Lobster', helvetica, arial;
 }
+
+
+#banniere h1 {
+    text-decoration: none;
+    color: #666;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 1)), color-stop(50%, rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, 1)));
+    text-shadow: 0px 0px 0 rgb(230, 230, 230), 1px -1px 0 rgb(216, 216, 216), 2px -2px 0 rgb(202, 202, 202), 3px -3px 0 rgb(188, 188, 188), 4px -4px 3px rgba(0, 0, 0, 0.45), 4px -4px 1px rgba(0, 0, 0, 0.5), 0px 0px 3px rgba(0, 0, 0, .2);
+}
+
+
+#banniere {
+    height: 125px;
+    background-image: url("../Images/banner.jpg");
+}
+
+
+/*  CSS concernant les classes */
+/*#########################################################################################################################################################################################################################################################################################"*/
+
+
+.menu-btn {
+    cursor: pointer;
+}
+
+a.nav-btn:hover {
+    color: green;
+}
+
+a.nav-btn:hover {
+    text-decoration: none;
+}
+
 
 
 .heading-sep {
@@ -341,32 +306,81 @@ a.nav-btn:hover {
 }
 
 
+
+
+/*  CSS concernant les media queries */
+/*#########################################################################################################################################################################################################################################################################################"*/
+
+@media (max-width: 1050px) {
+    #main-nav-hold .main-nav a.nav-btn {
+        width: 33%;
+    }
+}
+
+
+@media (max-width: 1480px) {
+    #main-nav-hold .main-nav a.nav-btn {
+        font-size: 15px;
+        margin: 0px;
+        width: 32%;
+    }
+    #main-nav-hold .main-nav a.nav-btn {
+        line-height: 45px;
+    }
+}
+
+
+@media (max-width: 800px) {
+    #main-nav-hold .main-nav a.nav-btn {
+        font-size: 13px;
+        margin: 0px 12px;
+    }
+}
+
+
+@media (max-width: 800px) {
+    #main-nav-hold>nav .nav-btn {
+        display: none;
+    }
+    #main-nav-hold .menu-btn {
+        display: block;
+    }
+}
+
+
+@media (min-width: 800px) {
+    #main-nav-hold .menu-btn {
+        display: none;
+    }
+    #main-nav-hold>nav .nav-btn {
+        display: inline-block;
+    }
+}
+
+
+
+
+
+@media (max-width: 767px) {
+    #main-nav-hold .main-nav {
+        height: 70px;
+    }
+    #main-nav-hold {
+        height: 70px;
+    }
+    #main-nav-hold .menu-btn {
+        top: 22px;
+    }
+    #main-nav-hold .menu-btn:hover {
+        top: 18px;
+    }
+}
+
+
+
 @media (max-width: 767px) {
     .menu-items {
         top: 70px;
     }
 }
 
-
-#banniere h1 {
-    position: relative;
-    font-size: 100px;
-    margin: auto;
-    padding-top: 12px;
-    letter-spacing: 5px;
-    font-family: 'Lobster', helvetica, arial;
-}
-
-
-#banniere h1 {
-    text-decoration: none;
-    color: #666;
-    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 1)), color-stop(50%, rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, 1)));
-    text-shadow: 0px 0px 0 rgb(230, 230, 230), 1px -1px 0 rgb(216, 216, 216), 2px -2px 0 rgb(202, 202, 202), 3px -3px 0 rgb(188, 188, 188), 4px -4px 3px rgba(0, 0, 0, 0.45), 4px -4px 1px rgba(0, 0, 0, 0.5), 0px 0px 3px rgba(0, 0, 0, .2);
-}
-
-
-#banniere {
-    height: 125px;
-    background-image: url("../Images/banner.jpg");
-}
