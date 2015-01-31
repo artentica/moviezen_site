@@ -134,7 +134,6 @@
         $(function(){
             $( ".datepicker" ).datetimepicker({
                 minDate:'-1970/01/01'
-                
             });
             $( document ).ready(function() {
                 $( "#datepicker" ).datetimepicker( "option", "dateFormat", $( this ).val() );    
