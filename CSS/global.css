@@ -1,5 +1,5 @@
 body{
-    background-color: #160C31;
+   background-color: #D2D0D8
 }
 
 
@@ -9,14 +9,17 @@ body{
     margin-top: 35px;
     border-color: rgba(10, 8, 61, 0.92);
     border-width: 2px;
-    background-color: rgba(4, 4, 32, 0.89);
+    background-color: rgba(4, 4, 32, 0.63);
     border-radius: 8px;
     color: #E8E7EC
 }
 
 h1{
     margin-bottom: 35px;
+    font-size: 40px;
 }
+
+
 
 
 @media (max-width: 960px) {
@@ -24,5 +27,35 @@ h1{
         width: 90%;
         margin: auto;
         margin-top: 25px;
+    }
+}
+
+p, li {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+/*#form-register input{
+    width: 90%;
+}*/
+
+#form-register span{
+    width:10%;
+}
+
+
+
+@media (max-width: 1150px) {
+/*    #form-register input{
+        width: 85%;
+    }*/
+
+    #form-register span{
+        width:15%;
+    }
+}
+@media (max-width: 760px) {
+    #form-register span{
+        width:20%;
     }
 }
