@@ -2,7 +2,7 @@
 
 
             echo'<div class="menu">
-				<div class="close"><a href=""><img src="assets/img/close-btn.svg" alt="close" class="svg-raw"/></a></div>
+				<div class="closemenu"><a onClick="showMenu()"><img src="Images/close-btn.svg" alt="close" class="svg-raw"/></a></div>
 
 				<div class="menu-items">
 
@@ -12,7 +12,7 @@
                         <li><a href="views/emprunt.php" class="nav-btn">Emprunt de matériel</a><div class="heading-sep"></div></li>
                         <li><a href="views/admin.php" class="nav-btn">Espace Administrateur</a><div class="heading-sep"></div></li>
                         <li><a href="views/calendrier.php" class="nav-btn">Calendrier des emprunts</a><div class="heading-sep"></div></li>
-                        <li><a href="views/projection.php" class="nav-btn">Espace liste de projection</a><div class="heading-sep"></div></li>
+                        <li><a href="views/projection.php" class="nav-btn">Espace liste de projection</a></li>
 					</ul>
 
 				</div><!-- end .menu-items -->

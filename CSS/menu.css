@@ -25,6 +25,9 @@
     left: 0px;
     top: 0px;
     background: #404144; }
+.menu-btn{
+    cursor: pointer;
+}
     #main-nav-hold .main-nav a.nav-btn {
      color: #D1DCFF;
       line-height: 90px;
@@ -142,8 +145,8 @@
 height: 2px;
 background: #ffffff;
 margin: 25px 0px;
-margin-left: 35px;
-margin-bottom: 0px; }
+margin-right: auto;
+margin-left: auto; }
 
 .menu-items{
      text-align: center;
@@ -163,3 +166,66 @@ width: 100%;
     transition: transform 0.4s; }
   .menu-open .menu-bottom {
     bottom: 0px; }
+
+.menu .menu-items ul {
+    list-style: none;
+    padding: 0;
+
+}
+.menu .menu-items a {
+text-decoration: none;
+font-size: 30px;
+line-height: 30px;
+font-weight: 700;
+}
+.menu {
+  font-family: "museo-sans", sans-serif;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: #2a2a2a;
+  z-index: 200;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: -webkit-transform 0.4s, opacity 0.4s, visibility 0s 0.4s;
+  transition: transform 0.4s, opacity 0.4s, visibility 0s 0.4s; }
+
+.menu-open {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transition: -webkit-transform 0.4s, opacity 0.4s;
+  transition: transform 0.4s, opacity 0.4s; }
+.menu-items {
+    top: 200px;
+position: relative;
+    transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+    -webkit-transition: -webkit-transform 0.4s;
+    transition: transform 0.4s; }
+  .menu-open .menu-bottom {
+    bottom: 0px; }
+
+.menu-items ul li{
+    text-align: center;
+
+}
+
+.closemenu:hover{
+    opacity: 0.5;
+}
+.closemenu{
+    cursor: pointer;
+    float: right;
+position: absolute;
+font-size: 21px;
+top: 15px;
+font-weight: bold;
+line-height: 1;
+color: #000000;
+text-shadow: 0 1px 0 #ffffff;
+opacity: 0.2;
+right: 15px;
+}

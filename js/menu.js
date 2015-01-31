@@ -1,5 +1,5 @@
-$('.menu-items a').on("click", showMenu);
 
-var showMenu = function() {
+
+function showMenu() {
 		$('.menu').toggleClass('menu-open');
 	};
