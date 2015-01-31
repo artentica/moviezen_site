@@ -34,13 +34,15 @@
 	<!-- Set Viewport Options -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-
+    <?php
+        include '../includes/include_on_all_page.php';
+    ?>
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
-	<link rel="stylesheet" type="text/css" href="../CSS/menu.css">
+
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
     <script src="../js/jquery-2.1.3.min.js"></script>
-	<script src="../js/menu.js"></script>
+
     <script src="../js/jquery.datetimepicker.js"></script>
     <script>  
         $(function(){

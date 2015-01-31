@@ -34,9 +34,10 @@
 
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../CSS/menu.css">
     <script src="../js/jquery-2.1.3.min.js"></script>
-	<script src="../js/menu.js"></script>
+       <?php
+        include '../includes/include_on_all_page.php';
+    ?>
 
 </head>
 <body>
