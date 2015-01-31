@@ -91,31 +91,42 @@
         $lots = protect($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
-        $date_emprunt = date("Y-m-d", strtotime($date_emprunt));
-        $date_retour = date("Y-m-d", strtotime($date_retour));
-        if(strpos($lots, ",")!=false){
-            $liste = explode(",", $lots);
-        }
-        else if(strpos($lots, "-")!=false){
-            $liste = explode("-", $lots);
-        }
-        else if(strpos($lots, "/")!=false){
-            $liste = explode("/", $lots);
-        }
-        else if(strpos($lots, " ")!=false){
-            $liste = explode(" ", $lots); 
+        $date_emprunt = date("Y-m-d H:m:s", strtotime($date_emprunt));
+        $date_retour = date("Y-m-d H:m:s", strtotime($date_retour));
+        $date_ajd = date("Y-m-d H:m:s");
+        $date_ajd = new DateTime($date_ajd);
+        $date_ajd = $date_ajd->format('Ymd');
+        $date_emprunt_test = new DateTime($date_emprunt);
+        $date_emprunt_test = $date_emprunt_test->format('Ymd');
+        $date_retour_test = new DateTime($date_retour);
+        $date_retour_test = $date_retour_test->format('Ymd');
+        if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test ){
+            if(strpos($lots, ",")!=false){
+                $liste = explode(",", $lots);
+            }
+            else if(strpos($lots, "-")!=false){
+                $liste = explode("-", $lots);
+            }
+            else if(strpos($lots, "/")!=false){
+                $liste = explode("/", $lots);
+            }
+            else if(strpos($lots, " ")!=false){
+                $liste = explode(" ", $lots); 
+            }
+            else{
+                $liste = str_split($lots);
+            }
+            foreach($liste as $liste){
+                $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
+                $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
+                $query2->execute();
+                $query2->close();
+            }
+            return true;
         }
         else{
-            $liste = str_split($lots);
+            return false;   
         }
-        foreach($liste as $liste){
-            $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
-            $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
-            $query2->execute();
-            $query2->close();
-        }
-        
-        return true;
     }
 
 

@@ -42,9 +42,7 @@
             $( ".datepicker" ).datetimepicker({
                 minDate:'-1970/01/01',
                 maxDate:'+1970/03/01',
-                showSecond: true, 
-                timeFormat: 'hh:mm:ss:l'
-
+                format: 'Y/m/d h:m:s'
             });
         });  
     </script>
@@ -60,7 +58,7 @@
 		<div class="panel-body">
             
             <?php
-
+            echo $_SESSION["mail"];
             echo('<table><thead><th>Identifiant de lot</th><th>Composition du lot</th><th>Disponible</th><th>Indisponible jusqu\'au</th></thead>');
 
             

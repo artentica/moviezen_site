@@ -128,17 +128,17 @@
 	<link rel="stylesheet" type="text/css" href="../CSS/menu.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
-        <script src="../js/jquery.js"></script>
-
+    <script src="../js/jquery.js"></script>
     <script src="../js/jquery.datetimepicker.js"></script>
 	<script src="../js/menu.js"></script>
     <script>  
         $(function(){
             $( ".datepicker" ).datetimepicker({
-                minDate:'-1970/01/01'
+                minDate:'-1970/01/01',
+                format: 'Y/m/d h:m:s'
             });
             $( document ).ready(function() {
-                $( "#datepicker" ).datetimepicker( "option", "dateFormat", $( this ).val() );    
+                $( "#datepicker" ).datetimepicker( "option", "dateFormat", "yy/MMM/dd hh:mm:ss" );    
             });
         });  
     </script>
