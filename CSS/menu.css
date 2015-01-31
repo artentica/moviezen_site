@@ -28,7 +28,7 @@
 .menu-btn{
     cursor: pointer;
 }
-    #main-nav-hold .main-nav a.nav-btn {
+#main-nav-hold .main-nav a.nav-btn {
      color: #D1DCFF;
       line-height: 90px;
       width: 16%;
@@ -210,7 +210,6 @@ position: relative;
 
 .menu-items ul li{
     text-align: center;
-
 }
 
 .closemenu:hover{
@@ -243,4 +242,10 @@ letter-spacing: 2px;
 text-align: center;
 -webkit-transition: all 0.2s ease-out;
 transition: all 0.2s ease-out;
+}
+
+@media (max-width: 767px){
+.menu-items{
+    top: 70px;
+}
 }

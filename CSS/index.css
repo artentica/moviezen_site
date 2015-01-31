@@ -11,8 +11,7 @@ li{
 }
 
 #banniere{
-    height : 100px;
-    min-width: 100%;
+    width: 100%
 }
 
 #form-register{
