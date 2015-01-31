@@ -103,8 +103,22 @@
         else{
             $commentaires = $_POST["new_projection_commentaires"];
         }
-        
-        modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $_POST["old_projection_nom"]);
+        $nom="";
+        if(!empty($_FILES["new_projection_affiche"])){
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' ); 
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
+            if ( in_array($extension_upload,$extensions_valides) ){
+                $nom = md5(uniqid(rand(), true));
+                $nom = "../Images/".$nom.".".$extension_upload;
+                $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
+            }
+        }
+        modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"]);
+    }
+
+    //ACTIVATION DE PROJECTION
+    if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
+        activateProj($_POST["activ_proj"]);
     }
 
 
@@ -112,7 +126,7 @@
     //GESTION DES LOTS
 
     //AJOUT DE LOTS
-    if(!empty($_POST["add_lot_id"]) && !empty($_POST["add_lot_composition"]) && $_SESSION["authentifie"]){
+    if(!empty($_POST["add_lot_id"]) && !empty($_POST["add_lot_composition"]) && !empty($_POST["add_lot_caution"]) && $_SESSION["authentifie"]){
         $nom="";
         if(!empty($_FILES["add_lot_photo"])){
             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' ); 
@@ -123,7 +137,7 @@
                 $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
             }
         }
-        addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom);
+        addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"]);
     }
 
     //SUPPRESSION DE LOTS
@@ -132,8 +146,18 @@
     }
 
     //MODIFICATION DE LOTS
-    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && $_SESSION["authentifie"]){
-        modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_id_old"]);
+    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
+        $nom="";
+        if(!empty($_FILES["modif_lot_photo"])){
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' ); 
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
+            if ( in_array($extension_upload,$extensions_valides) ){
+                $nom = md5(uniqid(rand(), true));
+                $nom = "../Images/".$nom.".".$extension_upload;
+                $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+            }
+        }
+        modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"]);
     }
    
 
@@ -266,15 +290,15 @@
                             $date_projection = $row["date_projection"];
                             $description = $row["description"];
                             $commentaires = $row["commentaires"];
-                            echo('<form method="post" action="admin.php" id="form-register">
+                            echo('<form method="post" action="admin.php" id="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$nom.'" name="old_projection_nom" id="old_projection_nom"/>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required value="'.$nom.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required value="'.str_replace("'"," ",$nom).'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_release">Date de release : </label></span><input type="date" name="new_projection_release" id="new_projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1" value="'.$date_release.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_date">Date de projection : </label></span><input type="date" name="new_projection_date" id="new_projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1" required value="'.$date_projection.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_description">Description : </label></span><input type="text" name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" aria-describedby="basic-addon1" required value="'.$description.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_commentaires">Commentaires : </label></span><input type="text" name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" aria-describedby="basic-addon1" value="'.$commentaires.'"/></div>
-
-                            <input type="submit" class="btn btn-info" value="Modifier cette projection"/>
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_affiche">Affiche de la projection: </label></span><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="form-control" aria-describedby="basic-addon1"/></div>
+                            <input type="submit" class="btn btn-success" value="Modifier cette projection"/>
                             
                             
                             
@@ -286,7 +310,24 @@
                     
                     
                     echo('
-                        
+                    
+                        <h3>Rendre une projection active</h3>
+                        <form method="post" action="admin.php" id="form-register">
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="activ_proj" id="activ_proj">
+                                ');
+                            $result = recupProj();
+                            while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                            {
+                                $nom = $row["nom"];
+                                $date = $row["date_projection"];
+                                $date = date("d/m/Y", strtotime($date));
+                                echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                            }
+                            $result->close();
+                    echo('
+                            <input type="submit" class="btn btn-warning" value="Activer cette projection"/>
+                            </select></div>
+                        </form>
                         
                         <h3>Supprimer une projection</h3>
                             <p>Attention, cette action est irréversible</p>
@@ -311,6 +352,7 @@
                             <form method="post" action="admin.php" id="form-register" enctype="multipart/form-data">
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_id">Identifiant du lot : </label></span><input name="add_lot_id" id="add_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_composition">Composition du lot: </label></span><input type="textarea" name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" aria-describedby="basic-addon1" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="add_lot_caution" id="add_lot_caution" placeholder="150" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_photo">Photo du lot: </label></span><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control" aria-describedby="basic-addon1"/></div>
                                 <input type="submit" class="btn btn-info" value="Ajouter ce lot"/>
                             </form>
@@ -342,12 +384,13 @@
                         {
                             $id = $row["id"];
                             $composition = $row["composition"];
-                            
-                            echo('<form method="post" action="admin.php" id="form-register">
+                            $caution = $row["caution"];
+                            echo('<form method="post" action="admin.php" id="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_id">Identifiant du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required value="'.$id.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_compo">Date de release : </label></span><input type="text" name="modif_lot_compo" id="modif_lot_compo"  class="form-control" aria-describedby="basic-addon1" value="'.$composition.'"/></div>
-
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150" class="form-control" aria-describedby="basic-addon1" value="'.$caution.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_photo">Photo du lot: </label></span><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="form-control" aria-describedby="basic-addon1"/></div>
                             <input type="submit" class="btn btn-info" value="Modifier ce lot"/>
                             
                             
