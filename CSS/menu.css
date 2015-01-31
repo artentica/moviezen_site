@@ -313,11 +313,6 @@ ul li a.nav-btn:hover {
     transition: all 0.2s ease-out;
 }
 
-.panel{
-    width: 80%;
-    margin: auto;
-    margin-top: 35px;
-}
 
 
 /*  CSS concernant les media queries */
