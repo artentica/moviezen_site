@@ -24,7 +24,7 @@
     width: 100%;
     left: 0px;
     top: 0px;
-    background: #404144; }
+    background: #0C0322; }
 .menu-btn{
     cursor: pointer;
 }
@@ -53,7 +53,7 @@
           font-size: 13px;
           margin: 0px 12px; } }
     a.nav-btn:hover {
-      color: green; } /*EBF3FA*/
+      color: #B193C8; }
   #main-nav-hold .menu-btn {
     width: 25px;
     position: absolute;
@@ -274,4 +274,5 @@ text-shadow:0px 0px 0 rgb(230,230,230),1px -1px 0 rgb(216,216,216),2px -2px 0 rg
 
 #banniere{
     height: 125px;
+    background-image: url("../Images/banner.jpg");
 }
