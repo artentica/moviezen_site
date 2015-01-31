@@ -57,23 +57,26 @@
             <?php
 
             $result = recupProjActive();
-            while ($row = $result->fetch_array(MYSQLI_ASSOC))
-            {
-                $nom = $row["nom"];
-                $date_projection = $row["date_projection"];
-                setlocale (LC_TIME, 'fr_FR','fra');
-                $date_projection = utf8_encode(strftime("%d %B %Y",strtotime($date_projection)));
-                $description  = $row["description"];
-                $commentaires  = $row["commentaires"];
-                $affiche = $row["affiche"];
+            if(!empty($result)){
+                
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $nom = $row["nom"];
+                    $date_projection = $row["date_projection"];
+                    setlocale (LC_TIME, 'fr_FR','fra');
+                    $date_projection = utf8_encode(strftime("%d %B %Y",strtotime($date_projection)));
+                    $description  = $row["description"];
+                    $commentaires  = $row["commentaires"];
+                    $affiche = $row["affiche"];
+                }
+                $result->close();
+                echo('<h1>'.$nom.'</h1>
+                <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest</h3>    
+                <img src="'.$affiche.'" alt="affiche" style="width:400px;height:400px;"/>
+                <p>'.$description.'</p>
+                <p>'.$commentaires.'</p>
+                ');
             }
-            $result->close();
-            echo('<h1>'.$nom.'</h1>
-            <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest</h3>    
-            <img src="'.$affiche.'" alt="affiche" style="width:400px;height:400px;"/>
-            <p>'.$description.'</p>
-            <p>'.$commentaires.'</p>
-            ');
             
 
 

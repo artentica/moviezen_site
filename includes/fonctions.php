@@ -231,14 +231,12 @@
 
     //FONCTION RECUPERANT UNE PROJECTION EN PARTICULIER
     function recupUniqueProj($nom){
-        $nom = protect($nom);
-        $query = 'SELECT * from projections WHERE nom="'.$nom.'"';
+        $query = "SELECT * from projections WHERE nom='".$nom."'";
         return $GLOBALS["bdd"]->query($query);
     }
 
     //FONCTION PERMETTANT D'ACTIVER UNE PROJECTION (MET LA PROJECTION AFFICHEE SUR LA PAGE CINE)
     function activateProj($nom){
-        $nom = protect($nom);
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET active='0' WHERE active='1'");
         $query->execute();
         $query->close();
@@ -258,7 +256,6 @@
 
     //FONCTION D'AJOUT D'UNE PROJECTION A LA BDD
     function addProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche){
-        $nom = protect($nom);
         $date_release = protect($date_release);
         $date_projection = protect($date_projection);
         $description = protect($description);
@@ -266,8 +263,9 @@
         $affiche = protect($affiche);
         $date_release = date("Y-m-d", strtotime($date_release));
         $date_projection = date("Y-m-d", strtotime($date_projection));
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections VALUES(?,?,?,?,?,?)");
-        $query->bind_param('ssssss',$nom,$date_release,$date_projection,$description,$commentaires,$affiche);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections VALUES(?,?,?,?,?,?,?)");
+        $active = 0;
+        $query->bind_param('ssssssi',$nom,$date_release,$date_projection,$description,$commentaires,$affiche, $active);
         $query->execute();
         $query->close();
         return true;
