@@ -4,7 +4,9 @@
 
     connect();
 
-    $_SESSION["emprunteur"]=0;
+    if(empty($_SESSION["emprunteur"])){
+        $_SESSION["emprunteur"]=0;
+    }
     
      if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
      {
@@ -151,16 +153,14 @@
                 echo('
                 <h1>Modifier un emprunt</h1>
                 <form method="post" action="emprunt.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_mail">@ ISEN : </label></span><input type="email" name="modif_mail" id="modif_mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1"/></div>
-                
-                <input type="submit" class="btn btn-success" value="Modifier mon emprunt"/>
+                    <input type="hidden" name="modif_mail" id="modif_mail" value="'.$_SESSION["mail"].'" required/>
+                    <input type="submit" class="btn btn-success" value="Modifier mon emprunt"/>
                 </form>
                 
                 
                 <h1>Annuler un emprunt</h1>
             <form method="post" action="emprunt.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="del_mail">@ ISEN : </label></span><input type="email" name="del_mail" id="del_mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1" required/></div>
-                
+                <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'" required/>
                 <input type="submit" class="btn btn-danger" value="Se désinscrire"/>
             </form>');
                 

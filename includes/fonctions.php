@@ -89,6 +89,7 @@
         $query->execute();
         $query->close();
         $lots = protect($lots);
+        $lots = strtoupper($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
         $date_emprunt = date("Y-m-d H:m:s", strtotime($date_emprunt));
@@ -119,7 +120,7 @@
                 $liste = explode(" ", $lots); 
             }
             else{
-                $liste = str_split($lots);
+                $liste = str_split($lots,2);
             }
             foreach($liste as $liste){
                 $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
