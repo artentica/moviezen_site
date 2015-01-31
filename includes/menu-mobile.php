@@ -17,7 +17,7 @@
 
 				</div><!-- end .menu-items -->
 
-				<div class="menu-bottom"><a href="">00.00.00.00.00</a>  <a href="">CONTACT ME</a> </div>
+				<div class="menu-bottom"><a href="">Contactez nous</a> </div>
 
 			</div><!-- end .menu -->';
         ?>
