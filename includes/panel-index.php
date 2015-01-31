@@ -8,7 +8,7 @@ echo '<div id="main-nav-hold">
                         <a href="views/admin.php" class="nav-btn">Espace Administrateur</a>
                         <a href="views/calendrier.php" class="nav-btn">Calendrier des emprunts</a>
                         <a href="views/projection.php" class="nav-btn">Espace liste de projection</a>
-                        <div class="menu-btn"><a onClick="showMenu()"><span></span><span></span><span></span></a></div>
+                        <div class="menu-btn" onClick="showMenu()"><a><span></span><span></span><span></span></a></div>
 
 		    </nav>
         </div>';

@@ -2,7 +2,7 @@
 
 
             echo'<div class="menu">
-				<div class="closemenu"><a onClick="showMenu()"><img src="Images/close-btn.svg" alt="close" class="svg-raw"/></a></div>
+				<div class="closemenu" onClick="showMenu()"><a><img src="Images/close-btn.svg" alt="close" class="svg-raw"/></a></div>
 
 				<div class="menu-items">
 
