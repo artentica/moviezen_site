@@ -102,7 +102,7 @@
             
             echo('</table>');
 
-            if(!$_SESSION["emprunteur"]){
+            if(!$_SESSION["emprunteur"] && empty($_SESSION["mail"])){
 
                 echo('<h1>Emprunter du matériel</h1>
             <p>Merci de renseigner tout les champs</p>

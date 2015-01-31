@@ -123,14 +123,22 @@
                 $liste = str_split($lots,2);
             }
             foreach($liste as $liste){
-                $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
-                $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
-                $query2->execute();
-                $query2->close();
-                $query2 = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible='0' WHERE id=?");
-                $query2->bind_param('s', $liste);
-                $query2->execute();
-                $query2->close();
+                $verif = "SELECT disponible from lots WHERE id='".$liste."'";
+                $result = $GLOBALS["bdd"]->query($verif);
+                $disponible=false;
+                while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                    $disponible = $row["disponible"];
+                }
+                if($disponible){
+                    $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
+                    $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
+                    $query2->execute();
+                    $query2->close();
+                    $query2 = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible='0' WHERE id=?");
+                    $query2->bind_param('s', $liste);
+                    $query2->execute();
+                    $query2->close();
+                }
             }
             return true;
         }

@@ -15,7 +15,7 @@
     }
 
     if(!empty($_POST["del_mail"])){
-        if(supprInscrit($_POST["del_mail"],$_SESSION["select_projection"])){
+        if(supprInscrit($_SESSION["mail"],$_POST["del_mail"])){
             $_SESSION["inscrit"]=0;
             unset($_SESSION["mail"]);
         }
