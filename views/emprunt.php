@@ -47,9 +47,7 @@
             $( ".datepicker" ).datetimepicker({
                 minDate:'-1970/01/01',
                 maxDate:'+1970/03/01',
-                showSecond: true, 
-                timeFormat: 'hh:mm:ss:l'
-
+                format: 'Y/m/d h:m:s'
             });
         });  
     </script>
@@ -65,9 +63,28 @@
 		<div class="panel-body">
             
             <?php
-
-            echo('<table><thead><th>Identifiant de lot</th><th>Composition du lot</th><th>Disponible</th><th>Indisponible jusqu\'au</th></thead>');
-
+            echo('<table class="table table-striped table-bordered table-hover"><thead><th>Image du lot</th><th>Identifiant de lot</th><th>Composition du lot</th><th>Disponible</th><th>Indisponible jusqu\'au</th></thead>');
+            $result = recupLot();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $id = $row["id"];
+                    $composition = $row["composition"];
+                    $disponible = $row["disponible"];
+                    $indisponible = "/";
+                    if($disponible){
+                        $disponible="Oui";
+                    }else{
+                        $disponible="Non";
+                        $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' ORDER BY `date_retour` DESC LIMIT 1";
+                        $result2 = $GLOBALS["bdd"]->query($query);
+                        while ($row2 = $result2->fetch_array(MYSQLI_ASSOC)){       
+                            $indisponible = $row2["date_retour"];
+                        }
+                    }
+                    $image = $row["image"];
+                    echo('<tr><td><img src="'.$image.'" alt="image" style="width:150px;height:150px"/></td><td>'.$id.'</td><td>'.$composition.'</td><td>'.$disponible.'</td><td>'.$indisponible.'</td></tr>');
+                }
+                $result->close();
             
             echo('</table>');
 

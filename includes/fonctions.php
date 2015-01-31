@@ -91,38 +91,53 @@
         $lots = protect($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
-        $date_emprunt = date("Y-m-d", strtotime($date_emprunt));
-        $date_retour = date("Y-m-d", strtotime($date_retour));
-        if(strpos($lots, ",")!=false){
-            $liste = explode(",", $lots);
-        }
-        else if(strpos($lots, "-")!=false){
-            $liste = explode("-", $lots);
-        }
-        else if(strpos($lots, "/")!=false){
-            $liste = explode("/", $lots);
-        }
-        else if(strpos($lots, " ")!=false){
-            $liste = explode(" ", $lots); 
+        $date_emprunt = date("Y-m-d H:m:s", strtotime($date_emprunt));
+        $date_retour = date("Y-m-d H:m:s", strtotime($date_retour));
+        $date_ajd = date("Y-m-d H:m:s");
+        $date_ajd = new DateTime($date_ajd);
+        $date_ajd = $date_ajd->format('Ymd');
+        $date_emprunt_test = new DateTime($date_emprunt);
+        $date_emprunt_test = $date_emprunt_test->format('Ymd');
+        $date_retour_test = new DateTime($date_retour);
+        $date_retour_test = $date_retour_test->format('Ymd');
+        if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test ){
+            if(strpos($lots, ",")!=false){
+                $liste = explode(",", $lots);
+            }
+            else if(strpos($lots, "-")!=false){
+                $liste = explode("-", $lots);
+            }
+            else if(strpos($lots, "/")!=false){
+                $liste = explode("/", $lots);
+            }
+            else if(strpos($lots, " ")!=false){
+                $liste = explode(" ", $lots); 
+            }
+            else{
+                $liste = str_split($lots);
+            }
+            foreach($liste as $liste){
+                $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
+                $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
+                $query2->execute();
+                $query2->close();
+                $query2 = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible='0' WHERE id=?");
+                $query2->bind_param('s', $liste);
+                $query2->execute();
+                $query2->close();
+            }
+            return true;
         }
         else{
-            $liste = str_split($lots);
+            return false;   
         }
-        foreach($liste as $liste){
-            $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
-            $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
-            $query2->execute();
-            $query2->close();
-        }
-        
-        return true;
     }
 
 
 
     //FONCTION MODIFICATION D'EMPRUNT (UTILISATEUR)
     function modifEmprunt($lots,$date_emprunt,$date_retour,$mail){
-        $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits_lots SET lots=?, date_emprunt=?, date_retour=?, WHERE inscrit_mail=?");
+        $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits_lots SET lots=?, date_emprunt=?, date_retour=? WHERE inscrit_mail=?");
         $lots = protect($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
@@ -224,16 +239,17 @@
 
 
     //FONCTION D'AJOUT D'UNE PROJECTION A LA BDD
-    function addProj($nom,$date_release,$date_projection,$description,$commentaires){
+    function addProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche){
         $nom = protect($nom);
         $date_release = protect($date_release);
         $date_projection = protect($date_projection);
         $description = protect($description);
         $commentaires = protect($commentaires);
+        $affiche = protect($affiche);
         $date_release = date("Y-m-d", strtotime($date_release));
         $date_projection = date("Y-m-d", strtotime($date_projection));
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections VALUES(?,?,?,?,?)");
-        $query->bind_param('sssss',$nom,$date_release,$date_projection,$description,$commentaires);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections VALUES(?,?,?,?,?,?)");
+        $query->bind_param('ssssss',$nom,$date_release,$date_projection,$description,$commentaires,$affiche);
         $query->execute();
         $query->close();
         return true;
@@ -334,11 +350,13 @@
     //FONCTIONS GESTION DES LOTS
 
     //FONCTION D'AJOUT D'UN LOT
-    function addLot($identifiant, $composition){
+    function addLot($identifiant, $composition,$image){
         $identifiant = protect($identifiant);
         $composition = protect($composition);
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?)");
-        $query->bind_param('ss',$identifiant,$composition);
+        $disponible = 1;
+        $image = protect($image);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?,?,?)");
+        $query->bind_param('ssis',$identifiant,$composition,$disponible,$image);
         $query->execute();
         $query->close();
         return true;
@@ -361,8 +379,8 @@
         $identifiant = protect($identifiant);
         $composition = protect($composition);
         $ancien_identifiant = protect($ancien_identifiant);
-        $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET id=?, composition=? WHERE id=?");
-        $query->bind_param('sss',$identifiant,$composition,$ancien_identifiant);
+        $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET id=?, composition=?, image=? WHERE id=?");
+        $query->bind_param('sss',$identifiant,$composition,$image,$ancien_identifiant);
         $query->execute();
         $query->close();
         return true;
