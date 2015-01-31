@@ -35,6 +35,7 @@
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
     <script src="../js/jquery-2.1.3.min.js"></script>
+	<script src="../js/menu.js"></script>
     <script src="../js/jquery.datetimepicker.js"></script>
     <script>  
         $(function(){

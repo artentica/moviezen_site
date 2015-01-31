@@ -128,8 +128,10 @@
 	<link rel="stylesheet" type="text/css" href="../CSS/menu.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
-    <script src="../js/jquery.js"></script>
+        <script src="../js/jquery.js"></script>
+
     <script src="../js/jquery.datetimepicker.js"></script>
+	<script src="../js/menu.js"></script>
     <script>  
         $(function(){
             $( ".datepicker" ).datetimepicker({
