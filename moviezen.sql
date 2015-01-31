@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 26 Janvier 2015 à 09:06
+-- Généré le :  Sam 31 Janvier 2015 à 11:29
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -61,16 +61,22 @@ CREATE TABLE IF NOT EXISTS `inscrits` (
 
 INSERT INTO `inscrits` (`nom`, `prenom`, `tel`, `mail`, `classe`) VALUES
 ('qcfdsgsg', 'dgdgfdfg', '0605080908', 'essai@isen-bretagne.fr', 'CSI3'),
+('aevhsqdnb', 'qkfbzbvaq ', '0600000000', 'f@isen-bretagne.fr', 'CSI3'),
 ('qsejhfbh', 'fqsjbfsbhvbq', '', 'f@ols.fr', 'Cdnsqjhbvc'),
 ('Toique', 'dsqijfdsq', '0205060809', 'fanch@isen.fr', 'CIR3'),
 ('Toque', 'Franc', '', 'fanto@is.fr', 'CSI3'),
+('eqfdsfsf', 'sdfsdf', '0605050505', 'fq@isen-bretagne.fr', 'CSOI3'),
+('sefdsf', 'sdffz', '0505050505', 'ft@isen-bretagne.fr', 'ITII2'),
 ('TOQUe', 'dqsjhfd', '', 'fto@is.fr', 'CIR3'),
 ('dswf;l', 'ds,nqjfnsdz', '', 'ftoque@is.fr', 'csdfsc'),
 ('xfgscv', 'svsvsdv', '0505050505', 'ftoque@isen-bretagne.fr', 'CSI3'),
 ('ouezfbhjvb', 'fsjdhgfvsddkhbv', '', 'ftoque@isen.fr', 'sdkvnhsdqhvc'),
 ('seqfsdf', 'sdfsdf', '0605080905', 'ftoque@laposte.net', 'CSI3'),
+('gaga', 'gaga', '0605080908', 'ga@isen-bretagne.fr', 'CSI'),
 ('efndsfnb', 'fdshbfdszbh', '0205050555', 'isen@isen-bretagne.fr', 'CIR2'),
-('adsdqfsf', 'sdfsfd', '0550500606', 'to@isen-bretagne.fr', 'CSI3');
+('qscfq', 'sfdsfsdf', '0600000000', 'sd@isen-bretagne.fr', 'CSI3'),
+('adsdqfsf', 'sdfsfd', '0550500606', 'to@isen-bretagne.fr', 'CSI3'),
+('qsfdsfdsf', 'dsfsdfd', '0505050505', 'ty@isen-bretagne.fr', 'ITII');
 
 -- --------------------------------------------------------
 
@@ -81,8 +87,8 @@ INSERT INTO `inscrits` (`nom`, `prenom`, `tel`, `mail`, `classe`) VALUES
 CREATE TABLE IF NOT EXISTS `inscrits_lots` (
   `inscrit_mail` varchar(255) COLLATE utf8_bin NOT NULL,
   `lots` varchar(2) COLLATE utf8_bin NOT NULL,
-  `date_emprunt` text COLLATE utf8_bin NOT NULL,
-  `date_retour` text COLLATE utf8_bin NOT NULL,
+  `date_emprunt` datetime NOT NULL,
+  `date_retour` datetime NOT NULL,
   KEY `inscri` (`inscrit_mail`),
   KEY `lot` (`lots`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -92,12 +98,19 @@ CREATE TABLE IF NOT EXISTS `inscrits_lots` (
 --
 
 INSERT INTO `inscrits_lots` (`inscrit_mail`, `lots`, `date_emprunt`, `date_retour`) VALUES
-('ftoque@isen-bretagne.fr', 'F', '1998-05-05', '1999-05-50'),
-('ftoque@isen-bretagne.fr', 'C', '1998-05-05', '1999-05-50'),
-('ftoque@isen-bretagne.fr', 'D', '1998-05-05', '1999-05-50'),
-('to@isen-bretagne.fr', 'F', '2001-05-06', '2015-05-06'),
-('ftoque@isen-bretagne.fr', 'F', '2015-01-16', '2015-01-09'),
-('ftoque@isen-bretagne.fr', 'D', '2015-01-16', '2015-01-09');
+('ftoque@isen-bretagne.fr', 'F', '1998-05-05 00:00:00', '0000-00-00 00:00:00'),
+('ftoque@isen-bretagne.fr', 'D', '1998-05-05 00:00:00', '0000-00-00 00:00:00'),
+('to@isen-bretagne.fr', 'F', '2001-05-06 00:00:00', '2015-05-06 00:00:00'),
+('ftoque@isen-bretagne.fr', 'F', '2015-01-16 00:00:00', '2015-01-09 00:00:00'),
+('ftoque@isen-bretagne.fr', 'D', '2015-01-16 00:00:00', '2015-01-09 00:00:00'),
+('f@isen-bretagne.fr', 'F', '2015-01-30 00:00:00', '2015-01-31 00:00:00'),
+('sd@isen-bretagne.fr', 'D', '2015-01-31 00:00:00', '2015-01-31 00:00:00'),
+('sd@isen-bretagne.fr', 'F', '2015-01-31 00:00:00', '2015-01-31 00:00:00'),
+('ft@isen-bretagne.fr', 'F', '2015-01-31 02:01:21', '2015-01-31 01:01:23'),
+('ft@isen-bretagne.fr', 'D', '2015-01-31 02:01:21', '2015-01-31 01:01:23'),
+('f@isen-bretagne.fr', 'F', '1960-05-06 00:05:00', '1980-05-06 00:05:00'),
+('to@isen-bretagne.fr', 'D', '2015-02-19 09:02:03', '2015-02-27 09:02:05'),
+('ga@isen-bretagne.fr', 'B', '2015-02-11 11:02:00', '2015-02-27 11:02:55');
 
 -- --------------------------------------------------------
 
@@ -108,6 +121,8 @@ INSERT INTO `inscrits_lots` (`inscrit_mail`, `lots`, `date_emprunt`, `date_retou
 CREATE TABLE IF NOT EXISTS `lots` (
   `id` varchar(2) COLLATE utf8_bin NOT NULL,
   `composition` text COLLATE utf8_bin NOT NULL,
+  `disponible` tinyint(1) NOT NULL DEFAULT '1',
+  `image` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -115,10 +130,11 @@ CREATE TABLE IF NOT EXISTS `lots` (
 -- Contenu de la table `lots`
 --
 
-INSERT INTO `lots` (`id`, `composition`) VALUES
-('C', 'Dolly'),
-('D', 'Micro'),
-('F', 'Camera essai222');
+INSERT INTO `lots` (`id`, `composition`, `disponible`, `image`) VALUES
+('B', 'eqsfsdfsf', 0, '../Images/181184c8ce262cf16aced6b111b31902.jpg'),
+('C', 'qedfsfsdf', 1, ''),
+('D', 'Micro', 1, ''),
+('F', 'Camera essai222', 1, '');
 
 -- --------------------------------------------------------
 
@@ -132,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `projections` (
   `date_projection` date NOT NULL,
   `description` text COLLATE utf8_bin NOT NULL,
   `commentaires` text COLLATE utf8_bin NOT NULL,
+  `affiche` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -139,11 +156,11 @@ CREATE TABLE IF NOT EXISTS `projections` (
 -- Contenu de la table `projections`
 --
 
-INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`) VALUES
-('Foxcatcherqedfsdf', '2015-01-14', '2015-01-16', 'Testfzefsdfsf', 'qfsdqfsdfds'),
-('Le magicien d\\''OZ', '2015-01-15', '2015-01-31', 'essafzdfsfsdfc', 'sdfsdgfdsfs'),
-('TESTETS', '2015-01-15', '2015-01-27', 'ESSSSSSSSSSSSSSSSSSSSAI', ''),
-('TTTTTTTTTTTTTTTTTTTTTTTT', '0000-00-00', '0000-00-00', 'TEEEEEEEEEEEEEEEEEE', '');
+INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`) VALUES
+('FAFA', '2015-01-31', '2015-02-12', 'FAFA', 'qddq', '../Images/12b70a583b72d1dee3dd8883779c5650.jpg'),
+('Foxcatcherqedfsdf', '2015-01-14', '2015-01-16', 'Testfzefsdfsf', 'qfsdqfsdfds', ''),
+('TESTETS', '2015-01-15', '2015-01-27', 'ESSSSSSSSSSSSSSSSSSSSAI', '', ''),
+('TTTTTTTTTTTTTTTTTTTTTTTT', '0000-00-00', '0000-00-00', 'TEEEEEEEEEEEEEEEEEE', '', '');
 
 -- --------------------------------------------------------
 
@@ -174,15 +191,15 @@ INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES
 -- Contraintes pour la table `inscrits_lots`
 --
 ALTER TABLE `inscrits_lots`
-  ADD CONSTRAINT `lots_constr` FOREIGN KEY (`lots`) REFERENCES `lots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `inscr_mail_constr` FOREIGN KEY (`inscrit_mail`) REFERENCES `inscrits` (`mail`);
+  ADD CONSTRAINT `inscr_mail_constr` FOREIGN KEY (`inscrit_mail`) REFERENCES `inscrits` (`mail`),
+  ADD CONSTRAINT `lots_constr` FOREIGN KEY (`lots`) REFERENCES `lots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `projections_inscrits`
 --
 ALTER TABLE `projections_inscrits`
-  ADD CONSTRAINT `proj_constr` FOREIGN KEY (`projection`) REFERENCES `projections` (`nom`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `inscr_constr` FOREIGN KEY (`inscrit_mail`) REFERENCES `inscrits` (`mail`);
+  ADD CONSTRAINT `inscr_constr` FOREIGN KEY (`inscrit_mail`) REFERENCES `inscrits` (`mail`),
+  ADD CONSTRAINT `proj_constr` FOREIGN KEY (`projection`) REFERENCES `projections` (`nom`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
