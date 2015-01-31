@@ -16,6 +16,7 @@ session_start();
        <script src="js/menu.js"></script>
         <link rel="stylesheet" type="text/css" href="CSS/menu.css">
 	<link rel="stylesheet" type="text/css" href="CSS/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="CSS/global.css">
 	<script src="js/jquery-2.1.3.min.js"></script>
 </head>
 <body>

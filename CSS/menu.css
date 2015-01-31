@@ -129,7 +129,6 @@
     background: #ffffff;
 }
 
-
 #banniere h1 {
     position: relative;
     font-size: 100px;
@@ -314,7 +313,11 @@ ul li a.nav-btn:hover {
     transition: all 0.2s ease-out;
 }
 
-
+.panel{
+    width: 80%;
+    margin: auto;
+    margin-top: 35px;
+}
 
 
 /*  CSS concernant les media queries */
@@ -345,6 +348,7 @@ ul li a.nav-btn:hover {
         margin: 0px 12px;
     }
 }
+
 
 
 @media (max-width: 800px) {
@@ -393,3 +397,9 @@ ul li a.nav-btn:hover {
     }
 }
 
+@media (max-width: 767px){
+    #banniere h1 {
+        font-size: 60px;
+        padding-top: 25px;
+    }
+}

@@ -1,0 +1,12 @@
+body{
+    background-color: green;
+}
+
+
+@media (max-width: 960px) {
+    .panel{
+        width: 90%;
+        margin: auto;
+        margin-top: 25px;
+    }
+}
