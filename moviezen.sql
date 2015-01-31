@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Sam 31 Janvier 2015 à 14:12
+-- Généré le :  Sam 31 Janvier 2015 à 14:31
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `projections` (
 INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`) VALUES
 ('FAFA', '2015-01-31', '2015-02-12', 'FAFA', 'qddq', '../Images/ab839057d16a858b76e202be4b7082f6.jpg', 1),
 ('Foxcatcherqedfsdf', '2015-01-14', '2015-01-16', 'TEST', 'qfdsfgdsfd', '../Images/ed94783fc491117c9947c807ce66ab19.jpg', 0),
-('LE magicien d\\''OSSSSSSSSSS', '2015-01-31', '2015-03-13', 'Ceci est un essai particulièrement réussi', '', '../Images/3e7ad375b37dc29ca7f5035191c62127.jpg', 0),
+('LE magicien d''OSSSSSSSSSS', '2015-01-31', '2015-03-13', 'Ceci est un essai particulièrement réussi', '', '../Images/3e7ad375b37dc29ca7f5035191c62127.jpg', 0),
 ('TESTETS', '2015-01-15', '2015-01-27', 'ESSSSSSSSSSSSSSSSSSSSAI', '', '', 0),
 ('TTTTTTTTTTTTTTTTTTTTTTTT', '0000-00-00', '0000-00-00', 'TEEEEEEEEEEEEEEEEEE', '', '', 0);
 
