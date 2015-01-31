@@ -162,15 +162,15 @@
     cursor: pointer;
 }
 
-a.nav-btn:hover {
+ul li a.nav-btn:hover {
     color: green;
-}
-
-a.nav-btn:hover {
     text-decoration: none;
 }
 
-
+#main-nav-hold nav a.nav-btn:hover {
+    color: green;
+    text-decoration: none;
+}
 
 .heading-sep {
     width: 55%;
