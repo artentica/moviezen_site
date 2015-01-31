@@ -195,7 +195,11 @@
     </script>
 </head>
 <body>
-    <img src="../Images/moviezen2.jpg" alt="bannière" id="banniere"/>
+    <div id="banniere">
+        <h1>
+            Moviezen
+        </h1>
+    </div>
     <header>
         <?php
        include '../includes/panel-global.php';
