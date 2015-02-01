@@ -1,0 +1,37 @@
+html{
+    text-align: center;
+}
+
+form{
+    text-align: center;
+}
+
+li{
+    text-align: left;
+}
+
+#banniere{
+    width: 100%
+}
+
+#form-register{
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.max{
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.form-label{
+    min-width: 40%;
+    max-width: 40%;
+}
+
+.center{
+    text-align: center;
+    margin: auto;
+    padding: auto;
+}
+

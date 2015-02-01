@@ -1,0 +1,452 @@
+
+/*  CSS concernant les identifiants */
+/*#########################################################################################################################################################################################################################################################################################"*/
+
+#main-nav-hold {
+    background: #001A98;
+    font-size: 16px;
+    height: 90px;
+    position: relative;
+    text-align: center;
+    /*text-transform: uppercase;*/
+}
+
+
+#main-nav-hold .vr-btn {
+    height: 35px;
+    width: 35px;
+    position: absolute;
+    left: 25px;
+    top: 27px;
+}
+
+#main-nav-hold .main-nav {
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    -ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    border-bottom: 1px solid #060112;
+    height: 90px;
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    background: #0C0322;
+}
+
+#main-nav-hold .main-nav a.nav-btn {
+    color: #D1DCFF;
+    line-height: 90px;
+    width: 15%;
+}
+
+#main-nav-hold .menu-btn {
+    width: 25px;
+    position: absolute;
+    right: 30px;
+    top: 32px;
+    display: block;
+}
+
+#main-nav-hold .menu-btn:hover {
+    top: 28px;
+}
+
+
+
+#main-nav-hold .menu-btn span {
+    display: block;
+    height: 2px;
+    background: #ffffff;
+    margin: 4px 0px;
+}
+
+
+#main-nav-hold .menu-btn:hover {
+    top: 28px;
+}
+
+
+#main-nav-hold .menu-btn:hover span {
+    margin: 6px 0px;
+}
+
+
+#main-nav-hold .fixed-nav {
+    position: fixed;
+}
+
+
+#main-nav-hold .main-nav-open {
+    left: -600px;
+}
+
+
+#main-nav-hold .nav-light-gray {
+    background: #ECECEC;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+
+#main-nav-hold .nav-light-gray .vr-btn svg path {
+    fill: #424242;
+}
+
+
+#main-nav-hold .nav-light-gray a.nav-btn {
+    color: #969696;
+}
+
+
+#main-nav-hold .nav-light-gray a.active {
+    color: #424242;
+}
+
+
+#main-nav-hold .nav-light-gray .menu-btn span {
+    background: #424242;
+}
+
+
+#main-nav-hold .nav-dark-gray {
+    background: #2a2a2a;
+    border-bottom: 1px solid #191919;
+}
+
+
+#main-nav-hold .nav-dark-gray .vr-btn svg path {
+    fill: #ffffff;
+}
+
+
+#main-nav-hold .nav-dark-gray a.nav-btn {
+    color: #969696;
+}
+
+
+#main-nav-hold .nav-dark-gray .menu-btn span {
+    background: #ffffff;
+}
+
+#banniere h1 {
+    position: relative;
+    font-size: 100px;
+    margin: auto;
+    padding-top: 12px;
+    letter-spacing: 5px;
+    font-family: 'Lobster', helvetica, arial;
+}
+
+
+#banniere h1 {
+    text-decoration: none;
+    color: #666;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 1)), color-stop(50%, rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, 1)));
+    text-shadow: 0px 0px 0 rgb(230, 230, 230), 1px -1px 0 rgb(216, 216, 216), 2px -2px 0 rgb(202, 202, 202), 3px -3px 0 rgb(188, 188, 188), 4px -4px 3px rgba(0, 0, 0, 0.45), 4px -4px 1px rgba(0, 0, 0, 0.5), 0px 0px 3px rgba(0, 0, 0, .2);
+}
+
+
+#banniere {
+    height: 125px;
+    background-image: url("../Images/banner.jpg");
+}
+
+
+/*  CSS concernant les classes */
+/*#########################################################################################################################################################################################################################################################################################"*/
+
+
+.menu-btn {
+    cursor: pointer;
+}
+
+ul li a.nav-btn:hover {
+    color: #F2ECF7;
+    text-decoration: none;
+}
+
+#main-nav-hold nav a.nav-btn:hover {
+    color: #F2ECF7;
+    text-decoration: none;
+}
+
+.heading-sep {
+    width: 55%;
+    height: 2px;
+    background: #ffffff;
+    margin: 25px 0px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+.menu-items {
+    text-align: center;
+    width: 100%;
+}
+
+
+.menu-open {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: -webkit-transform 0.4s, opacity 0.4s;
+    transition: transform 0.4s, opacity 0.4s;
+}
+
+
+.menu-open .menu-items {
+    transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+    -webkit-transition: -webkit-transform 0.4s;
+    transition: transform 0.4s;
+}
+
+
+.menu-open .menu-bottom a:hover{
+    color: #F3F4FA;
+    text-decoration: none;
+}
+.menu-open .menu-bottom a{
+    color: #B9A7E4;
+    font-size: 20px;
+    letter-spacing: 4px;
+}
+
+.menu-open .menu-bottom {
+    bottom: 0px;
+}
+
+
+.menu .menu-items ul {
+    list-style: none;
+    padding: 0;
+}
+
+
+.menu .menu-items a {
+    color: #D8DFE5;
+    text-decoration: none;
+    font-size: 30px;
+    line-height: 30px;
+    font-weight: 700;
+}
+
+
+.menu {
+    font-family: "museo-sans", sans-serif;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: #0C0322;;
+    z-index: 200;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: -webkit-transform 0.4s, opacity 0.4s, visibility 0s 0.4s;
+    transition: transform 0.4s, opacity 0.4s, visibility 0s 0.4s;
+}
+
+
+.menu-open {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: -webkit-transform 0.4s, opacity 0.4s;
+    transition: transform 0.4s, opacity 0.4s;
+}
+
+
+.menu-items {
+    top: 200px;
+    position: relative;
+    transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+    -webkit-transition: -webkit-transform 0.4s;
+    transition: transform 0.4s;
+}
+
+
+.menu-open .menu-bottom {
+    bottom: 0px;
+}
+
+
+.menu-items ul li {
+    text-align: center;
+}
+
+
+.closemenu:hover {
+    opacity: 0.5;
+}
+
+
+.closemenu {
+    cursor: pointer;
+    float: right;
+    position: absolute;
+    font-size: 21px;
+    top: 15px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    right: 15px;
+}
+
+
+.menu-bottom {
+    background: #100037;
+    position: absolute;
+    line-height: 80px;
+    width: 100%;
+    left: 0px;
+    bottom: -80px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-align: center;
+    -webkit-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+#decobtn:hover{
+
+    color: #F2ECF7;
+    border-color: #0C0322;
+    background-color: #0C0322;
+}
+
+
+#decobtn a,#decobtn a:hover,#decobtn a:focus,#decobtn a:active{
+    color: inherit;
+}
+
+#decoInAdmin a,#decoInAdmin a:hover,#decoInAdmin a:focus,#decoInAdmin a:active{
+    color: inherit;
+}
+
+#decoInAdmin{
+    position: absolute;
+    top:30px;
+    left:30px;
+    color: #D1DCFF;
+    border-color: #0C0322;
+    background-color: #0C0322;
+}
+
+#decobtn{
+     color: #D1DCFF;
+    border-color: #0C0322;
+    background-color: #0C0322;
+    position: absolute;
+    top: 28px;
+    right: 2%;
+    width: 4%;
+}
+
+@media(max-width:800px){
+    #decobtn{
+        color: #D1DCFF;
+        border-color: #0C0322;
+        background-color: #0C0322;
+        position: absolute;
+        top: 28px;
+        left: 4%;
+        width: 4%;
+    }
+}
+
+@media(max-width:768px){
+        #decobtn{
+            top:18px;
+            width: initial;
+        }
+}
+
+/*  CSS concernant les media queries */
+/*#########################################################################################################################################################################################################################################################################################"*/
+
+@media (max-width: 1050px) {
+    #main-nav-hold .main-nav a.nav-btn {
+        width: 33%;
+    }
+}
+
+
+@media (max-width: 1480px) {
+    #main-nav-hold .main-nav a.nav-btn {
+        font-size: 15px;
+        margin: 0px;
+        width: 31%;
+    }
+    #main-nav-hold .main-nav a.nav-btn {
+        line-height: 45px;
+    }
+}
+
+
+@media (max-width: 800px) {
+    #main-nav-hold .main-nav a.nav-btn {
+        font-size: 13px;
+        margin: 0px 12px;
+    }
+}
+
+
+
+@media (max-width: 800px) {
+    #main-nav-hold>nav .nav-btn {
+        display: none;
+    }
+    #main-nav-hold .menu-btn {
+        display: block;
+    }
+}
+
+
+@media (min-width: 800px) {
+    #main-nav-hold .menu-btn {
+        display: none;
+    }
+    #main-nav-hold>nav .nav-btn {
+        display: inline-block;
+    }
+}
+
+
+
+
+
+@media (max-width: 767px) {
+    #main-nav-hold .main-nav {
+        height: 70px;
+    }
+    #main-nav-hold {
+        height: 70px;
+    }
+    #main-nav-hold .menu-btn {
+        top: 22px;
+    }
+    #main-nav-hold .menu-btn:hover {
+        top: 18px;
+    }
+}
+
+
+
+@media (max-width: 767px) {
+    .menu-items {
+        top: 70px;
+    }
+}
+
+@media (max-width: 767px){
+    #banniere h1 {
+        font-size: 60px;
+        padding-top: 25px;
+    }
+}
