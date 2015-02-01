@@ -33,7 +33,6 @@
         $classe = protect($classe);
         $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
         $query->execute();
-        $projection = protect($projection);
         $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO projections_inscrits VALUES (?, ?)");
         $query2->bind_param('ss', $mail, $projection);
         $query2->execute();
@@ -88,8 +87,6 @@
         $query->bind_param('sssss', $nom,$prenom,$tel,$mail,$classe);
         $query->execute();
         $query->close();
-        $lots = protect($lots);
-        $lots = strtoupper($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
         $date_emprunt = date("Y-m-d H:m:s", strtotime($date_emprunt));
@@ -105,24 +102,8 @@
         $date_emprunt_test = $date_emprunt_test->format('Ymd');
         $date_retour_test = new DateTime($date_retour);
         $date_retour_test = $date_retour_test->format('Ymd');
-        
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
-            if(strpos($lots, ",")!=false){
-                $liste = explode(",", $lots);
-            }
-            else if(strpos($lots, "-")!=false){
-                $liste = explode("-", $lots);
-            }
-            else if(strpos($lots, "/")!=false){
-                $liste = explode("/", $lots);
-            }
-            else if(strpos($lots, " ")!=false){
-                $liste = explode(" ", $lots); 
-            }
-            else{
-                $liste = str_split($lots,2);
-            }
-            foreach($liste as $liste){
+            foreach($lots as $liste){
                 $verif = "SELECT disponible from lots WHERE id='".$liste."'";
                 $result = $GLOBALS["bdd"]->query($verif);
                 $disponible=false;
@@ -197,7 +178,7 @@
         $projection = protect($projection);
         $query = "SELECT * from projections_inscrits WHERE projection='".$projection."'";
         $result = $GLOBALS["bdd"]->query($query);
-        echo('<table id="table-style" data-toggle="table"><thead><tr><th>Numéro</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
+        echo('<table class="table table-striped table-bordered"><thead><tr><th>Numéro</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
         $table = "<html><body><table><tr><td><b>Nom</b></td><td><b>Prenom</b></td><td><b>Classe</b></td></tr>";
         $i=1;
         while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -243,6 +224,12 @@
         return $GLOBALS["bdd"]->query($query);
     }
 
+    //FONCTION RECUPERANT TOUTES LES PROJECTIONS EXISTANTES PAR ORDRE DE PROJECTION DESCENDANT
+    function recupProjDesc(){
+        $query = "SELECT * from projections ORDER BY date_projection DESC";
+        return $GLOBALS["bdd"]->query($query);
+    }
+
     //FONCTION RECUPERANT UNE PROJECTION EN PARTICULIER
     function recupUniqueProj($nom){
         $query = "SELECT * from projections WHERE nom='".$nom."'";
@@ -258,6 +245,7 @@
         $query->bind_param('s',$nom);
         $query->execute();
         $query->close();
+        return true;
     }
 
     //FONCTION RECUPERANT LA PROJECTION ACTIVE ACTUELLE
@@ -424,7 +412,7 @@
 
     //FONCTION DE RECUPERATION DE TOUT LES LOTS
     function recupLot(){
-        $query = "SELECT * from lots";
+        $query = "SELECT * from lots ORDER BY id";
         return $GLOBALS["bdd"]->query($query);
     }
 

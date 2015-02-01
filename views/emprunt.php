@@ -38,15 +38,16 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
-
+    <link rel="stylesheet" href="../CSS/bootstrap-multiselect.css" type="text/css"/>
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
     <?php
         include '../includes/include_on_all_page.php';
     ?>
     <script src="../js/jquery-2.1.3.min.js"></script>
-
+    <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.datetimepicker.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
     <script>  
         $(function(){
             $( ".datepicker" ).datetimepicker({
@@ -55,6 +56,13 @@
                 format: 'Y/m/d h:m:s'
             });
         });  
+    </script>
+    
+    <!-- Initialize the multiselect: -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#lots').multiselect();
+        });
     </script>
 </head>
 <body>
@@ -112,7 +120,20 @@
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="tel">Tel (portable de préférence) : </label></span><input type="tel" name="tel" id="tel" placeholder="0600000000" class="form-control" aria-describedby="basic-addon1" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="CIR3" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="lots">Lots : </label></span><input type="text" name="lots" id="lots" placeholder="A,K,L,C,...." class="form-control" aria-describedby="basic-addon1"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
+                ');
+                //<div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="lots">Lots : </label></span><input type="text" name="lots" id="lots" placeholder="A,K,L,C,...." class="form-control" aria-describedby="basic-addon1"/></div>
+                
+                $result = recupLot();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $id = $row["id"];
+                    $composition = $row["composition"];
+                    echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                }
+                $result->close();
+                
+                echo('</select></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_emprunt">Date d\'emprunt : </label></span><input type="date" name="date_emprunt" id="date_emprunt" placeholder="AAAA-MM-DD" class="form-control datepicker" aria-describedby="basic-addon1" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_retour">Date de retour : </label></span><input type="date" name="date_retour" id="date_retour" placeholder="AAAA-MM-DD" class="form-control datepicker" aria-describedby="basic-addon1" required/></div>
                 
@@ -152,8 +173,8 @@
             }
             else{
                 echo('
-                <h1>Modifier un emprunt</h1>
-                <form method="post" action="emprunt.php" id="form-register">
+                <h1 id="modifie_emprunt">Modifier un emprunt</h1>
+                <form method="post" action="emprunt.php#modifie_emprunt" id="form-register">
                     <input type="hidden" name="modif_mail" id="modif_mail" value="'.$_SESSION["mail"].'" required/>
                     <input type="submit" class="btn btn-success" value="Modifier mon emprunt"/>
                 </form>

@@ -48,7 +48,7 @@
                 <?php 
 
                 
-                $result = recupProj();
+                $result = recupProjDesc();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
                     $nom = $row["nom"];
