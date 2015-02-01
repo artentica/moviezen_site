@@ -9,7 +9,7 @@ echo '<div id="main-nav-hold">
 
 
 if(!empty($_SESSION["authentifie"])){
-    echo'<button title="Deconnexion button" type="button" class="btn" id="decobtn"><a href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a></button>';
+    echo'<a  title="Deconnexion button" type="button" class="btn" id="decobtn" href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>';
 }
 
 

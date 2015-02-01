@@ -36,7 +36,10 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
+<!--
     <link rel="stylesheet" href="../CSS/bootstrap-multiselect.css" type="text/css"/>
+-->
+    <link rel="stylesheet" href="../CSS/chosen.css" type="text/css"/>
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
     <?php
@@ -45,7 +48,10 @@
     <script src="../js/jquery-2.1.3.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.datetimepicker.js"></script>
+<!--
     <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
+-->
+    <script type="text/javascript" src="../js/chosen.jquery.js"></script>
     <script>  
         $(function(){
             $( ".datepicker" ).datetimepicker({
@@ -136,7 +142,7 @@
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="tel">Tel (portable de préférence) : </label></span><input type="tel" name="tel" id="tel" placeholder="0600000000" class="form-control" aria-describedby="basic-addon1" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0600000000" class="form-control" aria-describedby="basic-addon1" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="CIR3" class="form-control" aria-describedby="basic-addon1" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
                 ');
@@ -215,7 +221,11 @@
             
 		</div>
 	</div>
-    
+<script>
+    $("#lots").chosen({
+        placeholder_text_multiple:"Sélectionnez le matériel à emprunter",
+    });
+</script>
     
 </body>
 </html>
