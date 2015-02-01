@@ -109,7 +109,8 @@ include_once("../includes/function_global.php");
                 $result->close();
                 echo('
                 </select></div>
-                <input type="submit" class="btn btn-success" value="S\'inscrire pour le film"/>
+                <input type="submit" class="btn
+            btn-lg inscrval" id="save_cine" value="S\'inscrire pour le film"/>
             </form>
             
             ');
@@ -120,7 +121,7 @@ include_once("../includes/function_global.php");
                 echo('<h1 id="inscr">Se désinscrire de la projection</h1>
             <form method="post" action="cine.php" id="form-register">
                 <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'"/>
-                <input type="submit" class="btn btn-danger" value="Se désinscrire"/>
+                <input type="submit" class="inscrval btn btn-danger btn-lg" id="save_cine" value="Se désinscrire"/>
             </form>');
                 
             }

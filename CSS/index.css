@@ -15,10 +15,15 @@ li{
 }
 
 #form-register{
-    min-width: 100%;
-    max-width: 100%;
+    width: 80%;
+    margin: auto;
 }
 
+@media(max-width:760px){
+    #form-register{
+        width: 90%;
+    }
+}
 .max{
     min-width: 100%;
     max-width: 100%;

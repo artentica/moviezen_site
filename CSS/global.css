@@ -6,6 +6,41 @@ body{
     position: relative;
 }
 
+.input-group-addon label{
+    color: rgba(12, 3, 34, 0.8);
+}
+
+.inscrval{
+        margin-top: 25px;
+}
+
+#save_cine{
+
+    color: #FFF;
+    background-color: rgba(48, 21, 61, 0.64);
+    border-color: rgba(48, 21, 61, 0.68);
+}
+
+.input-group-addon{
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1;
+    text-align: center;
+    background-color: #D8D3E0;
+    border: 1px solid #735C7B;
+    border-radius: 4px;
+}
+@media (max-width: 1150px) {
+    .input-group-addon{
+        padding: 6px 6px;
+    }
+
+}
+.input-group{
+    margin-top: 10px;
+}
+
 .panel{
     width: 80%;
     margin: auto;
@@ -60,5 +95,10 @@ p, li {
 @media (max-width: 760px) {
     #form-register span{
         width:20%;
+    }
+}
+@media (max-width: 400px) {
+    #form-register span{
+        width:30%;
     }
 }
