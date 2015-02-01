@@ -120,6 +120,9 @@
                     $query2->execute();
                     $query2->close();
                 }
+                else{
+                    echo('Le lot '.$liste.' n\'est actuellement pas disponible et n\'a donc pas été emprunté.');    
+                }
             }
             return true;
         }
@@ -146,8 +149,15 @@
     
     //FONCTION SUPPRESSION D'UN EMPRUNT(UTILISATEUR)
     function supprEmprunt($mail){
-        $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=?");
         $mail = protect($mail);
+        $result = $GLOBALS["bdd"]->query("SELECT lots FROM inscrits_lots WHERE inscrit_mail='".$mail."'");
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)){    
+            $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible='1' WHERE id=?");
+            $query->bind_param('s',$row["lots"]);
+            $query->execute();
+            $query->close();
+        }
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=?");
         $query->bind_param('s',$mail);
         $query->execute();
         $query->close();
