@@ -409,6 +409,20 @@
     }
 
 
+    //FONCTION GERANT LA RENDU DES LOTS
+    function renduLot($identifiant){
+        $identifiant = protect($identifiant);
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE lots=?");
+        $query->bind_param('s',$identifiant);
+        $query->execute();
+        $query->close();
+        $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible=1  WHERE id=?");
+        $query->bind_param('s',$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
 
     //FONCTION DE RECUPERATION DE TOUT LES LOTS
     function recupLot(){

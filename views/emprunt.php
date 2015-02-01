@@ -80,7 +80,7 @@
 		<div class="panel-body">
             
             <?php
-            echo('<table class="table table-striped table-bordered table-hover"><thead><th>Image du lot</th><th>Identifiant de lot</th><th>Composition du lot</th><th>Disponible</th><th>Indisponible jusqu\'au</th><th>Caution du lot (en euros)</th></thead>');
+            echo('<table class="table table-bordered table-hover"><thead><th>Image du lot</th><th>Identifiant de lot</th><th>Composition du lot</th><th>Disponible</th><th>Indisponible jusqu\'au</th><th>Caution du lot (en euros)</th></thead>');
             $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
