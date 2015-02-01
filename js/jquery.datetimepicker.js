@@ -690,11 +690,12 @@
 			lazyInitTimer = 0,
 			createDateTimePicker,
 			destroyDateTimePicker,
+			_xdsoft_datetime,
 
 			lazyInit = function (input) {
 				input
 					.on('open.xdsoft focusin.xdsoft mousedown.xdsoft', function initOnActionCallback(event) {
-						if (input.is(':disabled') || input.data('xdsoft_datetimepicker')) {
+						if (input.is(':disabled') || input.is(':hidden') || !input.is(':visible') || input.data('xdsoft_datetimepicker')) {
 							return;
 						}
 						clearTimeout(lazyInitTimer);
@@ -734,8 +735,7 @@
 				current_time_index,
 				setPos,
 				timer = 0,
-				timer1 = 0,
-				_xdsoft_datetime;
+				timer1 = 0;
 
 			mounth_picker
 				.find('.xdsoft_month span')
@@ -989,28 +989,16 @@
 					input
 						.off('blur.xdsoft')
 						.on('blur.xdsoft', function () {
-						  if (options.allowBlank && !$.trim($(this).val()).length) {
-						    $(this).val(null);
-						    datetimepicker.data('xdsoft_datetime').empty();
-						  } else if (!Date.parseDate($(this).val(), options.format)) {
-						    var splittedHours   = +([$(this).val()[0], $(this).val()[1]].join('')),
-						        splittedMinutes = +([$(this).val()[2], $(this).val()[3]].join(''));
-						    
-						    // parse the numbers as 0312 => 03:12
-						    if(!options.datepicker && options.timepicker && splittedHours >= 0 && splittedHours < 24 && splittedMinutes >= 0 && splittedMinutes < 60) {
-						      $(this).val([splittedHours, splittedMinutes].map(function(item) {
-						        return item > 9 ? item : '0' + item
-						      }).join(':'));
-						    } else {
-						      $(this).val((_xdsoft_datetime.now()).dateFormat(options.format));
-						    }
-						    
-						    datetimepicker.data('xdsoft_datetime').setCurrentTime($(this).val());
-						  } else {
-						    datetimepicker.data('xdsoft_datetime').setCurrentTime($(this).val());
-						  }
-						  
-						  datetimepicker.trigger('changedatetime.xdsoft');
+							if (options.allowBlank && !$.trim($(this).val()).length) {
+								$(this).val(null);
+								datetimepicker.data('xdsoft_datetime').empty();
+							} else if (!Date.parseDate($(this).val(), options.format)) {
+								$(this).val((_xdsoft_datetime.now()).dateFormat(options.format));
+								datetimepicker.data('xdsoft_datetime').setCurrentTime($(this).val());
+							} else {
+								datetimepicker.data('xdsoft_datetime').setCurrentTime($(this).val());
+							}
+							datetimepicker.trigger('changedatetime.xdsoft');
 						});
 				}
 				options.dayOfWeekStartPrev = (options.dayOfWeekStart === 0) ? 6 : options.dayOfWeekStart - 1;
@@ -1370,7 +1358,7 @@
 								classes.push('xdsoft_today');
 							}
 
-							if (start.getDay() === 0 || start.getDay() === 6 || ~options.weekends.indexOf(start.dateFormat(options.formatDate))) {
+							if (start.getDay() === 0 || start.getDay() === 6 || options.weekends.indexOf(start.dateFormat(options.formatDate)) === -1) {
 								classes.push('xdsoft_weekend');
 							}
 
@@ -1414,11 +1402,9 @@
 							h = parseInt(now.getHours(), 10);
 							now.setMinutes(m);
 							m = parseInt(now.getMinutes(), 10);
-							var optionDateTime = new Date(_xdsoft_datetime.currentTime)
-							optionDateTime.setHours(h);
-							optionDateTime.setMinutes(m);
+
 							classes = [];
-							if((options.minDateTime !== false && options.minDateTime > optionDateTime) || (options.maxTime !== false && _xdsoft_datetime.strtotime(options.maxTime).getTime() < now.getTime()) || (options.minTime !== false && _xdsoft_datetime.strtotime(options.minTime).getTime() > now.getTime())) {
+							if ((options.maxTime !== false && _xdsoft_datetime.strtotime(options.maxTime).getTime() < now.getTime()) || (options.minTime !== false && _xdsoft_datetime.strtotime(options.minTime).getTime() > now.getTime())) {
 								classes.push('xdsoft_disabled');
 							}
 							if ((options.initTime || options.defaultSelect || datetimepicker.data('changed')) && parseInt(_xdsoft_datetime.currentTime.getHours(), 10) === parseInt(h, 10) && (options.step > 59 || Math[options.roundTime](_xdsoft_datetime.currentTime.getMinutes() / options.step) * options.step === parseInt(m, 10))) {
@@ -1734,12 +1720,12 @@
 			input
 				.data('xdsoft_datetimepicker', datetimepicker)
 				.on('open.xdsoft focusin.xdsoft mousedown.xdsoft', function (event) {
-					if (input.is(':disabled') || (input.data('xdsoft_datetimepicker').is(':visible') && options.closeOnInputClick)) {
+					if (input.is(':disabled') || input.is(':hidden') || !input.is(':visible') || (input.data('xdsoft_datetimepicker').is(':visible') && options.closeOnInputClick)) {
 						return;
 					}
 					clearTimeout(timer);
 					timer = setTimeout(function () {
-						if (input.is(':disabled')) {
+						if (input.is(':disabled') || input.is(':hidden') || !input.is(':visible')) {
 							return;
 						}
 

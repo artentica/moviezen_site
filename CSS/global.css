@@ -1,6 +1,7 @@
 body{
-   background-color: #D2D0D8
-}
+background-color: #E6E6E6;
+background-image: linear-gradient(-45deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.07) );
+background-size: 7px;}
 
 .panel-body{
     position: relative;
@@ -21,6 +22,10 @@ body{
     border-color: rgba(48, 21, 61, 0.68);
 }
 
+/*.search-field{
+    height:32px;
+}*/
+
 .input-group-addon{
     padding: 6px 12px;
     font-size: 14px;
@@ -37,6 +42,11 @@ body{
     }
 
 }
+
+.select2 .input-group{
+    margin:0;
+}
+
 .input-group{
     margin-top: 10px;
 }
@@ -47,7 +57,8 @@ body{
     margin-top: 35px;
     border-color: rgba(10, 8, 61, 0.92);
     border-width: 2px;
-    background-color: rgba(4, 4, 32, 0.63);
+    background-repeat: repeat;
+background: url('../Images/metal.png');
     border-radius: 8px;
     color: #E8E7EC
 }
@@ -77,6 +88,8 @@ p, li {
     width: 90%;
 }*/
 
+
+
 #form-register span{
     width:10%;
 }
@@ -101,4 +114,10 @@ p, li {
     #form-register span{
         width:30%;
     }
+}
+.selection span{
+    width: initial !important;
+}
+li.select2-selection__choice{
+    color:#555
 }
