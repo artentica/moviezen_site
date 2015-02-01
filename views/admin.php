@@ -110,7 +110,7 @@ include_once("../includes/function_global.php");
                 if($_SESSION["authentifie"]){
                     
                     echo('
-                    <button title="Deconnexion button" type="button" class="btn" id="decoInAdmin"><a href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a></button>
+                    <a title="Deconnexion button" type="button" class="btn" id="decoInAdmin" href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
                     <h1>Gestion des administrateurs</h1>
                     
                         <h3 id="mdpchange">Modifier votre mot de passe :</h3>
