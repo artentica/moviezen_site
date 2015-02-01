@@ -325,6 +325,19 @@ ul li a.nav-btn:hover {
     color: inherit;
 }
 
+#decoInAdmin a,#decoInAdmin a:hover,#decoInAdmin a:focus,#decoInAdmin a:active{
+    color: inherit;
+}
+
+#decoInAdmin{
+    position: absolute;
+    top:30px;
+    left:30px;
+    color: #D1DCFF;
+    border-color: #0C0322;
+    background-color: #0C0322;
+}
+
 #decobtn{
      color: #D1DCFF;
     border-color: #0C0322;

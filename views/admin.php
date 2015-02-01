@@ -110,11 +110,7 @@ include_once("../includes/function_global.php");
                 if($_SESSION["authentifie"]){
                     
                     echo('
-                    <h2>Se déconnecter</h2>
-                        <form method="post" action="admin.php" id="form-register">
-                            <input type="hidden" name="deco" id="deco" value="1"/>
-                            <input type="submit" class="btn btn-danger" value="Se déconnecter"/>
-                        </form>
+                    <button title="Deconnexion button" type="button" class="btn" id="decoInAdmin"><a href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a></button>
                     <h1>Gestion des administrateurs</h1>
                     
                         <h3 id="mdpchange">Modifier votre mot de passe :</h3>

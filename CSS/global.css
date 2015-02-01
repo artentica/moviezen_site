@@ -2,6 +2,9 @@ body{
    background-color: #D2D0D8
 }
 
+.panel-body{
+    position: relative;
+}
 
 .panel{
     width: 80%;
