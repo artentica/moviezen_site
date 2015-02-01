@@ -54,10 +54,14 @@
                     $caution = $row["caution"];
                     $indisponible = "/";
                     if($disponible){
-                        $disponible="Oui";
+                        $disponible=$disponible='<button type="button" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-ok" style="color:green"></span> Disponible
+</button>';;
                         $class="success";
                     }else{
-                        $disponible="Non";
+                        $disponible='<button type="button" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-remove" style="color:red"></span> Indisponible
+</button>';
                         $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' ORDER BY `date_retour` DESC LIMIT 1";
                         $result2 = $GLOBALS["bdd"]->query($query);
                         while ($row2 = $result2->fetch_array(MYSQLI_ASSOC)){    
@@ -68,7 +72,7 @@
                         $class="danger";
                     }
                     $image = $row["image"];
-                    echo('<tr><td><img src="'.$image.'" alt="image" style="width:150px;height:150px"/></td><td>'.$id.'</td><td>'.$composition.'</td><td class="'.$class.'">'.$disponible.'</td><td>'.$indisponible.'</td><td>'.$caution.'</td>');
+                    echo('<tr><td><img src="'.$image.'" alt="image" style="width:150px;height:150px"/></td><td >'.$disponible.'</td><td>'.$id.'</td><td>'.$composition.'</td><td>'.$indisponible.'</td><td>'.$caution.'</td>');
                     if(!empty($_SESSION["authentifie"])){
                         if($_SESSION["authentifie"]){
                             echo('<td><form action="calendrier.php" method="post">

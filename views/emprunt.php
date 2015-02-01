@@ -7,16 +7,6 @@
     if(empty($_SESSION["emprunteur"])){
         $_SESSION["emprunteur"]=0;
     }
-    
-     if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
-     {
-        
-             if(ajoutEmprunt($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
-                $_SESSION["mail"]=protect($_POST["mail"]);
-                $_SESSION["emprunteur"]=1;
-             }
-        
-     }
 
     if(!empty($_POST["del_mail"])){
         if(supprEmprunt($_POST["del_mail"])){
@@ -25,6 +15,14 @@
         }
     }
 
+    if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
+    {
+        if(ajoutEmprunt($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
+            $_SESSION["mail"]=protect($_POST["mail"]);
+            $_SESSION["emprunteur"]=1;
+        }
+        
+    }
     
 ?>
 <!doctype html>
@@ -78,9 +76,25 @@
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
+            <!-- 
+
+
+
+
+
+            ESPACE POUR LE CALENDRIER
+
+
+
+
+
+
+
+            -->
+            
             
             <?php
-            echo('<table class="table table-bordered table-hover"><thead><th>Image du lot</th><th>Identifiant de lot</th><th>Composition du lot</th><th>Disponible</th><th>Indisponible jusqu\'au</th><th>Caution du lot (en euros)</th></thead>');
+            echo('<table class="table table-bordered table-hover"><thead><th>Image du lot</th><th>Disponible</th><th>Identifiant de lot</th><th>Composition du lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot (en euros)</th></thead>');
             $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -90,10 +104,14 @@
                     $caution = $row["caution"];
                     $indisponible = "/";
                     if($disponible){
-                        $disponible="Oui";
+                        $disponible='<button type="button" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-ok" style="color:green"></span> Disponible
+</button>';
                         $class="success";
                     }else{
-                        $disponible="Non";
+                        $disponible='<button type="button" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-remove" style="color:red"></span> Indisponible
+</button>';
                         $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' ORDER BY `date_retour` DESC LIMIT 1";
                         $result2 = $GLOBALS["bdd"]->query($query);
                         while ($row2 = $result2->fetch_array(MYSQLI_ASSOC)){    
@@ -104,7 +122,7 @@
                         $class="danger";
                     }
                     $image = $row["image"];
-                    echo('<tr><td><img src="'.$image.'" alt="image" style="width:150px;height:150px"/></td><td>'.$id.'</td><td>'.$composition.'</td><td class="'.$class.'">'.$disponible.'</td><td>'.$indisponible.'</td><td>'.$caution.'</td></tr>');
+                    echo('<tr><td><img src="'.$image.'" alt="image" style="width:150px;height:150px"/></td><td >'.$disponible.'</td><td>'.$id.'</td><td>'.$composition.'</td><td>'.$indisponible.'</td><td>'.$caution.'</td></tr>');
                 }
                 $result->close();
             
@@ -139,7 +157,10 @@
                 
                 <label><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label><br/>
                 <input type="submit" class="btn btn-success" value="S\'inscrire"/>
-            </form>
+            </form>');
+                
+                
+                echo('
             
             <h2>Rappel des règles d\'emprunt concernant le matériel Moviezen</h2>
             <p>Une fois l\'inscription effectuée, le matériel vous est réservé durant la période demandée. Il est évident que cela vous engage à respecter les délais spécifiés. Les délais trop longs tels que des emprunts de plus de 3 mois par exemple ne sont pas autorisés. Un chèque de caution doit être émis à l\'ordre de Moviezen avec le montant total des lots empruntés. Ce chèque de caution est évidemment conservé en guise de garantie et ne sera pas touché si le matériel est rendu dans le même état que lors de l\'emprunt.</p>
