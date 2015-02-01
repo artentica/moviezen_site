@@ -313,16 +313,45 @@ ul li a.nav-btn:hover {
     transition: all 0.2s ease-out;
 }
 
-.btn-danger:hover{
+#decobtn:hover{
+
     color: #F2ECF7;
     border-color: #0C0322;
     background-color: #0C0322;
 }
 
-.btn-danger{
-    color: #D1DCFF;
+
+#decobtn a,#decobtn a:hover,#decobtn a:focus,#decobtn a:active{
+    color: inherit;
+}
+
+#decobtn{
+     color: #D1DCFF;
     border-color: #0C0322;
     background-color: #0C0322;
+    position: absolute;
+    top: 28px;
+    right: 2%;
+    width: 4%;
+}
+
+@media(max-width:800px){
+    #decobtn{
+        color: #D1DCFF;
+        border-color: #0C0322;
+        background-color: #0C0322;
+        position: absolute;
+        top: 28px;
+        left: 4%;
+        width: 4%;
+    }
+}
+
+@media(max-width:768px){
+        #decobtn{
+            top:18px;
+            width: initial;
+        }
 }
 
 /*  CSS concernant les media queries */

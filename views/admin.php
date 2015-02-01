@@ -1,6 +1,7 @@
 <?php
     session_start();
     include_once("../includes/fonctions.php");
+include_once("../includes/function_global.php");
     connect();
 
 
@@ -29,10 +30,7 @@
         }
     }
       
-    //Déconnexion
-    if(!empty($_POST["deco"]) && $_SESSION["authentifie"]){
-        unset($_SESSION["authentifie"]);
-    }
+
 
     
 

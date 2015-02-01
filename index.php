@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once("includes/function_global.php");
 ?>
 <!doctype html>
 <html>
