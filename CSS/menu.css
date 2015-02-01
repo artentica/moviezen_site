@@ -38,7 +38,7 @@
 #main-nav-hold .main-nav a.nav-btn {
     color: #D1DCFF;
     line-height: 90px;
-    width: 16%;
+    width: 15%;
 }
 
 #main-nav-hold .menu-btn {
@@ -313,7 +313,17 @@ ul li a.nav-btn:hover {
     transition: all 0.2s ease-out;
 }
 
+.btn-danger:hover{
+    color: #F2ECF7;
+    border-color: #0C0322;
+    background-color: #0C0322;
+}
 
+.btn-danger{
+    color: #D1DCFF;
+    border-color: #0C0322;
+    background-color: #0C0322;
+}
 
 /*  CSS concernant les media queries */
 /*#########################################################################################################################################################################################################################################################################################"*/
@@ -329,7 +339,7 @@ ul li a.nav-btn:hover {
     #main-nav-hold .main-nav a.nav-btn {
         font-size: 15px;
         margin: 0px;
-        width: 32%;
+        width: 31%;
     }
     #main-nav-hold .main-nav a.nav-btn {
         line-height: 45px;
