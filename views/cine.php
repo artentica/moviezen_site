@@ -35,7 +35,9 @@ include_once("../includes/function_global.php");
 
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
+   <link rel="stylesheet" href="../CSS/select2.css" type="text/css"/>
     <script src="../js/jquery-2.1.3.min.js"></script>
+      <script type="text/javascript" src="../js/select2.js"></script>
        <?php
         include '../includes/include_on_all_page.php';
     ?>
@@ -73,7 +75,7 @@ include_once("../includes/function_global.php");
                 $result->close();
                 echo('<h1>'.$nom_actif.'</h1>
                 <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest</h3>    
-                <img src="'.$affiche.'" alt="affiche" style="width:400px;height:400px;"/>
+                <img src="'.$affiche.'" alt="affiche" class="affiche" style=""/>
                 <p>'.$description.'</p>
                 <p>'.$commentaires.'</p>
                 ');
@@ -86,12 +88,12 @@ include_once("../includes/function_global.php");
                 echo('<h1 id="inscr">S\'inscrire pour la projection</h1>
             <p>Merci de renseigner tout les champs</p>
 			<form method="post" action="cine.php#inscr" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="Prénom" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control"  required/></div>
                 
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="select_projection">Projection : </label><select name="select_projection" id="select_projection">
+                <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><span><select name="select_projection" id="select_projection"><option></option>
                     ');
                 
                 $result = recupProjDesc();
@@ -101,16 +103,15 @@ include_once("../includes/function_global.php");
                     $date = $row["date_projection"];
                     $date = date("d/m/Y", strtotime($date));
                     echo('<option value="'.$nom.'" ');
-                    if(strcmp($nom_actif,$nom)==0){
-                        echo('selected="selected"');
-                    }
+                    /*if(strcmp($nom_actif,$nom)==0){
+                        echo('selected="selected"');        FRANCOIS C'est utile ca? pas de placeholder?
+                    }*/
                     echo('>'.$nom.' projeté le '.$date.'</option>');
                 }
                 $result->close();
                 echo('
                 </select></div>
-                <input type="submit" class="btn
-            btn-lg inscrval" id="save_cine" value="S\'inscrire pour le film"/>
+                <input type="submit" class="button dark_grey inscrval" id="save_cine" value="S\'inscrire pour le film"/>
             </form>
             
             ');
@@ -127,10 +128,19 @@ include_once("../includes/function_global.php");
             }
 
             ?>
-            <a href="#" class="button dark_grey">Download</a>
+
+
 		</div>
 	</div>
     
-    
+    <script>
+        $(document).ready(function() {
+  $("#select_projection").select2({
+          placeholder: "Sélectionnez une séance",
+          allowClear: true,
+          width:"100%"
+        });
+    });
+    </script>
 </body>
 </html>
