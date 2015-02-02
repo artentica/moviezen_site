@@ -39,33 +39,28 @@
 <!--
     <link rel="stylesheet" href="../CSS/bootstrap-multiselect.css" type="text/css"/>
 -->
-    <link rel="stylesheet" href="../CSS/chosen.css" type="text/css"/>
+    <link rel="stylesheet" href="../CSS/select2.css" type="text/css"/>
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
     <?php
         include '../includes/include_on_all_page.php';
     ?>
-    <script src="../js/jquery-2.1.3.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.js"></script>
     <script src="../js/jquery.datetimepicker.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
 <!--
     <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
 -->
-    <script type="text/javascript" src="../js/chosen.jquery.js"></script>
-    <script>  
-        $(function(){
-            $( ".datepicker" ).datetimepicker({
-                minDate:'-1970/01/01',
-                maxDate:'+1970/03/01',
-                format: 'Y/m/d h:m:s'
-            });
-        });  
-    </script>
+    <script type="text/javascript" src="../js/select2.js"></script>
+
     
     <!-- Initialize the multiselect: -->
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#lots').multiselect();
+            $('select').select2({
+                width:"100%",
+            });
         });
     </script>
 </head>
@@ -139,12 +134,12 @@
                 echo('<h1>Emprunter du matériel</h1>
             <p>Merci de renseigner tout les champs</p>
             <form method="post" action="emprunt.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0600000000" class="form-control" aria-describedby="basic-addon1" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="CIR3" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
+                <div class="input-group max center"><span class="input-group-addon form-label"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0600000000" class="form-control" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="CIR3" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
                 ');
                 //<div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="lots">Lots : </label></span><input type="text" name="lots" id="lots" placeholder="A,K,L,C,...." class="form-control" aria-describedby="basic-addon1"/></div>
                 
@@ -158,8 +153,8 @@
                 $result->close();
                 
                 echo('</select></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_emprunt">Date d\'emprunt : </label></span><input type="date" name="date_emprunt" id="date_emprunt" placeholder="AAAA-MM-DD" class="form-control datepicker" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_retour">Date de retour : </label></span><input type="date" name="date_retour" id="date_retour" placeholder="AAAA-MM-DD" class="form-control datepicker" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon2"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" required/></div>
                 
                 <label><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label><br/>
                 <input type="submit" class="btn btn-success" value="S\'inscrire"/>
@@ -221,11 +216,23 @@
             
 		</div>
 	</div>
-<script>
-    $("#lots").chosen({
-        placeholder_text_multiple:"Sélectionnez le matériel à emprunter",
-    });
-</script>
+ <script>
+            $( "#date_emprunt" ).datetimepicker({
+                format: 'Y/m/d H:m:s',
+                 minDate:'-1970/01/01',
+                maxDate:'+1970/03/01',
+                lang:'fr',
+                step:15
+            });
+
+            $( "#date_retour" ).datetimepicker({
+                format: 'Y/m/d H:m:s',
+                 minDate:'-1970/01/01',
+                maxDate:'+1970/03/01',
+                lang:'fr',
+                step:15
+            });
+    </script>
     
 </body>
 </html>
