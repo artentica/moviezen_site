@@ -405,6 +405,9 @@ ul li a.nav-btn:hover {
     #main-nav-hold .menu-btn {
         display: block;
     }
+    #title_page_menu{
+        display: inline;
+    }
 }
 
 
@@ -415,10 +418,19 @@ ul li a.nav-btn:hover {
     #main-nav-hold>nav .nav-btn {
         display: inline-block;
     }
+    #title_page_menu{
+        display: none;
+    }
 }
 
 
-
+#title_page_menu{
+    color: rgb(238, 238, 238);
+top: 22px;
+font-size: 18px;
+left: 80px;
+position: absolute;
+}
 
 
 @media (max-width: 767px) {
@@ -441,6 +453,9 @@ ul li a.nav-btn:hover {
 @media (max-width: 767px) {
     .menu-items {
         top: 70px;
+    }
+    .menu .menu-items a{
+        font-size: 22px;
     }
 }
 
