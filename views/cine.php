@@ -103,9 +103,9 @@ include_once("../includes/function_global.php");
                     $date = $row["date_projection"];
                     $date = date("d/m/Y", strtotime($date));
                     echo('<option value="'.$nom.'" ');
-                    /*if(strcmp($nom_actif,$nom)==0){
-                        echo('selected="selected"');        FRANCOIS C'est utile ca? pas de placeholder?
-                    }*/
+                    if(strcmp($nom_actif,$nom)==0){
+                        echo('selected="selected"');
+                    }
                     echo('>'.$nom.' projeté le '.$date.'</option>');
                 }
                 $result->close();
