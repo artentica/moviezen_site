@@ -408,6 +408,9 @@ ul li a.nav-btn:hover {
     #title_page_menu{
         display: inline;
     }
+    #titlte_page{
+        display: none;
+    }
 }
 
 
@@ -420,6 +423,9 @@ ul li a.nav-btn:hover {
     }
     #title_page_menu{
         display: none;
+    }
+    #titlte_page{
+        display: inline-block;
     }
 }
 
