@@ -101,7 +101,7 @@
 
             
             <?php
-            echo('<table class="table table-bordered table-hover"><thead><th>Image du lot</th><th>Composition du lot</th><th>Disponible</th><th style="display:none">Identifiant de lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot</th></thead>');
+            echo('<table class="table table-striped"><thead><th>Image du lot</th><th>Composition du lot</th><th>Disponible</th><th style="display:none">Identifiant de lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot</th></thead>');
             $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -111,14 +111,12 @@
                     $caution = $row["caution"];
                     $indisponible = "/";
                     if($disponible){
-                        $disponible='<button type="button" class="btn btn-default btn-lg">
-  <span class="glyphicon glyphicon-ok" style="color:green"></span> Disponible
-</button>';
+                        $disponible='<button type="button" class="button dark_grey button-large">
+  <span class="glyphicon glyphicon-ok" style="color:green"></span></button>';
                         $class="success";
                     }else{
-                        $disponible='<button type="button" class="btn btn-default btn-lg">
-  <span class="glyphicon glyphicon-remove" style="color:red"></span> Indisponible
-</button>';
+                        $disponible='<button type="button" class="button dark_grey button-large">
+  <span class="glyphicon glyphicon-remove" style="color:red"></span></button>';
                         $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' ORDER BY `date_retour` DESC LIMIT 1";
                         $result2 = $GLOBALS["bdd"]->query($query);
                         while ($row2 = $result2->fetch_array(MYSQLI_ASSOC)){    
