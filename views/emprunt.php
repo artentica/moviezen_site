@@ -94,9 +94,14 @@
 
             -->
             
+
+
+
+
+
             
             <?php
-            echo('<table class="table table-bordered table-hover"><thead><th>Image du lot</th><th>Disponible</th><th>Identifiant de lot</th><th>Composition du lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot (en euros)</th></thead>');
+            echo('<table class="table table-bordered table-hover"><thead><th>Image du lot</th><th>Composition du lot</th><th>Disponible</th><th style="display:none">Identifiant de lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot</th></thead>');
             $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -124,7 +129,7 @@
                         $class="danger";
                     }
                     $image = $row["image"];
-                    echo('<tr><td><img src="'.$image.'" alt="image" style="width:150px;height:150px"/></td><td >'.$disponible.'</td><td>'.$id.'</td><td>'.$composition.'</td><td>'.$indisponible.'</td><td>'.$caution.'</td></tr>');
+                    echo('<tr><td><img src="'.$image.'" alt="image" style=""/><td>'.$composition.'</td></td><td >'.$disponible.'</td><td style="display:none">'.$id.'</td><td>'.$indisponible.'</td><td>'.$caution.'&euro;</td></tr>');
                 }
                 $result->close();
             
@@ -137,8 +142,8 @@
             <form method="post" action="emprunt.php" id="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0600000000" class="form-control" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="prenom.nom@isen.fr" class="form-control" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0612345678" class="form-control" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="CIR3" class="form-control" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
                 ');
@@ -157,8 +162,8 @@
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon2"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" required/></div>
                 
-                <label><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label><br/>
-                <input type="submit" class="btn btn-success" value="S\'inscrire"/>
+                <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label><br/>
+                <input type="submit" class="button dark_grey" value="S\'inscrire"/>
             </form>');
                 
                 
@@ -170,9 +175,11 @@
             
             <h3>Vous avez déja emprunté du matériel ? Connectez vous</h3>
             <form method="post" action="emprunt.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="conn_mail">@ ISEN : </label></span><input type="email" name="conn_mail" id="conn_mail" placeholder="Essai.tarte@orange.fr" class="form-control" aria-describedby="basic-addon1"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label"
+                ><label for="conn_mail">@ ISEN : </label></span><input type="email" name="conn_mail" id="conn_mail" placeholder="prenom.nom@isen.fr" class="form-control"
+                /></div>
                 
-                <input type="submit" class="btn btn-info" value="Se connecter"/>
+                <input type="submit" style="margin-top:20px" class="button dark_grey" value="Se connecter"/>
             </form>
             
             ');
@@ -199,14 +206,14 @@
                 <h1 id="modifie_emprunt">Modifier un emprunt</h1>
                 <form method="post" action="emprunt.php#modifie_emprunt" id="form-register">
                     <input type="hidden" name="modif_mail" id="modif_mail" value="'.$_SESSION["mail"].'" required/>
-                    <input type="submit" class="btn btn-success" value="Modifier mon emprunt"/>
+                    <input type="submit" class="button dark_grey" value="Modifier mon emprunt"/>
                 </form>
                 
                 
                 <h1>Annuler un emprunt</h1>
             <form method="post" action="emprunt.php" id="form-register">
                 <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'" required/>
-                <input type="submit" class="btn btn-danger" value="Se désinscrire"/>
+                <input type="submit" class="button dark_grey" value="Se désinscrire"/>
             </form>');
                 
             }

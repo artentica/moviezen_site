@@ -274,3 +274,15 @@ border-radius: 0px 4px 4px 0px;
     padding-right: 0px;
 }
 
+#form-register{
+    margin-top: 20px;
+}
+
+.checkbox{
+    margin-top: 20px;
+}
+
+table img{
+    width: 100%;
+max-width: 150px;
+}
