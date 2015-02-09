@@ -131,7 +131,6 @@
         }
     }
 
-<<<<<<< HEAD
     //FONCTION AJOUT D'EMPRUNT (TEST AVEC TABLE DISPONIBILITES)
     function ajoutEmprunt2($nom,$prenom,$tel,$mail, $classe,$lots,$date_emprunt,$date_retour){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, ?, ?, ?)");
@@ -190,9 +189,6 @@
             return false;
         }
     }
-
-=======
->>>>>>> origin/master
 
 
     //FONCTION MODIFICATION D'EMPRUNT (UTILISATEUR)
