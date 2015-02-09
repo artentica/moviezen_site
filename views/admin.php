@@ -408,12 +408,8 @@ background-size: cover;">
                             }
                         }
                         if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])){
-<<<<<<< HEAD
                             addDispoLot($_POST["add_lot_id"]);
-                            echo('<div>Ce lot a bien été ajouté dans la base de données</div>');    
-=======
                             echo('<div>Ce lot a bien été ajouté dans la base de données</div>');
->>>>>>> origin/master
                         }
                         else{
                             echo('<div>Ce lot n\'a pas pu être ajouté dans la base de données</div>');
