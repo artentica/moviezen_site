@@ -288,6 +288,18 @@ border-radius: 0px 4px 4px 0px;
     border: none;
 }
 
+.select2-container--default .select2-selection--multiple{
+    background-color: rgb(255, 255, 255);
+border-radius: 0px 4px 4px 0px;
+    border: none;
+}
+
+.input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:last-child > .btn, .input-group-btn:last-child > .dropdown-toggle, .input-group-btn:first-child > .btn:not(:first-child) {
+border-bottom-left-radius: 0;
+border-top-left-radius: 0;
+border: none;
+}
+
 .select2-container--default .select2-selection--multiple .select2-selection__rendered{
     padding-left: 12px;
     margin-right: -12px;
