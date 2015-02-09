@@ -159,24 +159,28 @@
         $date_retour_test = $date_retour_test->format('Ymd');
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
-                $verif = "SELECT disponible from lots WHERE id='".$liste."'";
+                $date_emprunt_formatée = date("z", strtotime($date_emprunt));
+                $date_retour_formatée = date("z", strtotime($date_retour));
+                $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<=".($date_retour_formatée+1);
                 $result = $GLOBALS["bdd"]->query($verif);
                 $disponible=false;
+                $compteur =0;
                 while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                    $disponible = $row["disponible"];
+                    $compteur = $compteur+intval($row[$liste]);
+                }
+                if($compteur == ($date_retour_formatée-$date_emprunt_formatée+1)){
+                    $disponible = true;
                 }
                 if($disponible){
                     $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
                     $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
                     $query2->execute();
                     $query2->close();
-                    $query2 = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible='0' WHERE id=?");
-                    $query2->bind_param('s', $liste);
-                    $query2->execute();
-                    $query2->close();
+                    $query2 = "UPDATE dispo SET ".$liste."=0 WHERE jour>=".($date_emprunt_formatée+1)." AND jour<=".($date_retour_formatée+1);
+                    $query2 = $GLOBALS["bdd"]->query($query2);
                 }
                 else{
-                    echo('Le lot '.$liste.' n\'est actuellement pas disponible et n\'a donc pas été emprunté.');
+                    echo('Le lot '.$liste.' n\'est pas disponible sur la période demandée et n\'a donc pas été emprunté.');
                 }
             }
             return true;
@@ -205,13 +209,6 @@
     //FONCTION SUPPRESSION D'UN EMPRUNT(UTILISATEUR)
     function supprEmprunt($mail){
         $mail = protect($mail);
-        $result = $GLOBALS["bdd"]->query("SELECT lots FROM inscrits_lots WHERE inscrit_mail='".$mail."'");
-        while ($row = $result->fetch_array(MYSQLI_ASSOC)){
-            $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible='1' WHERE id=?");
-            $query->bind_param('s',$row["lots"]);
-            $query->execute();
-            $query->close();
-        }
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=?");
         $query->bind_param('s',$mail);
         $query->execute();
@@ -224,7 +221,7 @@
     function recupEmprunt($mail){
         $mail = protect($mail);
         $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail='".$mail."'";
-        return $GLOBALS["bdd"]->query($query);
+        return l;
     }
 
 
@@ -452,7 +449,6 @@
     function addDispoLot($identifiant){
         $identifiant = protect($identifiant);
         $query = "ALTER TABLE dispo ADD ".$identifiant." BOOLEAN NOT NULL DEFAULT 1";
-        echo $query;
         $query = $GLOBALS["bdd"]->query($query);
         return true;
     }
@@ -507,6 +503,13 @@
     function recupUniqueLot($id){
         $id = protect($id);
         $query = "SELECT * from lots WHERE id='".$id."'";
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+
+
+    function dejaInscrit($id){
+        $query = "SELECT * FROM inscrits where identifiant=".protect($id);
         return $GLOBALS["bdd"]->query($query);
     }
 

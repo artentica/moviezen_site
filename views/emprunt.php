@@ -15,14 +15,13 @@
         }
     }
 
-    if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
-    {
-        if(ajoutEmprunt($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
-            $_SESSION["mail"]=protect($_POST["mail"]);
+    if(!empty($_POST["conn_mail"])){
+        if(dejaInscrit($_POST["conn_mail"])){
             $_SESSION["emprunteur"]=1;
         }
-
     }
+
+
 
 ?>
 <!doctype html>
@@ -106,9 +105,21 @@ background-size: cover;">
                 {
                     $id = $row["id"];
                     $composition = $row["composition"];
-                    $disponible = $row["disponible"];
                     $caution = $row["caution"];
                     $indisponible = "/";
+                    $disponible = '0';
+
+
+                    $date_ajd = date("z");
+                    $query = "SELECT ".$id." FROM dispo WHERE jour=".($date_ajd+1);
+                    $result_dispo = $GLOBALS["bdd"]->query($query);
+                    while ($row_dispo = $result_dispo->fetch_array(MYSQLI_ASSOC))
+                    {
+                        $disponible = $row_dispo[$id];
+                    }
+
+
+
                     if($disponible){
                         $disponible='<button type="button" class="button dark_grey button-large">
   <span class="glyphicon glyphicon-ok" style="color:green"></span></button>';
@@ -116,7 +127,7 @@ background-size: cover;">
                     }else{
                         $disponible='<button type="button" class="button dark_grey button-large">
   <span class="glyphicon glyphicon-remove" style="color:red"></span></button>';
-                        $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' ORDER BY `date_retour` DESC LIMIT 1";
+                        $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' and jour>=".(date("z")+1)." ORDER BY `date_retour` LIMIT 1";
                         $result2 = $GLOBALS["bdd"]->query($query);
                         while ($row2 = $result2->fetch_array(MYSQLI_ASSOC)){
                             setlocale (LC_TIME, 'fr_FR','fra');
@@ -162,7 +173,14 @@ background-size: cover;">
                 <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label><br/>
                 <input type="submit" class="button dark_grey" value="S\'inscrire"/>
             </form>');
+                if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
+    {
+                    if(ajoutEmprunt2($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
+                        $_SESSION["mail"]=protect($_POST["mail"]);
+                        $_SESSION["emprunteur"]=1;
+                    }
 
+    }
 
                 echo('
 
