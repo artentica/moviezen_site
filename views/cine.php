@@ -106,7 +106,7 @@ include_once("../includes/function_global.php");
                     if(strcmp($nom_actif,$nom)==0){
                         echo('selected="selected"');
                     }
-                    echo('>'.$nom.' projeté le '.$date.'</option>');
+                    echo('>'.$nom.', projeté le '.$date.'</option>');
                 }
                 $result->close();
                 echo('

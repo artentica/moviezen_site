@@ -407,6 +407,7 @@ include_once("../includes/function_global.php");
                             }
                         }
                         if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])){
+                            addDispoLot($_POST["add_lot_id"]);
                             echo('<div>Ce lot a bien été ajouté dans la base de données</div>');    
                         }
                         else{
