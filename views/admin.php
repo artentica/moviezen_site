@@ -114,12 +114,14 @@ background-size: cover;">
                     <a title="Deconnexion button" type="button" class="btn" id="decoInAdmin" href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
                     <h1>Gestion des administrateurs</h1>
 
-                        <h3 id="mdpchange">Modifier votre mot de passe :</h3>
+
                             <form method="post" action="admin.php#mdpchange" id="form-register">
+                            <fieldset>
+    <legend id="mdpchange">Modifier votre mot de passe</legend>
                                 <input type="hidden" name="modif_id" id="modif_id" value="'.$_SESSION["id"].'"></input>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_mdp">Nouveau mot de passe : </label></span><input type="password" name="modif_mdp" id="modif_mdp" placeholder="azertyU²&io$p" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <input type="submit" class="button dark_grey" value="Modifier votre mot de passe"/>
-                            </form>
+                            </fieldset></form>
 
                         ');
 
@@ -135,13 +137,15 @@ background-size: cover;">
 
                     echo('
 
-                        <h3 id="add_admin">Ajouter un administrateur</h3>
+
                             <form method="post" action="admin.php#add_admin" id="form-register">
+                            <fieldset>
+    <legend id="add_admin">Ajouter un administrateur</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="azertyU²&io$p" class="form-control" aria-describedby="basic-addon1" required/></div>
 
                                 <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
-                            </form>
+                            </fieldset></form>
                         ');
                     //AJOUT D'ADMINISTRATEUR
                     if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && $_SESSION["authentifie"]){
