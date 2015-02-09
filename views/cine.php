@@ -33,35 +33,39 @@ include_once("../includes/function_global.php");
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 
+
+
+
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
    <link rel="stylesheet" href="../CSS/select2.css" type="text/css"/>
-    <script src="../js/jquery-2.1.3.min.js"></script>
       <script type="text/javascript" src="../js/select2.js"></script>
        <?php
         include '../includes/include_on_all_page.php';
     ?>
 
+
 </head>
 <body>
-    <div id="banniere">
+    <div id="banniere"  style="background-image: url('../CSS/new_design/images/header.jpg');
+background-size: cover;">
         <h1>
             Moviezen
         </h1>
     </div>
-    <header>
+
         <?php
        include '../includes/panel-global.php';
-        include '../includes/menu-mobile.php';?>
-    </header>
-    <div class="panel panel-default">
+      ?>
+
+    <div class="wrapper style1">
 		<div class="panel-body">
-            
+
             <?php
             $nom_actif = "";
             $result = recupProjActive();
             if(!empty($result)){
-                
+
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
                     $nom_actif = $row["nom"];
@@ -74,17 +78,17 @@ include_once("../includes/function_global.php");
                 }
                 $result->close();
                 echo('<h1>'.$nom_actif.'</h1>
-                <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest</h3>    
+                <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest</h3>
                 <img src="'.$affiche.'" alt="affiche" class="affiche" style=""/>
                 <p>'.$description.'</p>
                 <p>'.$commentaires.'</p>
                 ');
             }
-            
+
 
 
             if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){
-                
+
                 echo('<h1 id="inscr">S\'inscrire pour la projection</h1>
             <p>Merci de renseigner tout les champs</p>
 			<form method="post" action="cine.php#inscr" id="form-register">
@@ -92,10 +96,10 @@ include_once("../includes/function_global.php");
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="Prénom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control"  required/></div>
-                
+
                 <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><span><select name="select_projection" id="select_projection"><option></option>
                     ');
-                
+
                 $result = recupProjDesc();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -113,9 +117,9 @@ include_once("../includes/function_global.php");
                 </select></div>
                 <input type="submit" class="button dark_grey inscrval" id="save_cine" value="S\'inscrire pour le film"/>
             </form>
-            
+
             ');
-                
+
             }
 
             else{
@@ -124,7 +128,7 @@ include_once("../includes/function_global.php");
                 <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'"/>
                 <input type="submit" class="button dark_grey" id="save_cine" value="Se désinscrire"/>
             </form>');
-                
+
             }
 
             ?>
@@ -132,7 +136,7 @@ include_once("../includes/function_global.php");
 
 		</div>
 	</div>
-    
+
     <script>
         $(document).ready(function() {
   $("#select_projection").select2({

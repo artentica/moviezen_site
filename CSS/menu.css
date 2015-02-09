@@ -133,7 +133,7 @@
     position: relative;
     font-size: 100px;
     margin: auto;
-    padding-top: 12px;
+    padding-top: 35px;
     letter-spacing: 5px;
     font-family: 'Lobster', helvetica, arial;
 }
@@ -148,8 +148,7 @@
 
 
 #banniere {
-    height: 125px;
-    background-image: url("../Images/banner.jpg");
+    height: 175px;
 }
 
 
@@ -471,3 +470,7 @@ position: absolute;
         padding-top: 25px;
     }
 }
+
+/*.highlight{
+    text-shadow: #C3AAD2 1px 1px;
+}*/

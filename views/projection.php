@@ -26,20 +26,18 @@ include_once("../includes/function_global.php");
 	 <?php
         include '../includes/include_on_all_page.php';
     ?>
-	<script src="../js/jquery-2.1.3.min.js"></script>
-	<script src="../js/menu.js"></script>
 
 </head>
 <body>
-   <div id="banniere">
+   <div id="banniere"  style="background-image: url('../CSS/new_design/images/header.jpg');
+background-size: cover;">
         <h1>
             Moviezen
         </h1>
     </div>
     <header>
         <?php
-       include '../includes/panel-global.php';
-        include '../includes/menu-mobile.php';?>
+       include '../includes/panel-global.php';?>
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">

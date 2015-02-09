@@ -18,13 +18,13 @@ include_once("../includes/function_global.php");
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
-	<script src="../js/jquery-2.1.3.min.js"></script>
 	<?php
         include '../includes/include_on_all_page.php';
     ?>
 </head>
 <body>
-    <div id="banniere">
+    <div id="banniere"  style="background-image: url('../CSS/new_design/images/header.jpg');
+background-size: cover;">
         <h1>
             Moviezen
         </h1>
@@ -32,8 +32,7 @@ include_once("../includes/function_global.php");
     <header>
        <?php
        include '../includes/panel-global.php';
-
-        include '../includes/menu-mobile.php';?>
+?>
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
