@@ -131,6 +131,7 @@
         }
     }
 
+<<<<<<< HEAD
     //FONCTION AJOUT D'EMPRUNT (TEST AVEC TABLE DISPONIBILITES)
     function ajoutEmprunt2($nom,$prenom,$tel,$mail, $classe,$lots,$date_emprunt,$date_retour){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, ?, ?, ?)");
@@ -190,6 +191,8 @@
         }
     }
 
+=======
+>>>>>>> origin/master
 
 
     //FONCTION MODIFICATION D'EMPRUNT (UTILISATEUR)
@@ -445,6 +448,7 @@
         return true;
     }
 
+
     //FONCTION ALTERANT LA TABLE DISPONIBILITES POUR RAJOUTER LE NOUVEAU LOT
     function addDispoLot($identifiant){
         $identifiant = protect($identifiant);
@@ -452,7 +456,6 @@
         $query = $GLOBALS["bdd"]->query($query);
         return true;
     }
-
 
     //FONCTION DE SUPPRESSION D'UN LOT
     function supprLot($identifiant){
@@ -479,7 +482,7 @@
     }
 
 
-    //FONCTION GERANT LE RENDU DES LOTS
+    //FONCTION GERANT LA RENDU DES LOTS
     function renduLot($identifiant){
         $identifiant = protect($identifiant);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE lots=?");
