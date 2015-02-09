@@ -114,12 +114,14 @@ background-size: cover;">
                     <a title="Deconnexion button" type="button" class="btn" id="decoInAdmin" href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
                     <h1>Gestion des administrateurs</h1>
 
-                        <h3 id="mdpchange">Modifier votre mot de passe :</h3>
+
                             <form method="post" action="admin.php#mdpchange" id="form-register">
+                            <fieldset>
+    <legend id="mdpchange">Modifier votre mot de passe</legend>
                                 <input type="hidden" name="modif_id" id="modif_id" value="'.$_SESSION["id"].'"></input>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_mdp">Nouveau mot de passe : </label></span><input type="password" name="modif_mdp" id="modif_mdp" placeholder="azertyU²&io$p" class="form-control" aria-describedby="basic-addon1" required/></div>
-                                <input type="submit" class="btn btn-success" value="Modifier votre mot de passe"/>
-                            </form>
+                                <input type="submit" class="button dark_grey" value="Modifier votre mot de passe"/>
+                            </fieldset></form>
 
                         ');
 
@@ -135,13 +137,15 @@ background-size: cover;">
 
                     echo('
 
-                        <h3 id="add_admin">Ajouter un administrateur</h3>
+
                             <form method="post" action="admin.php#add_admin" id="form-register">
+                            <fieldset>
+    <legend id="add_admin">Ajouter un administrateur</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="azertyU²&io$p" class="form-control" aria-describedby="basic-addon1" required/></div>
 
-                                <input type="submit" class="btn btn-info" value="Ajouter un administrateur"/>
-                            </form>
+                                <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
+                            </fieldset></form>
                         ');
                     //AJOUT D'ADMINISTRATEUR
                     if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && $_SESSION["authentifie"]){
@@ -162,7 +166,7 @@ background-size: cover;">
                             <form method="post" action="admin.php#del_admin" id="form-register">
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="suppr_admin">Identifiant : </label></span><input name="suppr_admin" id="suppr_admin" type="text" placeholder="Turing" class="form-control" aria-describedby="basic-addon1" required/></div>
 
-                                <input type="submit" class="btn btn-danger" value="Supprimer cet administrateur"/>
+                                <input type="submit" class="button dark_grey" value="Supprimer cet administrateur"/>
                             </form>
                     ');
 
@@ -180,7 +184,8 @@ background-size: cover;">
                             echo('<div>Vous ne pouvez pas vous supprimer vous même !</div>');
                         }
                     }
-
+                    echo '</div></div><div class="panel panel-default">
+		<div class="panel-body">';
                     echo('
                     <h1>Gestion des projections</h1>
                     <h3 id="add_proj">Ajouter une Projection</h3>
@@ -191,7 +196,7 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_description">Description : </label></span><input type="text" name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" aria-describedby="basic-addon1" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" aria-describedby="basic-addon1"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_photo">Affiche de la projection: </label></span><input type="file" name="projection_affiche" id="projection_affiche" class="form-control" aria-describedby="basic-addon1"/></div>
-                            <input type="submit" class="btn btn-info" value="Ajouter cette projection"/>
+                            <input type="submit" class="button dark_grey" value="Ajouter cette projection"/>
                         </form>
 
                         ');
@@ -251,7 +256,7 @@ background-size: cover;">
 
                   echo('  </select></div>
 
-                    <input type="submit" class="btn btn-success" value="Modifier cette projection"/>
+                    <input type="submit" class="button dark_grey" value="Modifier cette projection"/>
                         </form>
 
                         ');
@@ -273,7 +278,7 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_description">Description : </label></span><input type="text" name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" aria-describedby="basic-addon1" required value="'.$description.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_commentaires">Commentaires : </label></span><input type="text" name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" aria-describedby="basic-addon1" value="'.$commentaires.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_affiche">Affiche de la projection: </label></span><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="form-control" aria-describedby="basic-addon1"/></div>
-                            <input type="submit" class="btn btn-success" value="Modifier cette projection"/>
+                            <input type="submit" class="button dark_grey" value="Modifier cette projection"/>
 
 
 
@@ -333,7 +338,7 @@ background-size: cover;">
                             }
                             $result->close();
                     echo('
-                            <input type="submit" class="btn btn-warning" value="Activer cette projection"/>
+                            <input type="submit" class="button dark_grey" value="Activer cette projection"/>
                             </select></div>
                         </form>');
 
@@ -366,7 +371,7 @@ background-size: cover;">
                     $result->close();
                     echo('</select></div>
 
-                                <input type="submit" class="btn btn-danger" value="Supprimer cette projection"/>
+                                <input type="submit" class="button dark_grey" value="Supprimer cette projection"/>
                             </form>');
 
                     //SUPPRESSION DE PROJECTION
@@ -381,7 +386,8 @@ background-size: cover;">
 
 
 
-
+echo '</div></div><div class="panel panel-default">
+		<div class="panel-body">';
                     echo('
 
                     <h1>Gestion des lots</h1>
@@ -391,7 +397,7 @@ background-size: cover;">
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_composition">Composition du lot: </label></span><input type="textarea" name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="add_lot_caution" id="add_lot_caution" placeholder="150" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_photo">Photo du lot: </label></span><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control" aria-describedby="basic-addon1"/></div>
-                                <input type="submit" class="btn btn-info" value="Ajouter ce lot"/>
+                                <input type="submit" class="button dark_grey" value="Ajouter ce lot"/>
                             </form>
                             ');
 
@@ -408,7 +414,6 @@ background-size: cover;">
                             }
                         }
                         if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])){
-                            addDispoLot($_POST["add_lot_id"]);
                             echo('<div>Ce lot a bien été ajouté dans la base de données</div>');
                         }
                         else{
@@ -435,7 +440,7 @@ background-size: cover;">
                 $result->close();
                   echo('
                                 </select></div>
-                                <input type="submit" class="btn btn-success" value="Modifier ce lot"/>
+                                <input type="submit" class="button dark_grey" value="Modifier ce lot"/>
                             </form>
 
                       ');
@@ -453,7 +458,7 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_compo">Date de release : </label></span><input type="text" name="modif_lot_compo" id="modif_lot_compo"  class="form-control" aria-describedby="basic-addon1" value="'.$composition.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150" class="form-control" aria-describedby="basic-addon1" value="'.$caution.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_photo">Photo du lot: </label></span><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="form-control" aria-describedby="basic-addon1"/></div>
-                            <input type="submit" class="btn btn-info" value="Modifier ce lot"/>
+                            <input type="submit" class="button dark_grey" value="Modifier ce lot"/>
 
 
 
@@ -497,7 +502,7 @@ background-size: cover;">
                 $result->close();
                     echo('</select></div>
 
-                                <input type="submit" class="btn btn-danger" value="Supprimer ce lot"/>
+                                <input type="submit" class="button dark_grey" value="Supprimer ce lot"/>
                             </form>
                 ');
 
@@ -520,7 +525,7 @@ background-size: cover;">
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
 
-                <input type="submit" class="btn btn-info" value="Se connecter"/>
+                <input type="submit" class="button dark_grey" value="Se connecter"/>
             </form>');
             }
 

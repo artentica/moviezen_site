@@ -10,7 +10,7 @@
 
 	body
 	{
-		min-width: 1000px;
+		/*min-width: 1000px;*/
 	}
 
 	body,input,select,textarea
@@ -23,11 +23,7 @@
 /* Wrappers                                                                      */
 /*********************************************************************************/
 
-	#header-wrapper
-	{
-		padding: 2em 0 0 0;
-		height: 11em;
-	}
+
 
 		body.homepage #header-wrapper
 		{

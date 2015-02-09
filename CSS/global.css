@@ -1,6 +1,15 @@
 body{
 background-color: rgb(245, 245, 245);
     color: rgb(29, 15, 51);
+     height: 100%;
+}
+
+#skel-layers-hiddenWrapper{
+    display: none;
+}
+
+html{
+    height: 100%;
 }
 
 .panel-body{
@@ -21,7 +30,7 @@ background-color: rgb(245, 245, 245);
 }*/
 
 .input-group-addon{
-    padding: 6px 12px;
+    padding: 0px;
     font-size: 14px;
     font-weight: normal;
     line-height: 1;
@@ -74,6 +83,11 @@ h1{
     }
 }
 
+
+.form-control{
+    height: 42px;
+}
+
 p, li {
     margin: 0 0 10px;
     font-size: 16px;
@@ -91,6 +105,7 @@ p, li {
 
 span.start_span{
     width:10%;
+    vertical-align: inherit;
 }
 
 
@@ -207,6 +222,7 @@ input.button:active {
  * Dark Grey
  */
 input.button.dark_grey,button.button.dark_grey {
+    margin-top: 15px;
     background: #d1d1d1;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#d1d1d1), to(#afafaf));
     background: -moz-linear-gradient(#d1d1d1, #afafaf);
@@ -270,6 +286,18 @@ span.select2-selection.select2-selection--single{
     background-color: rgb(255, 255, 255);
 border-radius: 0px 4px 4px 0px;
     border: none;
+}
+
+.select2-container--default .select2-selection--multiple{
+    background-color: rgb(255, 255, 255);
+border-radius: 0px 4px 4px 0px;
+    border: none;
+}
+
+.input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:last-child > .btn, .input-group-btn:last-child > .dropdown-toggle, .input-group-btn:first-child > .btn:not(:first-child) {
+border-bottom-left-radius: 0;
+border-top-left-radius: 0;
+border: none;
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__rendered{

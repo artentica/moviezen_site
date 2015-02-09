@@ -13,8 +13,9 @@ echo'
                         <header id="header">
                             <div class="inner">
 
-                                <!-- Logo -->
-                                    <h1><a href="../index.html" id="logo">Moviezen</a></h1>
+                                                                <!-- Logo -->
+                                    <h1><a href="#" id="logo" style="display:none;@media(max-width:899){ display:inner
+};">Moviezen</a></h1>
 
                                 <!-- Nav -->
                                     <nav id="nav">
@@ -33,10 +34,11 @@ echo'
             if($page=="calendrier.php")echo(" class=current_page_item");
     echo'><a href="calendrier.php" class="nav-btn">Calendrier des emprunts</a></li>
                                             <li';
-            if($page=="projection.php")echo(" class=current_page_item");
-    echo'><a href="projection.php" class="nav-btn">Espace liste de projection</a></li>
-
-                                        </ul>
+if(!empty($_SESSION["authentifie"])){
+    if($page=="projection.php")echo(" class=current_page_item");
+    echo'><a href="projection.php" class="nav-btn">Espace liste de projection</a></li>';
+}
+            echo ' </ul>
                                     </nav>';
                             if(!empty($_SESSION["authentifie"])){
     echo'<a  title="Deconnexion button" type="button" class="btn" id="decobtn" href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>';

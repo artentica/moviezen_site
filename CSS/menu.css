@@ -258,6 +258,8 @@ ul li a.nav-btn:hover {
 
 
 .menu-items {
+                                <!-- Logo -->
+                                    <h1><a href="#" id="logo">Moviezen</a></h1>
     top: 200px;
     position: relative;
     transform: rotateX(0deg);
@@ -315,8 +317,7 @@ ul li a.nav-btn:hover {
 #decobtn:hover{
 
     color: #F2ECF7;
-    border-color: #0C0322;
-    background-color: #0C0322;
+
 }
 
 
@@ -330,41 +331,33 @@ ul li a.nav-btn:hover {
 
 #decoInAdmin{
     position: absolute;
-    top:30px;
-    left:30px;
-    color: #D1DCFF;
-    border-color: #0C0322;
-    background-color: #0C0322;
+    top: 60px;
+left: 15px;
+    color: #FFF;
 }
+
 
 #decobtn{
-     color: #D1DCFF;
-    border-color: #0C0322;
-    background-color: #0C0322;
-    position: absolute;
-    top: 28px;
-    right: 2%;
-    width: 4%;
-}
+     color: #FFF;
 
-@media(max-width:800px){
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 7%;
+}
+@media(max-width:1638px){
     #decobtn{
-        color: #D1DCFF;
-        border-color: #0C0322;
-        background-color: #0C0322;
-        position: absolute;
-        top: 28px;
-        left: 4%;
-        width: 4%;
+        display: inline;
+        top: 65px;
+    }
+}
+@media(max-width:899px){
+    #decobtn{
+        display: none;
     }
 }
 
-@media(max-width:768px){
-        #decobtn{
-            top:18px;
-            width: initial;
-        }
-}
+
 
 /*  CSS concernant les media queries */
 /*#########################################################################################################################################################################################################################################################################################"*/
@@ -464,13 +457,11 @@ position: absolute;
     }
 }
 
-@media (max-width: 767px){
+@media (max-width: 899px){
     #banniere h1 {
         font-size: 60px;
-        padding-top: 25px;
+        padding-top: 60px;
     }
 }
 
-/*.highlight{
-    text-shadow: #C3AAD2 1px 1px;
-}*/
+

@@ -68,6 +68,12 @@ background-size: cover;">
             </p>
 		</div>
 	</div>
+<!--	 Footer Wrapper
+			<div id="footer-wrapper">
+				<footer id="footer" class="">
+					hgvhvhvhjcvhgvhv
+				</footer>
+			</div>-->
 
 
 </body>
