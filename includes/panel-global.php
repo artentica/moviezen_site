@@ -13,8 +13,9 @@ echo'
                         <header id="header">
                             <div class="inner">
 
-                                <!-- Logo -->
-                                    <h1><a href="../index.html" id="logo">Moviezen</a></h1>
+                                                                <!-- Logo -->
+                                    <h1><a href="#" id="logo" style="display:none;@media(max-width:899){ display:inner
+};">Moviezen</a></h1>
 
                                 <!-- Nav -->
                                     <nav id="nav">

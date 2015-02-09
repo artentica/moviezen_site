@@ -9,7 +9,8 @@ echo'
                             <div class="inner">
 
                                 <!-- Logo -->
-                                    <h1><a href="#" id="logo">Moviezen</a></h1>
+                                    <h1><a href="#" id="logo" style="display:none;@media(max-width:899){ display:inner
+};">Moviezen</a></h1>
 
                                 <!-- Nav -->
                                     <nav id="nav">

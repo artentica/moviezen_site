@@ -10,9 +10,9 @@
 		reset: 'full',
 		breakpoints: {
 			'global':	{ range: '*', href: 'CSS/new_design/style.css' },
-			'desktop':	{ range: '737-', href: 'CSS/new_design/style-desktop.css', containers: 1200, grid: { gutters: 50 } },
-			'1000px':	{ range: '737-1200', href: 'CSS/new_design/style-1000px.css', containers: 1000, grid: { gutters: 35 }, viewport: { width: 1080 } },
-			'mobile':	{ range: '-736', href: 'CSS/new_design/style-mobile.css', containers: '100%!', grid: { collapse: true, gutters: 10 }, viewport: { scalable: false } }
+			'desktop':	{ range: '900-', href: 'CSS/new_design/style-desktop.css', containers: 1200, grid: { gutters: 50 } },
+			/*'1000px':	{ range: '900-1200', href: 'CSS/new_design/style-1000px.css', containers: 1000, grid: { gutters: 35 }, viewport: { width: 1080 } },*/
+			'mobile':	{ range: '-899', href: 'CSS/new_design/style-mobile.css', containers: '100%!', grid: { collapse: true, gutters: 10 }, viewport: { scalable: false } }
 		},
 		plugins: {
 			layers: {
