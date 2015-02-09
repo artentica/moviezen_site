@@ -1,4 +1,4 @@
-<?php 
+<?php
 
     //FONCTION DE CONNEXION A LA BDD
     function connect(){
@@ -14,7 +14,7 @@
 
     //FONCTION DE PROTECTION DES CHAINES UTILISATEURS
     function protect($chaine){
-        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes(html_entity_decode ($chaine)));	 
+        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes(html_entity_decode ($chaine)));
         return $protect;
     }
 
@@ -23,7 +23,7 @@
 
     //FONCTIONS GESTION DES INSCRITS
 
-    
+
     //AJOUT D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function ajoutInscrit($nom,$prenom,$mail,$classe,$projection){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
@@ -41,7 +41,7 @@
     }
 
 
-    
+
     //FONCTION MODIFICATION D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function modifInscrit($mail, $projection, $ancien_mail){
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections_inscrits SET  inscrit_mail=?, projection=? WHERE inscrit_mail=?");
@@ -121,13 +121,13 @@
                     $query2->close();
                 }
                 else{
-                    echo('Le lot '.$liste.' n\'est actuellement pas disponible et n\'a donc pas été emprunté.');    
+                    echo('Le lot '.$liste.' n\'est actuellement pas disponible et n\'a donc pas été emprunté.');
                 }
             }
             return true;
         }
         else{
-            return false;   
+            return false;
         }
     }
 
@@ -146,12 +146,12 @@
         return true;
     }
 
-    
+
     //FONCTION SUPPRESSION D'UN EMPRUNT(UTILISATEUR)
     function supprEmprunt($mail){
         $mail = protect($mail);
         $result = $GLOBALS["bdd"]->query("SELECT lots FROM inscrits_lots WHERE inscrit_mail='".$mail."'");
-        while ($row = $result->fetch_array(MYSQLI_ASSOC)){    
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)){
             $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible='1' WHERE id=?");
             $query->bind_param('s',$row["lots"]);
             $query->execute();
@@ -176,7 +176,7 @@
 
 
 //################################################################################################################################################################
-    
+
 
 
     //FONCTIONS GESTION DES PROJECTIONS
@@ -193,7 +193,7 @@
         $i=1;
         while ($row = $result->fetch_array(MYSQLI_ASSOC))
         {
-            
+
             $mail = $row["inscrit_mail"];
             $query = "SELECT * from inscrits WHERE mail='".$mail."'";
             $result2 = $GLOBALS["bdd"]->query($query);
@@ -209,12 +209,12 @@
                 $i++;
             }
             $result2->close();
-            
+
         }
         $table = $table."</table></body></html>";
-        fopen("inscrits.xls","w+"); 
-        $file = ("inscrits.xls"); 
-        if(!$myfile = fopen($file, "w+"))     
+        fopen("inscrits.xls","w+");
+        $file = ("inscrits.xls");
+        if(!$myfile = fopen($file, "w+"))
         {
             print("erreur: ");
             print("le fichier n'existe pas!\n");
@@ -319,7 +319,7 @@
         return true;
     }
 
-    
+
 
 
 
@@ -337,7 +337,7 @@
         return $GLOBALS["bdd"]->query($query);
     }
 
-    
+
 
     //FONCTION D'AJOUT D'UN ADMIN DANS LA BASE
     function addAdmin($identifiant,$mdp){
