@@ -1,6 +1,15 @@
 body{
 background-color: rgb(245, 245, 245);
     color: rgb(29, 15, 51);
+     height: 100%;
+}
+
+#skel-layers-hiddenWrapper{
+    display: none;
+}
+
+html{
+    height: 100%;
 }
 
 .panel-body{

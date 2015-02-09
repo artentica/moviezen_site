@@ -56,13 +56,13 @@ background-size: cover;">
                 }
                 $result->close();?>
                     </select>
-                 <input type="submit" class="btn btn-success" value="Récupérer les inscrits"/>
+                 <input type="submit" class="button dark_grey" value="Récupérer les inscrits"/>
             </form>
                     
             <?php
             if(!empty($_POST["recup_proj"])){
                 if(recupInscrit($_POST["recup_proj"])){
-                    echo('<br/><a class="btn btn-success" href="inscrits.xls">Télécharger le fichier xls</a>');
+                    echo('<br/><a class="button dark_grey" href="inscrits.xls">Télécharger le fichier xls</a>');
                 }
             
             }
