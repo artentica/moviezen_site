@@ -30,7 +30,7 @@ html{
 }*/
 
 .input-group-addon{
-    padding: 6px 12px;
+    padding: 0px;
     font-size: 14px;
     font-weight: normal;
     line-height: 1;
@@ -83,6 +83,11 @@ h1{
     }
 }
 
+
+.form-control{
+    height: 42px;
+}
+
 p, li {
     margin: 0 0 10px;
     font-size: 16px;
@@ -100,6 +105,7 @@ p, li {
 
 span.start_span{
     width:10%;
+    vertical-align: inherit;
 }
 
 
@@ -216,6 +222,7 @@ input.button:active {
  * Dark Grey
  */
 input.button.dark_grey,button.button.dark_grey {
+    margin-top: 15px;
     background: #d1d1d1;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#d1d1d1), to(#afafaf));
     background: -moz-linear-gradient(#d1d1d1, #afafaf);

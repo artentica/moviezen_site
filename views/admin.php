@@ -180,7 +180,8 @@ background-size: cover;">
                             echo('<div>Vous ne pouvez pas vous supprimer vous même !</div>');
                         }
                     }
-
+                    echo '</div></div><div class="panel panel-default">
+		<div class="panel-body">';
                     echo('
                     <h1>Gestion des projections</h1>
                     <h3 id="add_proj">Ajouter une Projection</h3>
@@ -381,7 +382,8 @@ background-size: cover;">
 
 
 
-
+echo '</div></div><div class="panel panel-default">
+		<div class="panel-body">';
                     echo('
 
                     <h1>Gestion des lots</h1>

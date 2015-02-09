@@ -89,8 +89,10 @@ background-size: cover;">
 
             if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){
 
-                echo('<h1 id="inscr">S\'inscrire pour la projection</h1>
+                echo('<div class="panel panel-default">
+		<div class="panel-body"><h1 id="inscr">S\'inscrire pour la projection</h1>
             <p>Merci de renseigner tout les champs</p>
+
 			<form method="post" action="cine.php#inscr" id="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control"  required/></div>
@@ -116,7 +118,7 @@ background-size: cover;">
                 echo('
                 </select></div>
                 <input type="submit" class="button dark_grey inscrval" id="save_cine" value="S\'inscrire pour le film"/>
-            </form>
+            </form></div></div>
 
             ');
 
