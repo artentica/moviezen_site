@@ -437,8 +437,8 @@
         $caution = protect($caution);
         $disponible = 1;
         $image = protect($image);
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?,?,?,?)");
-        $query->bind_param('ssisi',$identifiant,$composition,$disponible,$image,$caution);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?,?,?)");
+        $query->bind_param('sssi',$identifiant,$composition,$image,$caution);
         $query->execute();
         $query->close();
         return true;
@@ -463,6 +463,14 @@
         return true;
     }
 
+    //FONCTION ALTERANT LA TABLE DISPONIBILITES POUR SUPPRIMER LE LOT
+    function supprDispoLot($identifiant){
+        $identifiant = protect($identifiant);
+        $query = "ALTER TABLE dispo DROP ".$identifiant;
+        $query = $GLOBALS["bdd"]->query($query);
+        return true;
+    }
+
 
     //FONCTION DE MODIFICATION D'UN LOT
     function modifLot($identifiant,$composition, $caution, $image,$ancien_identifiant){
@@ -477,14 +485,21 @@
         return true;
     }
 
+    //FONCTION ALTERANT LA TABLE DISPONIBILITES POUR MODIFIER LA DISPONIBILIT2 DU LOT
+    function modifDispoLot($identifiant,$date_emprunt,$date_retour,$new_date_emprunt,$new_date_retour){
+        $identifiant = protect($identifiant);
+        $query = "UPDATE dispo SET ".$identifiant."=1 WHERE jour >= ".$date_emprunt." AND jour< ".$date_retour;
+        $query = $GLOBALS["bdd"]->query($query);
+        $query = "UPDATE dispo SET ".$identifiant."=0 WHERE jour >= ".$new_date_emprunt." AND jour< ".$new_date_retour;
+        $query = $GLOBALS["bdd"]->query($query);
+        return true;
+    }
+
+
 
     //FONCTION GERANT LA RENDU DES LOTS
     function renduLot($identifiant){
         $identifiant = protect($identifiant);
-        $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE lots=?");
-        $query->bind_param('s',$identifiant);
-        $query->execute();
-        $query->close();
         $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible=1  WHERE id=?");
         $query->bind_param('s',$identifiant);
         $query->execute();
