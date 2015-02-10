@@ -9,7 +9,7 @@ include_once("../includes/function_global.php");
         renduLot($_POST["lot_rendu"]);
     }
 ?>
-    
+
 <!doctype html>
 <html>
 <head>
@@ -85,13 +85,13 @@ background-size: cover;">
                     echo('</tr>');
                 }
                 $result->close();
-                
+
             echo('</table>');
 
             ?>
         </div>
 	</div>
-    
-    
+
+
 </body>
 </html>
