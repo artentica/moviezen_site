@@ -41,9 +41,10 @@ background-size: cover;">
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
-            <h3>Récupérer les inscrits à une projection :</h3>
             <form method="post" action="projection.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="recup_proj">Projection : </label><select name="recup_proj" id="recup_proj">
+               <fieldset>
+    <legend>Récupérer les inscrits à une projection :</legend>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="recup_proj">Projection : </label></span><select name="recup_proj" id="recup_proj">
                 <?php 
 
                 
@@ -57,6 +58,8 @@ background-size: cover;">
                 $result->close();?>
                     </select>
                  <input type="submit" class="button dark_grey" value="Récupérer les inscrits"/>
+                   </div>
+                </fieldset>
             </form>
                     
             <?php

@@ -119,7 +119,7 @@ background-size: cover;">
                             <fieldset>
     <legend id="mdpchange">Modifier votre mot de passe</legend>
                                 <input type="hidden" name="modif_id" id="modif_id" value="'.$_SESSION["id"].'"></input>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_mdp">Nouveau mot de passe : </label></span><input type="password" name="modif_mdp" id="modif_mdp" placeholder="azertyU²&io$p" class="form-control" aria-describedby="basic-addon1" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_mdp">Nouveau <span title="Mot de passe">MDP</span> : </label></span><input type="password" name="modif_mdp" id="modif_mdp" placeholder="azertyU²&io$p" class="form-control" required/></div>
                                 <input type="submit" class="button dark_grey" value="Modifier votre mot de passe"/>
                             </fieldset></form>
 
@@ -141,8 +141,8 @@ background-size: cover;">
                             <form method="post" action="admin.php#add_admin" id="form-register">
                             <fieldset>
     <legend id="add_admin">Ajouter un administrateur</legend>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="azertyU²&io$p" class="form-control" aria-describedby="basic-addon1" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="azertyU²&io$p" class="form-control" required/></div>
 
                                 <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
                             </fieldset></form>
@@ -165,7 +165,7 @@ background-size: cover;">
                             <p>Attention, cette action est irréversible</p>
                             <form method="post" action="admin.php#del_admin" id="form-register"><fieldset>
     <legend id="del_admin">Supprimer un administrateur</legend>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="suppr_admin">Identifiant : </label></span><input name="suppr_admin" id="suppr_admin" type="text" placeholder="Turing" class="form-control" aria-describedby="basic-addon1" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="suppr_admin">Identifiant : </label></span><input name="suppr_admin" id="suppr_admin" type="text" placeholder="Turing" class="form-control" required/></div>
 
                                 <input type="submit" class="button dark_grey" value="Supprimer cet administrateur"/>
                             </fieldset></form>
@@ -192,12 +192,12 @@ background-size: cover;">
 
                         <form method="post" action="admin.php#add_proj" id="form-register" enctype="multipart/form-data"><fieldset>
     <legend id="add_proj">Ajouter une Projection</legend>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_nom">Nom du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_release">Date de release : </label></span><input type="date" name="projection_release" id="projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_date">Date de projection : </label></span><input type="date" name="projection_date" id="projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_description">Description : </label></span><input type="text" name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" aria-describedby="basic-addon1" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" aria-describedby="basic-addon1"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_photo">Affiche de la projection: </label></span><input type="file" name="projection_affiche" id="projection_affiche" class="form-control" aria-describedby="basic-addon1"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Nom du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input type="date" name="projection_release" id="projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input type="date" name="projection_date" id="projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><input type="text" name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_photo">Affiche : </label></span><input type="file" name="projection_affiche" id="projection_affiche" class="form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Ajouter cette projection"/>
                         </fieldset></form>
 
@@ -243,7 +243,7 @@ background-size: cover;">
 
                             <form method="post" action="admin.php#mod_proj" id="form-register"><fieldset>
     <legend id="mod_proj">Modifier une projection</legend>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_proj">Projection : </label><select name="modif_proj" id="modif_proj">
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_proj">Projection : </label></span><select name="modif_proj" id="modif_proj">
               ');
 
 
@@ -275,12 +275,12 @@ background-size: cover;">
                             $commentaires = $row["commentaires"];
                             echo('<form method="post" action="admin.php#mod_proj" id="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$nom.'" name="old_projection_nom" id="old_projection_nom"/>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required value="'.$nom.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_release">Date de release : </label></span><input type="date" name="new_projection_release" id="new_projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1" value="'.$date_release.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_date">Date de projection : </label></span><input type="date" name="new_projection_date" id="new_projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1" required value="'.$date_projection.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_description">Description : </label></span><input type="text" name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" aria-describedby="basic-addon1" required value="'.$description.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_commentaires">Commentaires : </label></span><input type="text" name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" aria-describedby="basic-addon1" value="'.$commentaires.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="new_projection_affiche">Affiche de la projection: </label></span><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="form-control" aria-describedby="basic-addon1"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_release">Date de release : </label></span><input type="date" name="new_projection_release" id="new_projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" value="'.$date_release.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_date">Date de projection : </label></span><input type="date" name="new_projection_date" id="new_projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" required value="'.$date_projection.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_description">Description : </label></span><input type="text" name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required value="'.$description.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_commentaires">Commentaires : </label></span><input type="text" name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" value="'.$commentaires.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Modifier cette projection"/>
 
 
@@ -331,7 +331,7 @@ background-size: cover;">
                         <form method="post" action="admin.php#act_proj" id="form-register">
                         <fieldset>
     <legend id="act_proj">Rendre une projection active</legend>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="activ_proj" id="activ_proj">
+                            <div class="input-group max center"><select name="activ_proj" id="activ_proj">
                                 ');
                             $result = recupProjDesc();
                             while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -365,7 +365,7 @@ background-size: cover;">
                             <p>Attention, cette action est irréversible</p>
                             <form method="post" action="admin.php#del_proj" id="form-register"><fieldset>
     <legend id="del_proj">Supprimer une projection</legend>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="suppr_proj" id="suppr_proj">');
+                                <div class="input-group max center"><span class="input-group-addon form-label"><select name="suppr_proj" id="suppr_proj">');
                     $result = recupProjDesc();
                     while ($row = $result->fetch_array(MYSQLI_ASSOC))
                     {
@@ -400,10 +400,10 @@ echo '</div></div><div class="panel panel-default">
                             <form method="post" action="admin.php#ajoute_lot" id="form-register" enctype="multipart/form-data">
                             <fieldset>
     <legend id="ajoute_lot">Ajouter un lot</legend>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_id">Identifiant du lot : </label></span><input name="add_lot_id" id="add_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" aria-describedby="basic-addon1" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_composition">Composition du lot: </label></span><input type="textarea" name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" aria-describedby="basic-addon1" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="add_lot_caution" id="add_lot_caution" placeholder="150" class="form-control" aria-describedby="basic-addon1" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_photo">Photo du lot: </label></span><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control" aria-describedby="basic-addon1"/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="add_lot_id" id="add_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_composition">Composition du lot: </label></span><input type="textarea" name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="add_lot_caution" id="add_lot_caution" placeholder="150&euro;" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_photo">Photo du lot: </label></span><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control"/></div>
                                 <input type="submit" class="button dark_grey" value="Ajouter ce lot"/>
                             </fieldset></form>
                             ');
@@ -434,7 +434,7 @@ echo '</div></div><div class="panel panel-default">
 
                             <form method="post" action="admin.php#modifie_lot" id="form-register"><fieldset>
     <legend id="modifie_lot">Modifier un lot</legend>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot">Projection : </label><select name="modif_lot" id="modif_lot">
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot">Lot(s) : </label></span><select name="modif_lot" id="modif_lot">
                                      ');
 
 
@@ -463,10 +463,10 @@ echo '</div></div><div class="panel panel-default">
                             echo('<form method="post" action="admin.php#modifie_lot" id="form-register" enctype="multipart/form-data">
 
                             <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_id">Identifiant du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required value="'.$id.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_compo">Date de release : </label></span><input type="text" name="modif_lot_compo" id="modif_lot_compo"  class="form-control" aria-describedby="basic-addon1" value="'.$composition.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150" class="form-control" aria-describedby="basic-addon1" value="'.$caution.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_photo">Photo du lot: </label></span><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="form-control" aria-describedby="basic-addon1"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id">Identifiant du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Nom" class="form-control" required value="'.$id.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_compo">Date de release : </label></span><input type="text" name="modif_lot_compo" id="modif_lot_compo"  class="form-control" value="'.$composition.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150" class="form-control" value="'.$caution.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_photo">Photo du lot: </label></span><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Modifier ce lot"/>
 
 
@@ -500,7 +500,7 @@ echo '</div></div><div class="panel panel-default">
 
                             <form method="post" action="admin.php#supprimer_lot" id="form-register"><fieldset>
     <legend id="supprimer_lot">Supprimer un lot</legend>
-                                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="suppr_lot" id="suppr_lot">');
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><select name="suppr_lot" id="suppr_lot">');
                 $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -531,8 +531,8 @@ echo '</div></div><div class="panel panel-default">
                 echo('<h1>Espace d\'administration</h1>
 
             <form method="post" action="admin.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Prénom" class="form-control" aria-describedby="basic-addon1" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Nom" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Prénom" class="form-control" required/></div>
 
                 <input type="submit" class="button dark_grey" value="Se connecter"/>
             </form>');
