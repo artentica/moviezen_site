@@ -161,13 +161,14 @@ background-size: cover;">
                     echo('
 
 
-                        <h3 id="del_admin">Supprimer un administrateur</h3>
+
                             <p>Attention, cette action est irréversible</p>
-                            <form method="post" action="admin.php#del_admin" id="form-register">
+                            <form method="post" action="admin.php#del_admin" id="form-register"><fieldset>
+    <legend id="del_admin">Supprimer un administrateur</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="suppr_admin">Identifiant : </label></span><input name="suppr_admin" id="suppr_admin" type="text" placeholder="Turing" class="form-control" aria-describedby="basic-addon1" required/></div>
 
                                 <input type="submit" class="button dark_grey" value="Supprimer cet administrateur"/>
-                            </form>
+                            </fieldset></form>
                     ');
 
                     //SUPPRESSION D'ADMINISTRATEUR
@@ -188,8 +189,9 @@ background-size: cover;">
 		<div class="panel-body">';
                     echo('
                     <h1>Gestion des projections</h1>
-                    <h3 id="add_proj">Ajouter une Projection</h3>
-                        <form method="post" action="admin.php#add_proj" id="form-register" enctype="multipart/form-data">
+
+                        <form method="post" action="admin.php#add_proj" id="form-register" enctype="multipart/form-data"><fieldset>
+    <legend id="add_proj">Ajouter une Projection</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_nom">Nom du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_release">Date de release : </label></span><input type="date" name="projection_release" id="projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_date">Date de projection : </label></span><input type="date" name="projection_date" id="projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" aria-describedby="basic-addon1" required/></div>
@@ -197,7 +199,7 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" aria-describedby="basic-addon1"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_photo">Affiche de la projection: </label></span><input type="file" name="projection_affiche" id="projection_affiche" class="form-control" aria-describedby="basic-addon1"/></div>
                             <input type="submit" class="button dark_grey" value="Ajouter cette projection"/>
-                        </form>
+                        </fieldset></form>
 
                         ');
                     //AJOUT DE PROJECTION
@@ -238,8 +240,9 @@ background-size: cover;">
 
                     echo('
 
-                        <h3 id="mod_proj">Modifier une projection</h3>
-                            <form method="post" action="admin.php#mod_proj" id="form-register">
+
+                            <form method="post" action="admin.php#mod_proj" id="form-register"><fieldset>
+    <legend id="mod_proj">Modifier une projection</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_proj">Projection : </label><select name="modif_proj" id="modif_proj">
               ');
 
@@ -257,7 +260,7 @@ background-size: cover;">
                   echo('  </select></div>
 
                     <input type="submit" class="button dark_grey" value="Modifier cette projection"/>
-                        </form>
+                        </fieldset></form>
 
                         ');
 
@@ -324,8 +327,10 @@ background-size: cover;">
 
                     echo('
 
-                        <h3 id="act_proj">Rendre une projection active</h3>
+
                         <form method="post" action="admin.php#act_proj" id="form-register">
+                        <fieldset>
+    <legend id="act_proj">Rendre une projection active</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="activ_proj" id="activ_proj">
                                 ');
                             $result = recupProjDesc();
@@ -340,7 +345,7 @@ background-size: cover;">
                     echo('
                             <input type="submit" class="button dark_grey" value="Activer cette projection"/>
                             </select></div>
-                        </form>');
+                        </fieldset></form>');
 
                     //ACTIVATION DE PROJECTION
                     if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
@@ -356,9 +361,10 @@ background-size: cover;">
 
                     echo('
 
-                        <h3 id="del_proj">Supprimer une projection</h3>
+
                             <p>Attention, cette action est irréversible</p>
-                            <form method="post" action="admin.php#del_proj" id="form-register">
+                            <form method="post" action="admin.php#del_proj" id="form-register"><fieldset>
+    <legend id="del_proj">Supprimer une projection</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="suppr_proj" id="suppr_proj">');
                     $result = recupProjDesc();
                     while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -372,7 +378,7 @@ background-size: cover;">
                     echo('</select></div>
 
                                 <input type="submit" class="button dark_grey" value="Supprimer cette projection"/>
-                            </form>');
+                            </fieldset></form>');
 
                     //SUPPRESSION DE PROJECTION
                     if(!empty($_POST["suppr_proj"]) &&  $_SESSION["authentifie"]){
@@ -391,14 +397,15 @@ echo '</div></div><div class="panel panel-default">
                     echo('
 
                     <h1>Gestion des lots</h1>
-                        <h3 id="ajoute_lot">Ajouter un lot</h3>
                             <form method="post" action="admin.php#ajoute_lot" id="form-register" enctype="multipart/form-data">
+                            <fieldset>
+    <legend id="ajoute_lot">Ajouter un lot</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_id">Identifiant du lot : </label></span><input name="add_lot_id" id="add_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_composition">Composition du lot: </label></span><input type="textarea" name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="add_lot_caution" id="add_lot_caution" placeholder="150" class="form-control" aria-describedby="basic-addon1" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="add_lot_photo">Photo du lot: </label></span><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control" aria-describedby="basic-addon1"/></div>
                                 <input type="submit" class="button dark_grey" value="Ajouter ce lot"/>
-                            </form>
+                            </fieldset></form>
                             ');
 
                     //AJOUT DE LOTS
@@ -424,8 +431,9 @@ echo '</div></div><div class="panel panel-default">
 
 
                     echo('
-                        <h3 id="modifie_lot">Modifier un lot</h3>
-                            <form method="post" action="admin.php#modifie_lot" id="form-register">
+
+                            <form method="post" action="admin.php#modifie_lot" id="form-register"><fieldset>
+    <legend id="modifie_lot">Modifier un lot</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot">Projection : </label><select name="modif_lot" id="modif_lot">
                                      ');
 
@@ -441,7 +449,7 @@ echo '</div></div><div class="panel panel-default">
                   echo('
                                 </select></div>
                                 <input type="submit" class="button dark_grey" value="Modifier ce lot"/>
-                            </form>
+                            </fieldset></form>
 
                       ');
 
@@ -453,6 +461,7 @@ echo '</div></div><div class="panel panel-default">
                             $composition = $row["composition"];
                             $caution = $row["caution"];
                             echo('<form method="post" action="admin.php#modifie_lot" id="form-register" enctype="multipart/form-data">
+
                             <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_id">Identifiant du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Nom" class="form-control" aria-describedby="basic-addon1" required value="'.$id.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="modif_lot_compo">Date de release : </label></span><input type="text" name="modif_lot_compo" id="modif_lot_compo"  class="form-control" aria-describedby="basic-addon1" value="'.$composition.'"/></div>
@@ -488,9 +497,9 @@ echo '</div></div><div class="panel panel-default">
                     }
 
                     echo('
-                        <h3 id="supprimer_lot">Supprimer un lot</h3>
-                            <p>Attention, cette action est irréversible</p>
-                            <form method="post" action="admin.php#supprimer_lot" id="form-register">
+
+                            <form method="post" action="admin.php#supprimer_lot" id="form-register"><fieldset>
+    <legend id="supprimer_lot">Supprimer un lot</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><select name="suppr_lot" id="suppr_lot">');
                 $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -503,7 +512,7 @@ echo '</div></div><div class="panel panel-default">
                     echo('</select></div>
 
                                 <input type="submit" class="button dark_grey" value="Supprimer ce lot"/>
-                            </form>
+                            </fieldset></form>
                 ');
 
                 //SUPPRESSION DE LOTS
