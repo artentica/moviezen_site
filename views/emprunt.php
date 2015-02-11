@@ -9,7 +9,7 @@
     }
 
     if(!empty($_POST["del_mail"])){
-        if(supprEmprunt($_POST["del_mail"])){
+        if(supprEmprunt($_POST["del_mail"],$_POST["del_date"])){
             $_SESSION["emprunteur"]=0;
             unset($_SESSION["mail"]);
         }
@@ -20,6 +20,17 @@
             $_SESSION["emprunteur"]=1;
         }
     }
+
+    if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
+    {
+                    if(ajoutEmprunt2($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
+                        $_SESSION["mail"]=protect($_POST["mail"]);
+                        $_SESSION["date_emprunt"]=date("Y-m-d H:m:s", strtotime(protect($_POST["date_emprunt"])));
+                        $_SESSION["emprunteur"]=1;
+                    }
+
+    }
+
 
 
 
@@ -173,14 +184,6 @@ background-size: cover;">
                 <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label><br/>
                 <input type="submit" class="button dark_grey" value="S\'inscrire"/>
             </form>');
-                if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
-    {
-                    if(ajoutEmprunt2($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
-                        $_SESSION["mail"]=protect($_POST["mail"]);
-                        $_SESSION["emprunteur"]=1;
-                    }
-
-    }
 
                 echo('
 
@@ -228,7 +231,8 @@ background-size: cover;">
                 <h1>Annuler un emprunt</h1>
             <form method="post" action="emprunt.php" id="form-register">
                 <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'" required/>
-                <input type="submit" class="button dark_grey" value="Se désinscrire"/>
+                <input type="hidden" name="del_date" id="del_date" value="'.$_SESSION["date_emprunt"].'" required/>
+                <input type="submit" class="button dark_grey" value="Annuler l\'emprunt que je viens de faire"/>
             </form>');
 
             }

@@ -53,7 +53,25 @@ include_once("../includes/function_global.php");
 
 
 
-
+    //MODIFICATION DE LOTS
+                    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
+                        $nom="";
+                        if(!empty($_FILES["modif_lot_photo"])){
+                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
+                            if ( in_array($extension_upload,$extensions_valides) ){
+                                $nom = md5(uniqid(rand(), true));
+                                $nom = "../Images/".$nom.".".$extension_upload;
+                                $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+                            }
+                        }
+                        if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
+                            $modifie = true;
+                        }
+                        else{
+                            $modifie = false;
+                        }
+                    }
 
 
 
@@ -383,10 +401,10 @@ background-size: cover;">
                     //SUPPRESSION DE PROJECTION
                     if(!empty($_POST["suppr_proj"]) &&  $_SESSION["authentifie"]){
                         if(supprProj($_POST["suppr_proj"])){
-                            echo('<div>La projection'.$_POST["suppr_proj"].'a bien été retirée dans la base de données !</div>');
+                            echo('<div class="alert alert-success">La projection'.$_POST["suppr_proj"].'a bien été retirée dans la base de données !</div>');
                         }
                         else{
-                            echo('<div>Une erreur s\'est produite lors de la requête</div>');
+                            echo('<div class="alert alert-danger">Une erreur s\'est produite lors de la requête</div>');
                         }
                     }
 
@@ -421,10 +439,11 @@ echo '</div></div><div class="panel panel-default">
                             }
                         }
                         if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])){
-                            echo('<div>Ce lot a bien été ajouté dans la base de données</div>');
+
+                            echo('<div class="alert alert-success">Ce lot a bien été ajouté dans la base de données</div>');
                         }
                         else{
-                            echo('<div>Ce lot n\'a pas pu être ajouté dans la base de données</div>');
+                            echo('<div class="alert alert-danger">Ce lot n\'a pas pu être ajouté dans la base de données</div>');
                         }
                     }
 
@@ -476,27 +495,16 @@ echo '</div></div><div class="panel panel-default">
                         }
                         $result->close();
                     }
-                    //MODIFICATION DE LOTS
-                    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
-                        $nom="";
-                        if(!empty($_FILES["modif_lot_photo"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
-                            }
-                        }
-                        if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
-                            echo('<div>Ce lot a été correctement modifié !</div>');
+
+                    if(!empty($modifie)){
+                        if($modifie){
+                            echo('<div class="alert alert-success">Ce lot a été correctement modifié !</div>');
                         }
                         else{
-                            echo('<div>Ce lot n\'a pas pu être modifié....</div>');
+                            echo('<div class="alert alert-danger">Ce lot n\'a pas pu être modifié....</div>');
                         }
                     }
-
-                    echo('
+                        echo('
 
                             <form method="post" action="admin.php#supprimer_lot" id="form-register"><fieldset>
     <legend id="supprimer_lot">Supprimer un lot</legend>
@@ -518,10 +526,10 @@ echo '</div></div><div class="panel panel-default">
                 //SUPPRESSION DE LOTS
                 if(!empty($_POST["suppr_lot"]) && $_SESSION["authentifie"]){
                     if(supprLot($_POST["suppr_lot"])){
-                        echo('<div>Ce lot a bien été supprimé !</div>');
+                        echo('<div class="alert alert-success">Ce lot a bien été supprimé !</div>');
                     }
                     else{
-                        echo('<div>Ce lot n\'a pas pu être supprimé !</div>');
+                        echo('<div class="alert alert-danger">Ce lot n\'a pas pu être supprimé !</div>');
                     }
                 }
 

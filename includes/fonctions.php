@@ -161,14 +161,14 @@
             foreach($lots as $liste){
                 $date_emprunt_formatée = date("z", strtotime($date_emprunt));
                 $date_retour_formatée = date("z", strtotime($date_retour));
-                $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<=".($date_retour_formatée+1);
+                $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
                 $result = $GLOBALS["bdd"]->query($verif);
                 $disponible=false;
                 $compteur =0;
                 while($row = $result->fetch_array(MYSQLI_ASSOC)){
                     $compteur = $compteur+intval($row[$liste]);
                 }
-                if($compteur == ($date_retour_formatée-$date_emprunt_formatée+1)){
+                if($compteur == ($date_retour_formatée-$date_emprunt_formatée)){
                     $disponible = true;
                 }
                 if($disponible){
@@ -176,7 +176,7 @@
                     $query2->bind_param('ssss', $mail,$liste,$date_emprunt,$date_retour);
                     $query2->execute();
                     $query2->close();
-                    $query2 = "UPDATE dispo SET ".$liste."=0 WHERE jour>=".($date_emprunt_formatée+1)." AND jour<=".($date_retour_formatée+1);
+                    $query2 = "UPDATE dispo SET ".$liste."=0 WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
                     $query2 = $GLOBALS["bdd"]->query($query2);
                 }
                 else{
@@ -193,23 +193,67 @@
 
     //FONCTION MODIFICATION D'EMPRUNT (UTILISATEUR)
     function modifEmprunt($lots,$date_emprunt,$date_retour,$mail){
-        $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits_lots SET lots=?, date_emprunt=?, date_retour=? WHERE inscrit_mail=?");
-        $lots = protect($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
-        $mail = protect($mail);
-        $query->bind_param('ssss', $lots, $date_emprunt, $date_retour, $mail);
-        $query->execute();
-        $query->close();
-        return true;
+        $date_emprunt = date("Y-m-d H:m:s", strtotime($date_emprunt));
+        $date_retour = date("Y-m-d H:m:s", strtotime($date_retour));
+        $date_ajd = date("Y-m-d H:m:s");
+        $date_ajd = new DateTime($date_ajd);
+        $date_futur = date("Y-m-d H:m:s");
+        $date_futur = new DateTime($date_futur);
+        date_add($date_futur, date_interval_create_from_date_string('1 year'));
+        $date_ajd = $date_ajd->format('Ymd');
+        $date_futur = $date_futur->format('Ymd');
+        $date_emprunt_test = new DateTime($date_emprunt);
+        $date_emprunt_test = $date_emprunt_test->format('Ymd');
+        $date_retour_test = new DateTime($date_retour);
+        $date_retour_test = $date_retour_test->format('Ymd');
+        if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
+            foreach($lots as $liste){
+                $date_emprunt_formatée = date("z", strtotime($date_emprunt));
+                $date_retour_formatée = date("z", strtotime($date_retour));
+                $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
+                $result = $GLOBALS["bdd"]->query($verif);
+                $disponible=false;
+                $compteur =0;
+                while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                    $compteur = $compteur+intval($row[$liste]);
+                }
+                if($compteur == ($date_retour_formatée-$date_emprunt_formatée)){
+                    $disponible = true;
+                }
+                if($disponible){
+                    $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits_lots SET lots=?, date_emprunt=?, date_retour=? WHERE inscrit_mail=?");
+                    $lots = protect($lots);
+                    $date_emprunt = protect($date_emprunt);
+                    $date_retour = protect($date_retour);
+                    $mail = protect($mail);
+                    $query->bind_param('ssss', $lots, $date_emprunt, $date_retour, $mail);
+                    $query->execute();
+                    $query->close();
+                    return true;
+                }
+            }
+        }
     }
 
 
     //FONCTION SUPPRESSION D'UN EMPRUNT(UTILISATEUR)
-    function supprEmprunt($mail){
+    function supprEmprunt($mail,$date_emprunt){
         $mail = protect($mail);
-        $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=?");
-        $query->bind_param('s',$mail);
+        $date_emprunt = date("Y-m-d H:m:s", strtotime(protect($date_emprunt)));
+        $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail='".$mail."' AND date_emprunt='".$date_emprunt."'";
+        $result = $GLOBALS["bdd"]->query($query);
+        $date_emprunt_formatée = date("z", strtotime($date_emprunt));
+        while($row = $result->fetch_array(MYSQLI_ASSOC)){
+            $lot = $row["lots"];
+            $date_retour = $row["date_retour"];
+            $date_retour_formatée = date("z", strtotime($date_retour));
+            $query2 = "UPDATE dispo SET ".$lot."=1 WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
+            $query2 = $GLOBALS["bdd"]->query($query2);
+        }
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=? AND date_emprunt=?");
+        $query->bind_param('ss',$mail,$date_emprunt);
         $query->execute();
         $query->close();
         return true;
@@ -220,7 +264,7 @@
     function recupEmprunt($mail){
         $mail = protect($mail);
         $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail='".$mail."'";
-        return l;
+        return true;
     }
 
 
@@ -441,6 +485,7 @@
         $query->bind_param('sssi',$identifiant,$composition,$image,$caution);
         $query->execute();
         $query->close();
+        addDispoLot($identifiant);
         return true;
     }
 
@@ -460,6 +505,7 @@
         $query->bind_param('s',$identifiant);
         $query->execute();
         $query->close();
+        supprDispoLot($identifiant);
         return true;
     }
 
@@ -478,19 +524,26 @@
         $composition = protect($composition);
         $ancien_identifiant = protect($ancien_identifiant);
         $caution = protect($caution);
+        if(empty($image)){
+            $query = "SELECT image from lots WHERE id='".$ancien_identifiant."'";
+            $result = $GLOBALS["bdd"]->query($query);
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $image = $row["image"];
+            }
+        }
         $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET id=?, composition=?, image=?, caution=?  WHERE id=?");
         $query->bind_param('sssss',$identifiant,$composition,$image,$caution,$ancien_identifiant);
         $query->execute();
         $query->close();
+        modifDispoLot($identifiant,$ancien_identifiant);
         return true;
     }
 
-    //FONCTION ALTERANT LA TABLE DISPONIBILITES POUR MODIFIER LA DISPONIBILIT2 DU LOT
-    function modifDispoLot($identifiant,$date_emprunt,$date_retour,$new_date_emprunt,$new_date_retour){
+    //FONCTION ALTERANT LA TABLE DISPONIBILITES POUR MODIFIER LA DISPONIBILITE DU LOT
+    function modifDispoLot($identifiant,$identifiant_old){
         $identifiant = protect($identifiant);
-        $query = "UPDATE dispo SET ".$identifiant."=1 WHERE jour >= ".$date_emprunt." AND jour< ".$date_retour;
-        $query = $GLOBALS["bdd"]->query($query);
-        $query = "UPDATE dispo SET ".$identifiant."=0 WHERE jour >= ".$new_date_emprunt." AND jour< ".$new_date_retour;
+        $identifiant_old = protect($identifiant_old);
+        $query = "ALTER TABLE dispo CHANGE ".$identifiant_old." ".$identifiant." BOOLEAN NOT NULL DEFAULT 1";
         $query = $GLOBALS["bdd"]->query($query);
         return true;
     }
@@ -500,10 +553,8 @@
     //FONCTION GERANT LA RENDU DES LOTS
     function renduLot($identifiant){
         $identifiant = protect($identifiant);
-        $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET disponible=1  WHERE id=?");
-        $query->bind_param('s',$identifiant);
-        $query->execute();
-        $query->close();
+        $query = "UPDATE dispo SET ".$identifiant."=1 WHERE jour>=".$date_emprunt." AND jour < ".$date_retour;
+        $query = $GLOBALS["bdd"]->query($query);
         return true;
     }
 
