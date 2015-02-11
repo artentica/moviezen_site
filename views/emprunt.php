@@ -158,7 +158,7 @@ background-size: cover;">
 
                 echo('<h1>Emprunter du matériel</h1>
             <p>Merci de renseigner tout les champs</p>
-            <form method="post" action="emprunt.php" id="form-register">
+            <form method="post" action="emprunt.php" id="form-register" style="margin-bottom:35px">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="prenom.nom@isen.fr" class="form-control" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
@@ -166,7 +166,7 @@ background-size: cover;">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="CIR3" class="form-control" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
                 ');
-                //<div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="lots">Lots : </label></span><input type="text" name="lots" id="lots" placeholder="A,K,L,C,...." class="form-control" aria-describedby="basic-addon1"/></div>
+                //<div class="input-group max center"><span class="input-group-addon form-label"><label for="lots">Lots : </label></span><input type="text" name="lots" id="lots" placeholder="A,K,L,C,...." class="form-control"/></div>
 
                 $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -178,10 +178,10 @@ background-size: cover;">
                 $result->close();
 
                 echo('</select></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon1"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label" id="basic-addon2"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" required/></div>
 
-                <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label><br/>
+                <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label>
                 <input type="submit" class="button dark_grey" value="S\'inscrire"/>
             </form>');
 
@@ -193,7 +193,7 @@ background-size: cover;">
 
             <h3>Vous avez déja emprunté du matériel ? Connectez vous</h3>
             <form method="post" action="emprunt.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label"
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"
                 ><label for="conn_mail">@ ISEN : </label></span><input type="email" name="conn_mail" id="conn_mail" placeholder="prenom.nom@isen.fr" class="form-control"
                 /></div>
 

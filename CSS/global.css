@@ -332,3 +332,23 @@ table img{
 th {
     text-align: center;
 }
+
+
+.bootstrap-filestyle{
+    width:100%;
+}
+
+.group-span-filestyle .glyphicon{
+    width: 20px;
+}
+
+.group-span-filestyle{
+    width: 10%;
+}
+
+.group-span-filestyle label{
+    width: 100%;
+    height: 40px;
+    border-right: 0;
+    padding-top: 9px;
+}

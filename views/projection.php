@@ -56,9 +56,9 @@ background-size: cover;">
                     echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
                 }
                 $result->close();?>
-                    </select>
+                    </select>                   </div>
+
                  <input type="submit" class="button dark_grey" value="Récupérer les inscrits"/>
-                   </div>
                 </fieldset>
             </form>
                     

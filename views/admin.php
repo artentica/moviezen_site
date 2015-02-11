@@ -95,6 +95,8 @@ include_once("../includes/function_global.php");
         include '../includes/include_on_all_page.php';
     ?>
         <script src="../js/jquery.datetimepicker.js"></script>
+        <script src="../js/bootstrap.js"></script>
+        <script src="../js/inputfile.js"></script>
 
     <script>
         $(function(){
@@ -104,6 +106,7 @@ include_once("../includes/function_global.php");
             });
             $( document ).ready(function() {
                 $( "#datepicker" ).datetimepicker( "option", "dateFormat", "yy/MMM/dd hh:mm:ss" );
+                $(":file").filestyle({buttonText: " Image",buttonBefore: true});
             });
         });
     </script>
@@ -215,7 +218,7 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input type="date" name="projection_date" id="projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><input type="text" name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_photo">Affiche : </label></span><input type="file" name="projection_affiche" id="projection_affiche" class="form-control"/></div>
+                            <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"></span>--><input type="file" name="projection_affiche" id="projection_affiche" class="form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Ajouter cette projection"/>
                         </fieldset></form>
 
@@ -419,9 +422,9 @@ echo '</div></div><div class="panel panel-default">
                             <fieldset>
     <legend id="ajoute_lot">Ajouter un lot</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="add_lot_id" id="add_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_composition">Composition du lot: </label></span><input type="textarea" name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_composition">Description: </label></span><input type="textarea" name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="add_lot_caution" id="add_lot_caution" placeholder="150&euro;" class="form-control" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_photo">Photo du lot: </label></span><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control"/></div>
+                                <div class="input-group max center"><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control"/></div>
                                 <input type="submit" class="button dark_grey" value="Ajouter ce lot"/>
                             </fieldset></form>
                             ');
