@@ -622,6 +622,44 @@
         return true;
     }
 
+    //FONCTION DE RECUPERATION DE TOUT LES LOTS
+    function renduLotCalendar(){
+        $query = "SELECT id FROM lots";
+        $result = $GLOBALS["bdd"]->query($query);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $liste_lots[] = $row["id"];
+        }
+        $i=1;
+        $query = "SELECT * FROM dispo ORDER BY jour";
+        $result = $GLOBALS["bdd"]->query($query);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            foreach($liste_lots as $liste){
+                if(!intval($row[$liste])){
+                    $jour = $row["jour"];
+                    $date = DateTime::createFromFormat('z', $jour);
+                    echo('
+                    {
+                        "success": 1,
+                        "result": [
+                            {
+                                "id":'.$i.',
+                                "title":'.$liste.',
+                                "url": "http://example.com",
+                                "start": 12039485678000, // Milliseconds
+                                "end": 1234576967000 // Milliseconds
+                            }
+                        ]
+                    }
+
+
+                    ');
+                    $i++;
+                }
+            }
+        }
+    }
 
     //FONCTION DE RECUPERATION DE TOUT LES LOTS
     function recupLot(){
