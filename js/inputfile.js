@@ -172,7 +172,7 @@
 
 		htmlInput : function() {
 			if (this.options.input) {
-				return '<input type="text" class="form-control ' + (this.options.size == 'nr' ? '' : 'input-' + this.options.size) + '" disabled> ';
+				return '<input type="text" class="form-control badge' + (this.options.size == 'nr' ? '' : 'input-' + this.options.size) + '" disabled> ';
 			} else {
 				return '';
 			}
