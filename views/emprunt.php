@@ -137,7 +137,7 @@ background-size: cover;">
 
             <?php
 
-            echo('<table class="table table-striped"><thead><th>Image du lot</th><th>Composition du lot</th><th>Disponible</th><th style="display:none">Identifiant de lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot</th></thead>');
+            echo('<table class="table table-striped table-bordered"><thead><th>Image du lot</th><th>Composition du lot</th><th>Disponible</th><th style="display:none">Identifiant de lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot</th></thead>');
             $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -292,7 +292,7 @@ background-size: cover;">
                 <input type="hidden" name="modif_old_date" id="modif_old_date" value="'.$_POST["modif_lots"].'" required/>
                 <input type="hidden" name="modif_old_mail" id="modif_old_mail" value="'.$_POST["modif_mail"].'" required/>
                 <input type="hidden" name="modif_old_lots" id="modif_old_lots" value="'.$anciens_lots.'" required/>
-                <input type="submit" class="button dark_grey" value="S\'inscrire"/>
+                <input type="submit" class="button dark_grey" value="Modifier cet emprunt"/>
             </form>
                 ');
                 }
@@ -306,6 +306,7 @@ background-size: cover;">
                 ');
 
                 $result = recupEmpruntAjd($_SESSION["mail"]);
+                print_r($result);
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
                     $date_emprunt = $row["date_emprunt"];
