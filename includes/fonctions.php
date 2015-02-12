@@ -150,7 +150,7 @@
         $date_ajd = new DateTime($date_ajd);
         $date_futur = date("Y-m-d H:m:s");
         $date_futur = new DateTime($date_futur);
-        date_add($date_futur, date_interval_create_from_date_string('1 year'));
+        date_add($date_futur, date_interval_create_from_date_string('1 month'));
         $date_ajd = $date_ajd->format('Ymd');
         $date_futur = $date_futur->format('Ymd');
         $date_emprunt_test = new DateTime($date_emprunt);
@@ -192,47 +192,64 @@
 
 
     //FONCTION MODIFICATION D'EMPRUNT (UTILISATEUR)
-    function modifEmprunt($lots,$date_emprunt,$date_retour,$mail){
+    function modifEmprunt($lots,$date_emprunt,$date_retour,$mail,$new_date_emprunt,$new_date_retour){
+        $mail = protect($mail);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
-        $date_emprunt = date("Y-m-d H:m:s", strtotime($date_emprunt));
-        $date_retour = date("Y-m-d H:m:s", strtotime($date_retour));
+        $new_date_emprunt = protect($new_date_emprunt);
+        $new_date_retour = protect($new_date_retour);
+        $new_date_emprunt = date("Y-m-d H:m:s", strtotime($new_date_emprunt));
+        $new_date_retour = date("Y-m-d H:m:s", strtotime($new_date_retour));
         $date_ajd = date("Y-m-d H:m:s");
         $date_ajd = new DateTime($date_ajd);
         $date_futur = date("Y-m-d H:m:s");
         $date_futur = new DateTime($date_futur);
-        date_add($date_futur, date_interval_create_from_date_string('1 year'));
+        date_add($date_futur, date_interval_create_from_date_string('1 month'));
         $date_ajd = $date_ajd->format('Ymd');
         $date_futur = $date_futur->format('Ymd');
-        $date_emprunt_test = new DateTime($date_emprunt);
+        $date_emprunt_test = new DateTime($new_date_emprunt);
         $date_emprunt_test = $date_emprunt_test->format('Ymd');
-        $date_retour_test = new DateTime($date_retour);
+        $date_retour_test = new DateTime($new_date_retour);
         $date_retour_test = $date_retour_test->format('Ymd');
+        $nombre = strlen($lots);
+        $disponible=false;
+        $compteur =0;
+        $date_emprunt_formatée = date("z", strtotime($date_emprunt));
+        $date_retour_formatée = date("z", strtotime($date_retour));
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
-                $date_emprunt_formatée = date("z", strtotime($date_emprunt));
-                $date_retour_formatée = date("z", strtotime($date_retour));
-                $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
+                $verif = "UPDATE dispo SET ".$liste."=1 WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
                 $result = $GLOBALS["bdd"]->query($verif);
-                $disponible=false;
-                $compteur =0;
+            }
+            $new_date_emprunt_formatée = date("z", strtotime($new_date_emprunt));
+            $new_date_retour_formatée = date("z", strtotime($new_date_retour));
+            foreach($lots as $liste){
+                $verif = "SELECT ".$liste." from dispo WHERE jour>=".($new_date_emprunt_formatée+1)." AND jour<".($new_date_retour_formatée+1);
+                $result = $GLOBALS["bdd"]->query($verif);
                 while($row = $result->fetch_array(MYSQLI_ASSOC)){
                     $compteur = $compteur+intval($row[$liste]);
                 }
-                if($compteur == ($date_retour_formatée-$date_emprunt_formatée)){
-                    $disponible = true;
-                }
-                if($disponible){
-                    $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits_lots SET lots=?, date_emprunt=?, date_retour=? WHERE inscrit_mail=?");
-                    $lots = protect($lots);
-                    $date_emprunt = protect($date_emprunt);
-                    $date_retour = protect($date_retour);
-                    $mail = protect($mail);
-                    $query->bind_param('ssss', $lots, $date_emprunt, $date_retour, $mail);
-                    $query->execute();
-                    $query->close();
-                    return true;
-                }
+            }
+        }
+        if($compteur == $nombre*($date_retour_formatée-$date_emprunt_formatée)){
+            $disponible = true;
+        }
+        if($disponible){
+            foreach($lots as $liste){
+                $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits_lots SET lots=?, date_emprunt=?, date_retour=? WHERE inscrit_mail=? AND date_emprunt=?");
+                $liste = protect($liste);
+                $query->bind_param('ssss', $lots, $date_emprunt, $date_retour, $mail);
+                $query->execute();
+                $query->close();
+                $verif = "UPDATE dispo SET ".$liste."=0 WHERE jour>=".($new_date_emprunt_formatée+1)." AND jour<".($new_date_retour_formatée+1);
+                $result = $GLOBALS["bdd"]->query($verif);
+            }
+            return true;
+        }
+        else{
+            foreach($lots as $liste){
+                $verif = "UPDATE dispo SET ".$liste."=0 WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
+                $result = $GLOBALS["bdd"]->query($verif);
             }
         }
     }
