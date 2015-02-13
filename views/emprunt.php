@@ -32,6 +32,16 @@
 
     }
 
+    if(!empty($_POST["mail"]) && !empty($_POST["new"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
+    {
+                    if(ajoutNewEmprunt($_POST["mail"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
+                        $_SESSION["mail"]=protect($_POST["mail"]);
+                        $_SESSION["date_emprunt"]=date("Y-m-d H:m:s", strtotime(protect($_POST["date_emprunt"])));
+                        $_SESSION["emprunteur"]=1;
+                    }
+
+    }
+
     if(!empty($_POST["conn_mail"])){
         if(!empty(recupEmpruntAjd($_POST["conn_mail"]))){
             $_SESSION["emprunteur"]=1;
@@ -234,6 +244,30 @@ background-size: cover;">
             }
             else{
                 echo('
+
+                <legend id="nouvel_emprunt">Effectuer un nouvel emprunt</legend>
+                <form method="post" action="emprunt.php#nouvel_emprunt" id="form-register">
+                <input type="hidden" name="mail" id="mail" value="'.$_SESSION["mail"].'" required/>
+                <input type="hidden" name="new" id="new" value="1" required/>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
+                ');
+
+                $result = recupLot();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $id = $row["id"];
+                    $composition = $row["composition"];
+                    echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                }
+                $result->close();
+
+                echo('</select></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" required/></div>
+
+                <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label>
+                <input type="submit" class="button dark_grey" value="S\'inscrire"/>
+                </form>
                 <legend id="modifie_emprunt">Modifier un emprunt</legend>
                 <form method="post" action="emprunt.php#modifie_emprunt" id="form-register">
                 <input type="hidden" name="modif_mail" id="modif_mail" value="'.$_SESSION["mail"].'" required/>
