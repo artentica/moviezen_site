@@ -20,6 +20,12 @@
         return $protect;
     }
 
+    //FONCTION DE RECUPERATION DES PROMOS DISPONIBLES
+    function recupPromo(){
+        $query = "SELECT * from promotion ORDER BY id";
+        return $GLOBALS["bdd"]->query($query);
+    }
+
 
 //################################################################################################################################################################
 
@@ -189,6 +195,53 @@
                 }
             }
             return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    //FONCTION DE VERIFICATION D'EMPRUNT
+    function verifEmpruntDispo($lots,$date_emprunt,$date_retour){
+        $date_emprunt = protect($date_emprunt);
+        $date_retour = protect($date_retour);
+        $date_emprunt = date("Y-m-d H:m:s", strtotime($date_emprunt));
+        $date_retour = date("Y-m-d H:m:s", strtotime($date_retour));
+        $date_ajd = date("Y-m-d H:m:s");
+        $date_ajd = new DateTime($date_ajd);
+        $date_futur = date("Y-m-d H:m:s");
+        $date_futur = new DateTime($date_futur);
+        date_sub($date_ajd, date_interval_create_from_date_string('1 day'));
+        date_add($date_futur, date_interval_create_from_date_string('1 month'));
+        $date_ajd = $date_ajd->format('Ymd');
+        $date_futur = $date_futur->format('Ymd');
+        $date_emprunt_test = new DateTime($date_emprunt);
+        $date_emprunt_test = $date_emprunt_test->format('Ymd');
+        $date_retour_test = new DateTime($date_retour);
+        $date_retour_test = $date_retour_test->format('Ymd');
+        $reponse = "";
+        if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
+            foreach($lots as $liste){
+                $date_emprunt_formatée = date("z", strtotime($date_emprunt));
+                $date_retour_formatée = date("z", strtotime($date_retour));
+                $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
+                $result = $GLOBALS["bdd"]->query($verif);
+                $disponible=false;
+                $compteur =0;
+                while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                    $compteur = $compteur+intval($row[$liste]);
+                }
+                if($compteur == ($date_retour_formatée-$date_emprunt_formatée)){
+                    $disponible = true;
+                }
+                if($disponible){
+                    $reponse .= '<p class="alert alert-success">Le lot '.$liste.' est disponible sur la période demandée.</p>';
+                }
+                else{
+                    $reponse .= '<p class="alert alert-danger">Le lot '.$liste.' n\'est pas disponible sur la période demandée.</p>';
+                }
+            }
+            return $reponse;
         }
         else{
             return false;

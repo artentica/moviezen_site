@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Ven 13 Février 2015 à 14:08
+-- Généré le :  Ven 13 Février 2015 à 18:14
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -29,6 +29,8 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `admin` (
   `identifiant` text COLLATE utf8_bin NOT NULL,
   `mdp` text COLLATE utf8_bin NOT NULL,
+  `mail` text COLLATE utf8_bin NOT NULL,
+  `responsable_emprunt` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`identifiant`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -36,9 +38,9 @@ CREATE TABLE IF NOT EXISTS `admin` (
 -- Contenu de la table `admin`
 --
 
-INSERT INTO `admin` (`identifiant`, `mdp`) VALUES
-('Artentica', '$2y$10$4JkBOdcgvDL3IjDegV98wu.NQWnmnwpQxpu0s93bYwtWJAldIyk86'),
-('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS');
+INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`) VALUES
+('Artentica', '$2y$10$4JkBOdcgvDL3IjDegV98wu.NQWnmnwpQxpu0s93bYwtWJAldIyk86', '', 0),
+('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS', 'fanch.toquer@laposte.net', 0);
 
 -- --------------------------------------------------------
 
@@ -105,20 +107,20 @@ INSERT INTO `dispo` (`jour`, `B`, `A`, `C`, `D`, `E`) VALUES
 (42, 1, 1, 1, 1, 1),
 (43, 1, 1, 1, 1, 1),
 (44, 1, 1, 1, 1, 1),
-(45, 1, 1, 1, 1, 1),
-(46, 1, 1, 1, 1, 1),
-(47, 1, 1, 1, 1, 1),
-(48, 1, 1, 1, 1, 1),
-(49, 1, 1, 1, 1, 1),
-(50, 1, 1, 1, 1, 1),
-(51, 1, 1, 1, 1, 1),
+(45, 1, 0, 1, 1, 1),
+(46, 1, 0, 1, 1, 1),
+(47, 1, 0, 1, 1, 1),
+(48, 1, 0, 1, 1, 1),
+(49, 1, 0, 1, 1, 1),
+(50, 1, 0, 1, 1, 1),
+(51, 1, 0, 1, 1, 1),
 (52, 1, 1, 1, 1, 1),
 (53, 1, 1, 1, 1, 1),
 (54, 1, 1, 1, 1, 1),
 (55, 1, 1, 1, 1, 1),
 (56, 1, 1, 1, 1, 1),
-(57, 1, 1, 1, 1, 1),
-(58, 1, 1, 1, 1, 1),
+(57, 1, 0, 1, 1, 1),
+(58, 1, 0, 1, 1, 1),
 (59, 1, 1, 1, 1, 1),
 (60, 1, 1, 1, 1, 1),
 (61, 1, 1, 1, 1, 1),
@@ -439,9 +441,19 @@ CREATE TABLE IF NOT EXISTS `inscrits` (
   `prenom` text COLLATE utf8_bin NOT NULL,
   `tel` varchar(10) COLLATE utf8_bin NOT NULL,
   `mail` varchar(255) COLLATE utf8_bin NOT NULL,
-  `classe` text COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`mail`)
+  `classe` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`mail`),
+  KEY `index_classe` (`classe`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `inscrits`
+--
+
+INSERT INTO `inscrits` (`nom`, `prenom`, `tel`, `mail`, `classe`) VALUES
+('TOO', 'fanch', '0600000000', 'fanch@isen-bretagne.fr', 'CIR3'),
+('Test', 'Test', '', 'ftoque@isen-bretagne.fr', 'BTSPREPA2'),
+('Test', 'Test', '0600000000', 'test@isen-bretagne.fr', 'CIR3');
 
 -- --------------------------------------------------------
 
@@ -458,6 +470,14 @@ CREATE TABLE IF NOT EXISTS `inscrits_lots` (
   KEY `lot` (`lots`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Contenu de la table `inscrits_lots`
+--
+
+INSERT INTO `inscrits_lots` (`inscrit_mail`, `lots`, `date_emprunt`, `date_retour`) VALUES
+('test@isen-bretagne.fr', 'A', '2015-02-14 15:02:14', '2015-02-21 15:02:44'),
+('fanch@isen-bretagne.fr', 'A', '2015-02-26 18:02:00', '2015-02-28 18:02:00');
+
 -- --------------------------------------------------------
 
 --
@@ -471,6 +491,13 @@ CREATE TABLE IF NOT EXISTS `lots` (
   `caution` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `lots`
+--
+
+INSERT INTO `lots` (`id`, `composition`, `image`, `caution`) VALUES
+('A', 'Test', '../Images/360bd51e8aec03dd972ee867f1964dc2.png', 250);
 
 -- --------------------------------------------------------
 
@@ -489,6 +516,13 @@ CREATE TABLE IF NOT EXISTS `projections` (
   PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Contenu de la table `projections`
+--
+
+INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`) VALUES
+('Fast and Furious', '2015-02-14', '2015-02-20', 'Brian O\\''Conner, now working for the FBI in LA, teams up with Dominic Toretto to bring down a heroin importer by infiltrating his operation.', '', '../Images/8ae120db25b439ed04f9777e8ca00b38.png', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -503,8 +537,54 @@ CREATE TABLE IF NOT EXISTS `projections_inscrits` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
+-- Contenu de la table `projections_inscrits`
+--
+
+INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES
+('ftoque@isen-bretagne.fr', 'Fast and Furious');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `promotion`
+--
+
+CREATE TABLE IF NOT EXISTS `promotion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `promotion` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `promotion` (`promotion`),
+  KEY `promotion_index` (`promotion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=14 ;
+
+--
+-- Contenu de la table `promotion`
+--
+
+INSERT INTO `promotion` (`id`, `promotion`) VALUES
+(3, 'BTSPREPA1'),
+(6, 'BTSPREPA2'),
+(2, 'CIR1'),
+(5, 'CIR2'),
+(8, 'CIR3'),
+(1, 'CSI1'),
+(4, 'CSI2'),
+(7, 'CSI3'),
+(9, 'ITII3'),
+(11, 'ITII4'),
+(13, 'ITII5'),
+(10, 'M1'),
+(12, 'M2');
+
+--
 -- Contraintes pour les tables exportées
 --
+
+--
+-- Contraintes pour la table `inscrits`
+--
+ALTER TABLE `inscrits`
+  ADD CONSTRAINT `promo_constr` FOREIGN KEY (`classe`) REFERENCES `promotion` (`promotion`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `inscrits_lots`

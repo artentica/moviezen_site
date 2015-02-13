@@ -96,7 +96,20 @@ background-size: cover;">
 			<form method="post" action="cine.php#inscr" id="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control"  required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="Prénom" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><select name="classe" id="classe">');
+
+
+                $result = recupPromo();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $promo = $row["promotion"];
+                    echo('<option value="'.$promo.'">'.$promo.'</option>');
+                }
+                $result->close();
+                  echo('
+
+                    </select>
+                </div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control"  required/></div>
 
                 <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><span><select name="select_projection" id="select_projection"><option></option>

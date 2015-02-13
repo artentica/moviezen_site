@@ -22,7 +22,7 @@
         }
     }
 
-    if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
+    if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"]  && !empty($_POST["emprunter"]))
     {
                     if(ajoutEmprunt2($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
                         $_SESSION["mail"]=protect($_POST["mail"]);
@@ -32,7 +32,7 @@
 
     }
 
-    if(!empty($_POST["mail"]) && !empty($_POST["new"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
+    if(!empty($_POST["mail"]) && !empty($_POST["new"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"]  && !empty($_POST["emprunt_emprunter"]))
     {
                     if(ajoutNewEmprunt($_POST["mail"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
                         $_SESSION["mail"]=protect($_POST["mail"]);
@@ -41,6 +41,8 @@
                     }
 
     }
+
+
 
     if(!empty($_POST["conn_mail"])){
         if(!empty(recupEmpruntAjd($_POST["conn_mail"]))){
@@ -194,14 +196,38 @@ background-size: cover;">
 
             if(!$_SESSION["emprunteur"] && empty($_SESSION["mail"])){
 
-                echo('<h1>Emprunter du matériel</h1>
+                echo('
+                <legend id="emprunte_lot">Emprunter du matériel</legend>
             <p>Merci de renseigner tout les champs</p>
-            <form method="post" action="emprunt.php" id="form-register" style="margin-bottom:35px">
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="prenom.nom@isen.fr" class="form-control" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0612345678" class="form-control" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><input type="text" name="classe" id="classe" placeholder="CIR3" class="form-control" required/></div>
+            <form method="post" action="emprunt.php#emprunte_lot" id="form-register" style="margin-bottom:35px">
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" value="');
+                if(isset($_POST["nom"])){echo $_POST["nom"];}
+                echo('" placeholder="Nom" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom"  value="');
+                if(isset($_POST["prenom"])){echo $_POST["prenom"];}
+                echo('" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="prenom.nom@isen.fr" value="');
+                if(isset($_POST["mail"])){echo $_POST["mail"];}
+                echo('" class="form-control" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0612345678" class="form-control" value="');
+                if(isset($_POST["tel"])){echo $_POST["tel"];}
+                   echo('" pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><select name="classe" id="classe">');
+
+
+                $result = recupPromo();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $promo = $row["promotion"];
+                    if(isset($_POST["classe"]) && $promo == $_POST["classe"]){
+                        echo('<option value="'.$promo.'" selected="selected">'.$promo.'</option>');
+                    }
+                    else{
+                        echo('<option value="'.$promo.'">'.$promo.'</option>');
+                    }
+                }
+                $result->close();
+                  echo('</select></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
                 ');
                 //<div class="input-group max center"><span class="input-group-addon form-label"><label for="lots">Lots : </label></span><input type="text" name="lots" id="lots" placeholder="A,K,L,C,...." class="form-control"/></div>
@@ -216,13 +242,26 @@ background-size: cover;">
                 $result->close();
 
                 echo('</select></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control" value="');
+                if(isset($_POST["date_emprunt"])){echo $_POST["date_emprunt"];}
+                echo('"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" value="');
+                if(isset($_POST["date_retour"])){echo $_POST["date_retour"];}
+                echo('" required/></div>
 
                 <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label>
-                <input type="submit" class="button dark_grey" value="S\'inscrire"/>
+                <input type="submit" class="button dark_grey" name="verifier" value="Vérifier si les lots demandés sont disponibles sur la période demandée"/>
+                <input type="submit" class="button dark_grey" name="emprunter" value="Emprunter"/>
             </form>');
-
+                if(!empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"])  && !empty($_POST["verifier"])){
+                    $result = verifEmpruntDispo($_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"]);
+                    if($result){
+                        echo('<div class="alert">'.$result.'</div>');
+                    }
+                    else{
+                        echo('<div class="alert alert-danger">Erreur lors du traitement de votre demande</div>');
+                    }
+                }
                 echo('
 
             <h2>Rappel des règles d\'emprunt concernant le matériel Moviezen</h2>
@@ -262,12 +301,32 @@ background-size: cover;">
                 $result->close();
 
                 echo('</select></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  value="');
+                if(isset($_POST["date_emprunt"])){echo $_POST["date_emprunt"];}
+                echo('" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" value="');
+                if(isset($_POST["date_retour"])){echo $_POST["date_retour"];}
+                echo('" required/></div>
 
                 <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label>
-                <input type="submit" class="button dark_grey" value="S\'inscrire"/>
+                <input type="submit" class="button dark_grey" name="emprunt_verifier" value="Vérifier si les lots demandés sont disponibles sur la période demandée"/>
+                <input type="submit" class="button dark_grey" name="emprunt_emprunter" value="Emprunter"/>
                 </form>
+
+                ');
+                if(!empty($_POST["mail"]) && !empty($_POST["new"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"]  && !empty($_POST["emprunt_verifier"]))
+    {
+                    $result = verifEmpruntDispo($_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"]);
+                    if($result){
+                        echo('<div class="alert">'.$result.'</div>');
+                    }
+                    else{
+                        echo('<div class="alert alert-danger">Erreur lors du traitement de votre demande</div>');
+                    }
+
+    }
+
+                echo('
                 <legend id="modifie_emprunt">Modifier un emprunt</legend>
                 <form method="post" action="emprunt.php#modifie_emprunt" id="form-register">
                 <input type="hidden" name="modif_mail" id="modif_mail" value="'.$_SESSION["mail"].'" required/>
