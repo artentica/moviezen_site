@@ -38,12 +38,7 @@ html{
     background-color: #EEE;
     border-radius: 4px;
 }
-@media (max-width: 1150px) {
-    .input-group-addon{
-        padding: 6px 6px;
-    }
 
-}
 
 .select2 .input-group{
     margin:0;
@@ -140,6 +135,16 @@ li.select2-selection__choice{
 }
 span#basic-addon1, span#basic-addon2{
     width:25%;
+}
+
+@media (max-width: 1150px) {
+    .input-group-addon{
+        padding: 6px 6px;
+    }
+    .form-control {
+        height: 47px;
+    }
+
 }
 
                                         /*SPECIAL BUTTONS*/

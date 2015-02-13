@@ -7,7 +7,7 @@
 echo'
 <!-- Header -->
             <div id="header-wrapper">
-                <div class="">
+                <div class="container">
 
                     <!-- Header -->
                         <header id="header">
