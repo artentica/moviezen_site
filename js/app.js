@@ -1,13 +1,15 @@
 (function($) {
 
 	"use strict";
-
+    var d= new Date();
+    var n = d.toISOString();
+    var date = n.substring(0,10);
 	var options = {
 		events_source: 'events.json.php',
 		view: 'month',
-		tmpl_path: 'tmpls/',
+		tmpl_path: './tmpls/',
 		tmpl_cache: false,
-		day: '2013-03-12',
+		day: date,
 		onAfterEventsLoad: function(events) {
 			if(!events) {
 				return;

@@ -5,8 +5,8 @@ include_once("../includes/function_global.php");
     connect();
 
 
-    if(!empty($_POST["lot_rendu"])){
-        renduLot($_POST["lot_rendu"]);
+    if(!empty($_POST["rendu_lot_id"]) && !empty($_POST["rendu_lot_lots"]) && !empty($_POST["rendu_lot_date_emprunt"]) && !empty($_POST["rendu_lot_date_retour"])){
+        renduLot($_POST["rendu_lot_id"],$_POST["rendu_lot_lots"],$_POST["rendu_lot_date_emprunt"],$_POST["rendu_lot_date_retour"]);
     }
 ?>
 
@@ -16,8 +16,9 @@ include_once("../includes/function_global.php");
     <meta charset="UTF-8">
 	<title>Calendrier des emprunts</title>
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
-
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
+    <link rel="stylesheet" href="../CSS/calendar.min.css">
+
 	<?php
         include '../includes/include_on_all_page.php';
     ?>
@@ -36,62 +37,80 @@ background-size: cover;">
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
+            <legend id="calendrier">Calendrier des emprunts</legend>
+            <div class="page-header">
+                <div class="pull-right form-inline">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" data-calendar-nav="prev"><< Prev</button>
+                        <button class="btn" data-calendar-nav="today">Today</button>
+                        <button class="btn btn-primary" data-calendar-nav="next">Next >></button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-warning" data-calendar-view="year">Year</button>
+                        <button class="btn btn-warning active" data-calendar-view="month">Month</button>
+                        <button class="btn btn-warning" data-calendar-view="week">Week</button>
+                    </div>
+                </div>
+		     </div>
+            <div id="calendar"></div>
+            <div class="modal hide fade" id="events-modal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Event</h3>
+                </div>
+                <div class="modal-body" style="height: 400px">
+                </div>
+                <div class="modal-footer">
+                    <a href="#" data-dismiss="modal" class="btn">Close</a>
+                </div>
+	       </div>
             <?php
-            echo('<table class="table table-striped"><thead><th>Image du lot</th><th>Composition du lot</th><th>Disponible</th><th style="display:none">Identifiant de lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot</th></thead>');
-            $result = recupLot();
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $id = $row["id"];
-                    $composition = $row["composition"];
-                    $caution = $row["caution"];
-                    $indisponible = "/";
-                    $disponible = '0';
 
 
-                    $date_ajd = date("z");
-                    $query = "SELECT ".$id." FROM dispo WHERE jour=".($date_ajd+1);
-                    $result_dispo = $GLOBALS["bdd"]->query($query);
-                    while ($row_dispo = $result_dispo->fetch_array(MYSQLI_ASSOC))
+                if(!empty($_SESSION["authentifie"])){
+                    echo('
+                    <legend id="table_emprunt">Gestion de la rendu des lots</legend>
+                    <table class="table table-striped table-bordered"><thead><th>Empretant</th><th>Lots empruntés</th><th>Date d\'emprunt</th><th>Date de retour</th><th>Marquer l\'emprunt comme rendu</th></thead>');
+                    $result = recupEmpruntLot();
+                    while ($row = $result->fetch_array(MYSQLI_ASSOC))
                     {
-                        $disponible = $row_dispo[$id];
-                    }
+                        $identifiant = $row["inscrit_mail"];
+                        $lots = $row["concat_lots"];
+                        $date_emprunt = $row["date_emprunt"];
+                        $date_retour = $row["date_retour"];
+                        setlocale (LC_TIME, 'fr_FR','fra');
+                        $date_emprunt_formatée = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                        $date_retour_formatée = utf8_encode(strftime("%d %b %Y",strtotime($date_retour)));
+                        echo('<tr><td>'.$identifiant.'</td><td>'.$lots.'</td><td>'.$date_emprunt_formatée.'</td><td>'.$date_retour_formatée.'</td><td><form method="post" action="calendrier.php#table_emprunt" id="form-register">
+                            <input type="hidden" name="rendu_lot_id" id="rendu_lot_id" value="'.$identifiant.'" required/>
+                            <input type="hidden" name="rendu_lot_lots" id="rendu_lot_lots" value="'.$lots.'" required/>
+                            <input type="hidden" name="rendu_lot_date_emprunt" id="rendu_lot_date_emprunt" value="'.$date_emprunt.'" required/>
+                            <input type="hidden" name="rendu_lot_date_retour" id="rendu_lot_date_retour" value="'.$date_retour.'" required/>
+                            <input type="submit" class="button dark_grey" value="Cet emprunt a bien été rendu"/>
 
-
-
-                    if($disponible){
-                        $disponible='<button type="button" class="button dark_grey button-large">
-  <span class="glyphicon glyphicon-ok" style="color:green"></span></button>';
-                        $class="success";
-                    }else{
-                        $disponible='<button type="button" class="button dark_grey button-large">
-  <span class="glyphicon glyphicon-remove" style="color:red"></span></button>';
-                        $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' ORDER BY `date_retour` DESC LIMIT 1";
-                        $result2 = $GLOBALS["bdd"]->query($query);
-                        while ($row2 = $result2->fetch_array(MYSQLI_ASSOC)){
-                            setlocale (LC_TIME, 'fr_FR','fra');
-                            $indisponible = $row2["date_retour"];
-                            $indisponible = utf8_encode(strftime("%d %B %Y, %H:%M",strtotime($indisponible)));
-                        }
-                        $class="danger";
+                        </form></td></tr>');
                     }
-                    $image = $row["image"];
-                    echo('<tr><td><img src="'.$image.'" alt="image" style=""/><td>'.$composition.'</td></td><td >'.$disponible.'</td><td style="display:none">'.$id.'</td><td>'.$indisponible.'</td><td>'.$caution.'&euro;</td>');
-                    if(!empty($_SESSION["authentifie"])){
-                        echo('<td><form action="calendrier.php" method="post">
-                            <input type="hidden" value="'.$id.'" name="lot_rendu" id="lot_rendu">
-                            <input type="submit" class="btn btn-success" value="Lot rendu"/>
-                        </form></td>');
-                    }
-                    echo('</tr>');
+                    $result->close();
                 }
-                $result->close();
-
-            echo('</table>');
-
             ?>
+
         </div>
 	</div>
 
-
+<script type="text/javascript" src="../js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="../js/underscore-min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/jstz.min.js"></script>
+<script type="text/javascript" src="../js/language/fr-FR.js"></script>
+<script type="text/javascript" src="../js/calendar.js"></script>
+<script type="text/javascript" src="../js/app.js"></script>
+<script type="text/javascript">
+    var calendar = $("#calendar").calendar(
+        {
+            language: 'fr-FR',
+            tmpl_path: "./tmpls/",
+            events_source: './events.json.php'
+        });
+</script>
 </body>
 </html>

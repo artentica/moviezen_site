@@ -62,7 +62,7 @@ if(!String.prototype.formatNum) {
 		// /component/bootstrap-calendar/tmpls/
 		// or absolute
 		// http://localhost/component/bootstrap-calendar/tmpls/
-		tmpl_path:          'tmpls/',
+		tmpl_path:          './tmpls/',
 		tmpl_cache:         true,
 		classes:            {
 			months: {
@@ -185,39 +185,39 @@ if(!String.prototype.formatNum) {
 		after_time:  'Starts after timeline',
 
 
-		m0:  'January',
-		m1:  'February',
-		m2:  'March',
-		m3:  'April',
-		m4:  'May',
-		m5:  'June',
-		m6:  'July',
-		m7:  'August',
-		m8:  'September',
-		m9:  'October',
-		m10: 'November',
-		m11: 'December',
+		m0:  'Janvier',
+        m1:  'Février',
+        m2:  'Mars',
+        m3:  'Avril',
+        m4:  'Mai',
+        m5:  'Juin',
+        m6:  'Juillet',
+        m7:  'Août',
+        m8:  'Septembre',
+        m9:  'Octobre',
+        m10: 'Novembre',
+        m11: 'Décembre',
 
-		ms0:  'Jan',
-		ms1:  'Feb',
-		ms2:  'Mar',
-		ms3:  'Apr',
-		ms4:  'May',
-		ms5:  'Jun',
-		ms6:  'Jul',
-		ms7:  'Aug',
-		ms8:  'Sep',
-		ms9:  'Oct',
-		ms10: 'Nov',
-		ms11: 'Dec',
+        ms0:  'Jan',
+        ms1:  'Fév',
+        ms2:  'Mar',
+        ms3:  'Avr',
+        ms4:  'Mai',
+        ms5:  'Jun',
+        ms6:  'Jul',
+        ms7:  'Aoû',
+        ms8:  'Sep',
+        ms9:  'Oct',
+        ms10: 'Nov',
+        ms11: 'Déc',
 
-		d0: 'Sunday',
-		d1: 'Monday',
-		d2: 'Tuesday',
-		d3: 'Wednesday',
-		d4: 'Thursday',
-		d5: 'Friday',
-		d6: 'Saturday'
+        d0: 'Dimanche',
+        d1: 'Lundi',
+        d2: 'Mardi',
+        d3: 'Mercredi',
+        d4: 'Jeudi',
+        d5: 'Vendredi',
+        d6: 'Samedi'
 	};
 
 	var browser_timezone = '';

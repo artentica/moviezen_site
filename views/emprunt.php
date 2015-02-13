@@ -16,8 +16,9 @@
     }
 
     if(!empty($_POST["conn_mail"])){
-        if(dejaInscrit($_POST["conn_mail"])){
+        if(!empty(dejaInscrit($_POST["conn_mail"]))){
             $_SESSION["emprunteur"]=1;
+            $_SESSION["mail"]=protect($_POST["conn_mail"]);
         }
     }
 
@@ -31,7 +32,38 @@
 
     }
 
+    if(!empty($_POST["mail"]) && !empty($_POST["new"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"])
+    {
+                    if(ajoutNewEmprunt($_POST["mail"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
+                        $_SESSION["mail"]=protect($_POST["mail"]);
+                        $_SESSION["date_emprunt"]=date("Y-m-d H:m:s", strtotime(protect($_POST["date_emprunt"])));
+                        $_SESSION["emprunteur"]=1;
+                    }
 
+    }
+
+    if(!empty($_POST["conn_mail"])){
+        if(!empty(recupEmpruntAjd($_POST["conn_mail"]))){
+            $_SESSION["emprunteur"]=1;
+            $_SESSION["mail"]=protect($_POST["conn_mail"]);
+        }
+    }
+
+    if(!empty($_POST["decon"])){
+       $_SESSION["emprunteur"]=0;
+        unset($_SESSION["mail"]);
+    }
+
+    if(!empty($_POST["annul_lots"])){
+        supprEmprunt($_POST["annul_mail"],$_POST["annul_lots"]);
+    }
+
+    if(!empty($_POST["modification_lots"]) && !empty($_POST["new_date_emprunt"]) && !empty($_POST["new_date_retour"])){
+        $date = explode('/',$_POST["modif_old_date"]);
+        $date_emprunt = $date[0];
+        $date_retour = $date[1];
+        modifEmprunt($_POST["modification_lots"],$_POST["modif_old_lots"],$date_emprunt,$date_retour,$_POST["modif_old_mail"],$_POST["new_date_emprunt"],$_POST["new_date_retour"]);
+    }
 
 
 ?>
@@ -68,6 +100,10 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#lots').select2({
+                width:"100%",
+                 placeholder: "Choisissez le matériel"
+            });
+            $('#modification_lots').select2({
                 width:"100%",
                  placeholder: "Choisissez le matériel"
             });
@@ -110,7 +146,8 @@ background-size: cover;">
 
 
             <?php
-            echo('<table class="table table-striped"><thead><th>Image du lot</th><th>Composition du lot</th><th>Disponible</th><th style="display:none">Identifiant de lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot</th></thead>');
+
+            echo('<table class="table table-striped table-bordered"><thead><th>Image du lot</th><th>Composition du lot</th><th>Disponible</th><th style="display:none">Identifiant de lot</th><th>Indisponible jusqu\'au</th><th>Caution du lot</th></thead>');
             $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -138,7 +175,7 @@ background-size: cover;">
                     }else{
                         $disponible='<button type="button" class="button dark_grey button-large">
   <span class="glyphicon glyphicon-remove" style="color:red"></span></button>';
-                        $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' and jour>=".(date("z")+1)." ORDER BY `date_retour` LIMIT 1";
+                        $query=" SELECT * FROM inscrits_lots WHERE lots='".$id."' ORDER BY `date_retour` DESC LIMIT 1";
                         $result2 = $GLOBALS["bdd"]->query($query);
                         while ($row2 = $result2->fetch_array(MYSQLI_ASSOC)){
                             setlocale (LC_TIME, 'fr_FR','fra');
@@ -148,7 +185,8 @@ background-size: cover;">
                         $class="danger";
                     }
                     $image = $row["image"];
-                    echo('<tr><td><img src="'.$image.'" alt="image" style=""/><td>'.$composition.'</td></td><td >'.$disponible.'</td><td style="display:none">'.$id.'</td><td>'.$indisponible.'</td><td>'.$caution.'&euro;</td></tr>');
+                    echo('<tr><td><img src="'.$image.'" alt="image" style=""/><td>'.$composition.'</td></td><td >'.$disponible.'</td><td style="display:none">'.$id.'</td><td>'.$indisponible.'</td><td>'.$caution.'&euro;</td>');
+                    echo('</tr>');
                 }
                 $result->close();
 
@@ -202,37 +240,125 @@ background-size: cover;">
 
             ');
 
-            if(!empty($_POST["conn_mail"])){
-                echo('Vous avez emprunté : <ol>');
-                $result = recupEmprunt($_POST["conn_mail"]);
-                $_SESSION["conn_mail"]=protect($_POST["conn_mail"]);
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $lot = $row["lots"];
-                    $date_emprunt = $row["date_emprunt"];
-                    $date_retour = $row["date_retour"];
-                    echo('<li>Lot '.$lot.' ');
-                    echo('du '.$date_emprunt.' au '.$date_retour.'</li>');
-                }
-                echo('</ol>');
-                $result->close();
-            }
 
             }
             else{
                 echo('
-                <h1 id="modifie_emprunt">Modifier un emprunt</h1>
-                <form method="post" action="emprunt.php#modifie_emprunt" id="form-register">
-                    <input type="hidden" name="modif_mail" id="modif_mail" value="'.$_SESSION["mail"].'" required/>
-                    <input type="submit" class="button dark_grey" value="Modifier mon emprunt"/>
+
+                <legend id="nouvel_emprunt">Effectuer un nouvel emprunt</legend>
+                <form method="post" action="emprunt.php#nouvel_emprunt" id="form-register">
+                <input type="hidden" name="mail" id="mail" value="'.$_SESSION["mail"].'" required/>
+                <input type="hidden" name="new" id="new" value="1" required/>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
+                ');
+
+                $result = recupLot();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $id = $row["id"];
+                    $composition = $row["composition"];
+                    echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                }
+                $result->close();
+
+                echo('</select></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" required/></div>
+
+                <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label>
+                <input type="submit" class="button dark_grey" value="S\'inscrire"/>
                 </form>
+                <legend id="modifie_emprunt">Modifier un emprunt</legend>
+                <form method="post" action="emprunt.php#modifie_emprunt" id="form-register">
+                <input type="hidden" name="modif_mail" id="modif_mail" value="'.$_SESSION["mail"].'" required/>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="modif_lots">Lots : </label></span><select name="modif_lots" id="modif_lots">
+                ');
+
+                $result = recupEmpruntAjd($_SESSION["mail"]);
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $date_emprunt = $row["date_emprunt"];
+                    $date_retour = $row["date_retour"];
+                    setlocale (LC_TIME, 'fr_FR','fra');
+                    $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                    echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
+                }
+                $result->close();
+                echo('</select></div>
+                    <input type="submit" class="button dark_grey" value="Modifier cet emprunt"/>
+                </form>
+                ');
+                if(!empty($_POST["modif_lots"]) && !empty($_POST["modif_mail"])){
+                    $date = explode('/', $_POST["modif_lots"]);
+                    echo('<form method="post" action="emprunt.php#modifie_emprunt" id="form-register" style="margin-bottom:35px">
+                <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="modification_lots">Lots : </label></span><select name="modification_lots[]" id="modification_lots" multiple="multiple">');
+
+                $result = recupLot();
+                $result2 = recupEmpruntDate($_SESSION["mail"],$_POST["modif_lots"]);
+                $anciens_lots = "";
+                while ($row = $result2->fetch_array(MYSQLI_ASSOC))
+                {
+                    $utilise[] = $row["lots"];
+                }
+                $result2->close();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $id = $row["id"];
+                    $composition = $row["composition"];
+                    $anciens_lots .= '/'.$id;
+                    if(in_array($id,$utilise)){
+                        echo('<option value="'.$id.'" selected="selected">'.$id.' composé de '.$composition.'</option>');
+                    }
+                    else{
+                        echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                    }
+                }
+                $result->close();
 
 
-                <h1>Annuler un emprunt</h1>
+
+
+
+                    echo('
+                </select></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="new_date_emprunt">Date d\'emprunt : </label></span><input name="new_date_emprunt" id="new_date_emprunt" placeholder="Nouvelle date d\'emprunt" class="form-control"  value="'.$date[0].'" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="new_date_retour">Date de retour : </label></span><input name="new_date_retour" id="new_date_retour" placeholder="Nouvelle date de retour" class="form-control datepicker"  value="'.$date[1].'" required/></div>
+                <input type="hidden" name="modif_old_date" id="modif_old_date" value="'.$_POST["modif_lots"].'" required/>
+                <input type="hidden" name="modif_old_mail" id="modif_old_mail" value="'.$_POST["modif_mail"].'" required/>
+                <input type="hidden" name="modif_old_lots" id="modif_old_lots" value="'.$anciens_lots.'" required/>
+                <input type="submit" class="button dark_grey" value="Modifier cet emprunt"/>
+            </form>
+                ');
+                }
+
+
+                echo('
+                <legend id="annulation_emprunt">Annuler un emprunt</legend>
+            <form method="post" action="emprunt.php#annulation_emprunt" id="form-register">
+                <input type="hidden" name="annul_mail" id="annul_mail" value="'.$_SESSION["mail"].'" required/>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="annul_lots">Lots : </label></span><select name="annul_lots" id="annul_lots">
+                ');
+
+                $result = recupEmpruntAjd($_SESSION["mail"]);
+                print_r($result);
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $date_emprunt = $row["date_emprunt"];
+                    $date_retour = $row["date_retour"];
+                    setlocale (LC_TIME, 'fr_FR','fra');
+                    $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                    echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
+                }
+                $result->close();
+                echo('</select></div>
+                <input type="submit" class="button dark_grey" value="Annuler cet emprunt"/>
+            </form>
+
+
+                <legend>Se déconnecter</legend>
             <form method="post" action="emprunt.php" id="form-register">
-                <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'" required/>
-                <input type="hidden" name="del_date" id="del_date" value="'.$_SESSION["date_emprunt"].'" required/>
-                <input type="submit" class="button dark_grey" value="Annuler l\'emprunt que je viens de faire"/>
+                <input type="hidden" name="decon" id="decon" value="1" required/>
+                <input type="submit" class="button dark_grey" value="Se déconnecter"/>
             </form>');
 
             }
@@ -253,6 +379,36 @@ background-size: cover;">
             });
 
             $( "#date_retour" ).datetimepicker({
+                format: 'Y/m/d H:m:s',
+                 minDate:'-1970/01/01',
+                maxDate:'+1970/03/01',
+                lang:'fr',
+                step:15
+            });
+            $( "#modif_date_emprunt" ).datetimepicker({
+                format: 'Y/m/d H:m:s',
+                 minDate:'-1970/01/01',
+                maxDate:'+1970/03/01',
+                lang:'fr',
+                step:15
+            });
+
+            $( "#modif_date_retour" ).datetimepicker({
+                format: 'Y/m/d H:m:s',
+                 minDate:'-1970/01/01',
+                maxDate:'+1970/03/01',
+                lang:'fr',
+                step:15
+            });
+            $( "#new_date_emprunt" ).datetimepicker({
+                format: 'Y/m/d H:m:s',
+                 minDate:'-1970/01/01',
+                maxDate:'+1970/03/01',
+                lang:'fr',
+                step:15
+            });
+
+            $( "#new_date_retour" ).datetimepicker({
                 format: 'Y/m/d H:m:s',
                  minDate:'-1970/01/01',
                 maxDate:'+1970/03/01',
