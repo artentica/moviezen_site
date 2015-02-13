@@ -35,7 +35,9 @@
 
 
 
-
+    if(!empty($_POST["add_respons_id"]) && isset($_POST["add_respons"])){
+        changeAdmin($_POST["add_respons_id"],$_POST["add_respons"]);
+    }
 
 
 
@@ -188,7 +190,24 @@ background-size: cover;">
 
                     echo('
 
+                            <form method="post" action="admin.php#change_respons" id="form-register">
+                            <fieldset>
+    <legend id="change_respons">Mettre un administrateur responsable des emprunts</legend>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id">Nouveau <span title="Mot de passe">MDP</span> : </label></span><select name="add_respons_id" id="add_respons_id">');
+                        $result = recupAdmin();
+                        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                        {
+                            $id = $row["identifiant"];
+                            echo('<option value="'.$id.'">'.$id.'</option>');
+                        }
+                        $result->close();
 
+
+                    echo('</select></div>
+                                <label class="checkbox"><input type="radio" name="add_respons" value="1" checked>Faire de cet administrateur un responsable des emprunts</label>
+                                <label class="checkbox"><input type="radio" name="add_respons" value="0">Ne plus faire de cet administrateur un responsable des emprunts</label>
+                                <input type="submit" class="button dark_grey" value="Modifier cet administrateur"/>
+                            </fieldset></form>
 
 
                             <form method="post" action="admin.php#del_admin" id="form-register"><fieldset>

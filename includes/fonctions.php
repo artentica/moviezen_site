@@ -646,6 +646,12 @@
         return $GLOBALS["bdd"]->query($query);
     }
 
+    //FONCTION VERIFIANT SI L'UTILISATEUR EST CONNU OU NON
+    function recupAdmin(){
+        $query = "SELECT identifiant FROM admin";
+        return $GLOBALS["bdd"]->query($query);
+    }
+
 
 
     //FONCTION D'AJOUT D'UN ADMIN DANS LA BASE
@@ -685,6 +691,18 @@
         $query->close();
         return true;
     }
+
+    //FONCTION DE CHANGEMENT DE RESPONSABILITES POUR UN ADMINISTRATEUR (devenir responsable emprunts pour le moment)
+    function changeAdmin($identifiant, $respons){
+        $identifiant = protect($identifiant);
+        $respons = protect($respons);
+        $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET responsable_emprunt=? WHERE identifiant=?");
+        $query->bind_param('is',$respons,$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
 
 //################################################################################################################################################################
 
