@@ -249,10 +249,10 @@ background-size: cover;">
                             }
                         }
                         if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom)){
-                            echo('<div>La projection'.$_POST["projection_nom"].'a bien été ajoutée dans la base de données !</div>');
+                            echo('<div class="message">La projection'.$_POST["projection_nom"].'a bien été ajoutée dans la base de données !</div>');
                         }
                         else{
-                            echo('<div>La projection'.$_POST["projection_nom"].'n\'a pas pu être ajoutée dans la base de données !</div>');
+                            echo('<div class="message">La projection'.$_POST["projection_nom"].'n\'a pas pu être ajoutée dans la base de données !</div>');
                         }
                     }
 
@@ -339,10 +339,10 @@ background-size: cover;">
                             }
                         }
                         if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"])){
-                            echo("<div>Cette projection a bien été modifiée !</div>");
+                            echo("<div class='message'>Cette projection a bien été modifiée !</div>");
                         }
                         else{
-                            echo("<div>Une erreur s'est produite lors de la modification de cette projection</div>");
+                            echo("<div class='message'>Une erreur s'est produite lors de la modification de cette projection</div>");
                         }
                     }
 
@@ -372,10 +372,10 @@ background-size: cover;">
                     //ACTIVATION DE PROJECTION
                     if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
                         if(activateProj($_POST["activ_proj"])){
-                            echo('<div>Cette projection a bien été activée dans le Ciné de l\'ISEN</div>');
+                            echo('<div class="message">Cette projection a bien été activée dans le Ciné de l\'ISEN</div>');
                         }
                         else{
-                            echo('<div>Cette projection n\'a pu être activée...</div>');
+                            echo('<div class="message">Cette projection n\'a pu être activée...</div>');
                         }
                     }
 

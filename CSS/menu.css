@@ -258,8 +258,7 @@ ul li a.nav-btn:hover {
 
 
 .menu-items {
-                                <!-- Logo -->
-                                    <h1><a href="#" id="logo">Moviezen</a></h1>
+
     top: 200px;
     position: relative;
     transform: rotateX(0deg);
@@ -332,7 +331,7 @@ ul li a.nav-btn:hover {
 #decoInAdmin{
     position: absolute;
     top: 60px;
-left: 15px;
+    left: 15px;
     color: #FFF;
 }
 

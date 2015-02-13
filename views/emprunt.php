@@ -226,9 +226,10 @@ background-size: cover;">
                 echo('
 
             <h2>Rappel des règles d\'emprunt concernant le matériel Moviezen</h2>
-            <p>Une fois l\'inscription effectuée, le matériel vous est réservé durant la période demandée. Il est évident que cela vous engage à respecter les délais spécifiés. Les délais trop longs tels que des emprunts de plus de 3 mois par exemple ne sont pas autorisés. Un chèque de caution doit être émis à l\'ordre de Moviezen avec le montant total des lots empruntés. Ce chèque de caution est évidemment conservé en guise de garantie et ne sera pas touché si le matériel est rendu dans le même état que lors de l\'emprunt.</p>
+            <p>Une fois l\'inscription effectuée, le matériel vous est réservé durant la période demandée. Il est évident que cela vous engage à respecter les délais spécifiés. Les délais trop longs tels que des emprunts de plus de 3 mois par exemple ne sont pas autorisés. Un chèque de caution doit être émis à l\'ordre de Moviezen avec le montant total des lots empruntés. Ce chèque de caution est évidemment conservé en guise de garantie et ne sera pas touché si le matériel est rendu dans le même état que lors de l\'emprunt.</p></div></div>
 
-
+            <div class="panel panel-default">
+		<div class="panel-body">
             <h3>Vous avez déja emprunté du matériel ? Connectez vous</h3>
             <form method="post" action="emprunt.php" id="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"
