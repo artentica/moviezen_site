@@ -16,8 +16,8 @@ include_once("../includes/function_global.php");
     <meta charset="UTF-8">
 	<title>Calendrier des emprunts</title>
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
-
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
+    <link rel="stylesheet" href="../CSS/calendar.min.css">
 	<?php
         include '../includes/include_on_all_page.php';
     ?>
@@ -36,7 +36,10 @@ background-size: cover;">
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
+
+            <div id="calendar"></div>
             <?php
+
 
                 if(!empty($_SESSION["authentifie"])){
                     echo('
@@ -67,6 +70,17 @@ background-size: cover;">
         </div>
 	</div>
 
-
+<script type="text/javascript" src="../js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="../js/underscore-min.js"></script>
+<script type="text/javascript" src="../js/calendar.js"></script>
+<script type="text/javascript" src="../js/language/fr-FR.js"></script>
+<script type="text/javascript">
+    var calendar = $("#calendar").calendar(
+        {
+            language: 'fr-FR',
+            tmpl_path: "./tmpls/",
+            events_source: './ajax.php'
+        });
+</script>
 </body>
 </html>

@@ -313,7 +313,7 @@
 
     //FONCTION DE RECUPERATION DES EMPRUNTS ET REGROUPEMENTS SOUS FORME DE LOT
     function recupEmpruntLot(){
-        $query = "SELECT inscrit_mail, GROUP_CONCAT(lots) as concat_lots, date_emprunt, date_retour FROM inscrits_lots GROUP BY  date_emprunt";
+        $query = "SELECT inscrit_mail, GROUP_CONCAT(lots) as concat_lots, date_emprunt, date_retour FROM inscrits_lots GROUP BY date_emprunt";
         return $GLOBALS["bdd"]->query($query);
     }
 
@@ -623,42 +623,31 @@
     }
 
     //FONCTION DE RECUPERATION DE TOUT LES LOTS
-    function renduLotCalendar(){
-        $query = "SELECT id FROM lots";
-        $result = $GLOBALS["bdd"]->query($query);
-        while ($row = $result->fetch_array(MYSQLI_ASSOC))
-        {
-            $liste_lots[] = $row["id"];
-        }
+    function renduLotCalendar($date_start,$date_end){
+        $out = array();
         $i=1;
-        $query = "SELECT * FROM dispo ORDER BY jour";
+        $query = "SELECT * FROM inscrits_lots WHERE date_emprunt>='".$date_start."' AND date_retour<'".$date_end."' ORDER BY date_emprunt";
         $result = $GLOBALS["bdd"]->query($query);
         while ($row = $result->fetch_array(MYSQLI_ASSOC))
         {
-            foreach($liste_lots as $liste){
-                if(!intval($row[$liste])){
-                    $jour = $row["jour"];
-                    $date = DateTime::createFromFormat('z', $jour);
-                    echo('
-                    {
-                        "success": 1,
-                        "result": [
-                            {
-                                "id":'.$i.',
-                                "title":'.$liste.',
-                                "url": "http://example.com",
-                                "start": 12039485678000, // Milliseconds
-                                "end": 1234576967000 // Milliseconds
-                            }
-                        ]
-                    }
-
-
-                    ');
-                    $i++;
-                }
-            }
+            $lot = $row["lots"];
+            $id = $row["inscrit_mail"];
+            $date_emprunt = $row["date_emprunt"];
+            $date_emprunt_formatée = date_create_from_format("Y-m-d H:m:s", $date_emprunt);
+            $date_emprunt_formatée = date_format($date_emprunt_formatée,'U');
+            $date_retour = $row["date_retour"];
+            $date_retour_formatée = date_create_from_format("Y-m-d H:m:s", $date_retour);
+            $date_retour_formatée = date_format($date_retour_formatée,'U');
+            $out[] = array(
+                'id' => $i,
+                'title' => $lot,
+                'url' => $id,
+                'start' => strtotime($date_emprunt).'000', // Milliseconds
+                'end' => strtotime($date_retour).'000' // Milliseconds
+            );
+            $i++;
         }
+        echo json_encode(array('success' => 1, 'result' => $out));
     }
 
     //FONCTION DE RECUPERATION DE TOUT LES LOTS
