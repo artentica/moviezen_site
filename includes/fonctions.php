@@ -638,10 +638,32 @@
             $date_retour = $row["date_retour"];
             $date_retour_formatée = date_create_from_format("Y-m-d H:m:s", $date_retour);
             $date_retour_formatée = date_format($date_retour_formatée,'U');
+            $modulo = $i % 6;
+            switch ($modulo) {
+                case 0:
+                    $couleur = "important";
+                    break;
+                case 1:
+                    $couleur = "success";
+                    break;
+                case 2:
+                    $couleur = "warning";
+                    break;
+                case 3:
+                    $couleur = "info";
+                    break;
+                case 4:
+                    $couleur = "inverse";
+                    break;
+                case 5:
+                    $couleur = "special";
+                    break;
+            }
             $out[] = array(
                 'id' => $i,
                 'title' => $lot,
-                'url' => $id,
+                'url' => '',
+                "class" => "event-".$couleur,
                 'start' => strtotime($date_emprunt).'000', // Milliseconds
                 'end' => strtotime($date_retour).'000' // Milliseconds
             );
