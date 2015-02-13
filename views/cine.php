@@ -64,7 +64,7 @@ background-size: cover;">
             <?php
             $nom_actif = "";
             $result = recupProjActive();
-            if(!empty($result)){
+            if($result->num_rows){
 
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {

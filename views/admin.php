@@ -183,9 +183,10 @@ background-size: cover;">
 
 
 
-                            <p>Attention, cette action est irréversible</p>
+
                             <form method="post" action="admin.php#del_admin" id="form-register"><fieldset>
     <legend id="del_admin">Supprimer un administrateur</legend>
+    <p>Attention, cette action est irréversible</p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="suppr_admin">Identifiant : </label></span><input name="suppr_admin" id="suppr_admin" type="text" placeholder="Turing" class="form-control" required/></div>
 
                                 <input type="submit" class="button dark_grey" value="Supprimer cet administrateur"/>
@@ -383,9 +384,10 @@ background-size: cover;">
                     echo('
 
 
-                            <p>Attention, cette action est irréversible</p>
+
                             <form method="post" action="admin.php#del_proj" id="form-register"><fieldset>
     <legend id="del_proj">Supprimer une projection</legend>
+    <p>Attention, cette action est irréversible</p>
                                 <div class="input-group max center"><span class="input-group-addon form-label"><select name="suppr_proj" id="suppr_proj">');
                     $result = recupProjDesc();
                     while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -511,6 +513,7 @@ echo '</div></div><div class="panel panel-default">
 
                             <form method="post" action="admin.php#supprimer_lot" id="form-register"><fieldset>
     <legend id="supprimer_lot">Supprimer un lot</legend>
+    <p>Attention, cette action est irréversible</p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><select name="suppr_lot" id="suppr_lot">');
                 $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))

@@ -1,8 +1,10 @@
 <?php
 
+    require_once('../conf/config.php');
+
     //FONCTION DE CONNEXION A LA BDD
     function connect(){
-		$GLOBALS["bdd"] = new mysqli('localhost', 'utilisateur', 'azerty', 'moviezen');
+		$GLOBALS["bdd"] = new mysqli(HOST, USER, PASSWORD, DATABASE);
 		$GLOBALS["bdd"]->set_charset("utf8");
 		if ($GLOBALS["bdd"]->connect_errno){
 			echo "Echec lors de la connexion à MySQL :(" . $GLOBALS["bdd"]->connect_errno .") " . $GLOBALS["bdd"]->connect_errno;
