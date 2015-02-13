@@ -168,8 +168,10 @@
         $date_emprunt_test = $date_emprunt_test->format('Ymd');
         $date_retour_test = new DateTime($date_retour);
         $date_retour_test = $date_retour_test->format('Ymd');
+        $string_lots = "";
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
+                $string_lots .= $liste." ";
                 $date_emprunt_formatée = date("z", strtotime($date_emprunt));
                 $date_retour_formatée = date("z", strtotime($date_retour));
                 $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
@@ -194,11 +196,29 @@
                     echo('Le lot '.$liste.' n\'est pas disponible sur la période demandée et n\'a donc pas été emprunté.');
                 }
             }
-            return true;
+            $ok = true;
         }
         else{
-            return false;
+            $ok = false;
         }
+        return $ok;
+
+        //PARTIE ENVOI DE MAIL, A NE TESTER QU'AVEC UN SERVEUR SMTP FONCTIONNEL
+        //Ca fait tout planter méchamment sinon
+        /*if($ok){
+            $verif = "SELECT mail from admin WHERE responsable_emprunt=1";
+            $result = $GLOBALS["bdd"]->query($verif);
+            setlocale (LC_TIME, 'fr_FR','fra');
+            $date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+            $date_retour = utf8_encode(strftime("%d %b %Y",strtotime($date_retour)));
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                mail($row["mail"],"Un nouvel emprunt a été effectué !", "Les lots ".$string_lots." \r\n seront empruntés par ".$nom." ".$prenom." \r\n du ".$date_emprunt." au ".$date_retour);
+            }
+            return $ok;
+        }
+        else{
+            return $ok;
+        }*/
     }
 
     //FONCTION DE VERIFICATION D'EMPRUNT
@@ -291,11 +311,29 @@
                     echo('Le lot '.$liste.' n\'est pas disponible sur la période demandée et n\'a donc pas été emprunté.');
                 }
             }
-            return true;
+            $ok = true;
         }
         else{
-            return false;
+            $ok = false;
         }
+        return $ok;
+
+        //PARTIE ENVOI DE MAIL, A NE TESTER QU'AVEC UN SERVEUR SMTP FONCTIONNEL
+        //Ca fait tout planter méchamment sinon
+        /*if($ok){
+            $verif = "SELECT mail from admin WHERE responsable_emprunt=1";
+            $result = $GLOBALS["bdd"]->query($verif);
+            setlocale (LC_TIME, 'fr_FR','fra');
+            $date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+            $date_retour = utf8_encode(strftime("%d %b %Y",strtotime($date_retour)));
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                mail($row["mail"],"Un nouvel emprunt a été effectué !", "Les lots ".$string_lots." \r\n seront empruntés par ".$nom." ".$prenom." \r\n du ".$date_emprunt." au ".$date_retour);
+            }
+            return $ok;
+        }
+        else{
+            return $ok;
+        }*/
     }
 
 
@@ -328,6 +366,7 @@
         $date_retour_formatée = date("z", strtotime($date_retour));
         $new_date_emprunt_formatée = date("z", strtotime($new_date_emprunt));
         $new_date_retour_formatée = date("z", strtotime($new_date_retour));
+        $string_lots = "";
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             $anciens = explode('/',$anciens_lots);
             foreach($anciens as $liste){
@@ -351,6 +390,7 @@
             $query->execute();
             $query->close();
             foreach($lots as $liste){
+                $string_lots .= $liste." ";
                 $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
                 $liste = protect($liste);
                 $query->bind_param('ssss', $mail,$liste, $new_date_emprunt, $new_date_retour);
@@ -359,14 +399,33 @@
                 $verif = "UPDATE dispo SET ".$liste."=0 WHERE jour>=".($new_date_emprunt_formatée+1)." AND jour<".($new_date_retour_formatée+1);
                 $result = $GLOBALS["bdd"]->query($verif);
             }
-            return true;
+            $ok = true;
         }
         else{
             foreach($lots as $liste){
                 $verif = "UPDATE dispo SET ".$liste."=0 WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
                 $result = $GLOBALS["bdd"]->query($verif);
             }
+            $ok = false;
         }
+        return $ok;
+
+        //PARTIE ENVOI DE MAIL, A NE TESTER QU'AVEC UN SERVEUR SMTP FONCTIONNEL
+        //Ca fait tout planter méchamment sinon
+        /*if($ok){
+            $verif = "SELECT mail from admin WHERE responsable_emprunt=1";
+            $result = $GLOBALS["bdd"]->query($verif);
+            setlocale (LC_TIME, 'fr_FR','fra');
+            $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($new_date_emprunt)));
+            $new_date_retour = utf8_encode(strftime("%d %b %Y",strtotime($new_date_retour)));
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                mail($row["mail"],"Un emprunt a été modifié !", "Les lots ".$string_lots." \r\n seront empruntés par ".$nom." ".$prenom." \r\n du ".$new_date_emprunt." au ".$new_date_retour);
+            }
+            return $ok;
+        }
+        else{
+            return $ok;
+        }*/
     }
 
 
@@ -590,12 +649,14 @@
 
 
     //FONCTION D'AJOUT D'UN ADMIN DANS LA BASE
-    function addAdmin($identifiant,$mdp){
+    function addAdmin($identifiant,$mdp,$mail,$respons){
         $identifiant = protect($identifiant);
         $mdp = protect($mdp);
+        $mail = protect($mail);
+        $respons = protect($respons);
         $mdp = password_hash($mdp,PASSWORD_DEFAULT);
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?)");
-        $query->bind_param('ss',$identifiant,$mdp);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?,?,?)");
+        $query->bind_param('sssi',$identifiant,$mdp,$mail,$respons);
         $query->execute();
         $query->close();
         return true;

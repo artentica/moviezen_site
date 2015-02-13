@@ -164,17 +164,24 @@ background-size: cover;">
     <legend id="add_admin">Ajouter un administrateur</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="azertyU²&io$p" class="form-control" required/></div>
-
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mail">Adresse mail : </label></span><input type="mail" name="add_mail" id="add_mail" placeholder="test@gmail.com" class="form-control" required/></div>
+                                <label class="checkbox"><input type="checkbox" name="add_respons" value="1">Faire de cet administrateur un responsable des emprunts ?</label>
                                 <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
                             </fieldset></form>
                         ');
                     //AJOUT D'ADMINISTRATEUR
-                    if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && $_SESSION["authentifie"]){
-                        if(addAdmin($_POST["add_id"],$_POST["add_mdp"])){
-                            echo('<div>L\'administrateur '.protect($_POST["add_id"]).' a bien été ajouté à la base de données !</div>');
+                    if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && !empty($_POST["add_mail"]) && $_SESSION["authentifie"]){
+                        if(!empty($_POST["add_respons"])){
+                            $respons = 1;
                         }
                         else{
-                            echo('<div>L\'administrateur '.protect($_POST["add_id"]).' n\'a pas pu être ajouté à la base de données !</div>');
+                            $respons = 0;
+                        }
+                        if(addAdmin($_POST["add_id"],$_POST["add_mdp"],$_POST["add_mail"],$respons)){
+                            echo('<div class="alert alert-success">L\'administrateur '.protect($_POST["add_id"]).' a bien été ajouté à la base de données !</div>');
+                        }
+                        else{
+                            echo('<div class="alert alert-danger">L\'administrateur '.protect($_POST["add_id"]).' n\'a pas pu être ajouté à la base de données !</div>');
                         }
                     }
 
