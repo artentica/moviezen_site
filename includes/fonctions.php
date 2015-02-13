@@ -661,9 +661,10 @@
             }
             $out[] = array(
                 'id' => $i,
-                'title' => $lot,
+                'title' => 'Le lot '.$lot.' a été emprunté par '.$id,
                 'url' => '',
                 "class" => "event-".$couleur,
+                "text" => $lot,
                 'start' => strtotime($date_emprunt).'000', // Milliseconds
                 'end' => strtotime($date_retour).'000' // Milliseconds
             );

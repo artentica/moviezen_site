@@ -18,6 +18,7 @@ include_once("../includes/function_global.php");
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" href="../CSS/calendar.min.css">
+
 	<?php
         include '../includes/include_on_all_page.php';
     ?>
@@ -36,8 +37,33 @@ background-size: cover;">
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
-
+            <legend id="calendrier">Calendrier des emprunts</legend>
+            <div class="page-header">
+                <div class="pull-right form-inline">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" data-calendar-nav="prev"><< Prev</button>
+                        <button class="btn" data-calendar-nav="today">Today</button>
+                        <button class="btn btn-primary" data-calendar-nav="next">Next >></button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-warning" data-calendar-view="year">Year</button>
+                        <button class="btn btn-warning active" data-calendar-view="month">Month</button>
+                        <button class="btn btn-warning" data-calendar-view="week">Week</button>
+                    </div>
+                </div>
+		     </div>
             <div id="calendar"></div>
+            <div class="modal hide fade" id="events-modal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Event</h3>
+                </div>
+                <div class="modal-body" style="height: 400px">
+                </div>
+                <div class="modal-footer">
+                    <a href="#" data-dismiss="modal" class="btn">Close</a>
+                </div>
+	       </div>
             <?php
 
 
@@ -67,19 +93,23 @@ background-size: cover;">
                     $result->close();
                 }
             ?>
+
         </div>
 	</div>
 
 <script type="text/javascript" src="../js/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="../js/underscore-min.js"></script>
-<script type="text/javascript" src="../js/calendar.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/jstz.min.js"></script>
 <script type="text/javascript" src="../js/language/fr-FR.js"></script>
+<script type="text/javascript" src="../js/calendar.js"></script>
+<script type="text/javascript" src="../js/app.js"></script>
 <script type="text/javascript">
     var calendar = $("#calendar").calendar(
         {
             language: 'fr-FR',
             tmpl_path: "./tmpls/",
-            events_source: './ajax.php'
+            events_source: './events.json.php'
         });
 </script>
 </body>
