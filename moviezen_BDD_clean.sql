@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Ven 13 Février 2015 à 14:04
+-- Généré le :  Ven 13 Février 2015 à 14:08
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -38,8 +38,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 
 INSERT INTO `admin` (`identifiant`, `mdp`) VALUES
 ('Artentica', '$2y$10$4JkBOdcgvDL3IjDegV98wu.NQWnmnwpQxpu0s93bYwtWJAldIyk86'),
-('Francois', '$2y$10$r07fAGkoS5ZPaie6ch8ff.6JT2gZ1i3M7XRub/y80MHFQDjsYlALq'),
-('Turing', '$2y$10$Vji7Q8AI7cIZZCeJ4uFbV.DWCte6HUUNzzpWYwqADs1ewsi8/GpWu');
+('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS');
 
 -- --------------------------------------------------------
 
