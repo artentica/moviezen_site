@@ -237,7 +237,17 @@ background-size: cover;">
                 {
                     $id = $row["id"];
                     $composition = $row["composition"];
-                    echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                    if(isset($_POST["lots"])){
+                        if(in_array($id,$_POST["lots"])){
+                            echo('<option value="'.$id.'" selected="selected">'.$id.' composé de '.$composition.'</option>');
+                        }
+                        else{
+                            echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                        }
+                    }
+                    else{
+                        echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                    }
                 }
                 $result->close();
 
@@ -297,16 +307,26 @@ background-size: cover;">
                 {
                     $id = $row["id"];
                     $composition = $row["composition"];
-                    echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                    if(isset($_POST["lots"])  && isset($_POST["emprunt_verifier"])){
+                        if(in_array($id,$_POST["lots"])){
+                            echo('<option value="'.$id.'" selected="selected">'.$id.' composé de '.$composition.'</option>');
+                        }
+                        else{
+                            echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                        }
+                    }
+                    else{
+                        echo('<option value="'.$id.'">'.$id.' composé de '.$composition.'</option>');
+                    }
                 }
                 $result->close();
 
                 echo('</select></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_emprunt">Date d\'emprunt : </label></span><input name="date_emprunt" id="date_emprunt" placeholder="Date d\'emprunt" class="form-control"  value="');
-                if(isset($_POST["date_emprunt"])){echo $_POST["date_emprunt"];}
+                if(isset($_POST["date_emprunt"]) && isset($_POST["emprunt_verifier"])){echo $_POST["date_emprunt"];}
                 echo('" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="date_retour">Date de retour : </label></span><input name="date_retour" id="date_retour" placeholder="Date de retour" class="form-control datepicker" value="');
-                if(isset($_POST["date_retour"])){echo $_POST["date_retour"];}
+                if(isset($_POST["date_retour"])  && isset($_POST["emprunt_verifier"])){echo $_POST["date_retour"];}
                 echo('" required/></div>
 
                 <label class="checkbox"><input type="checkbox" name="accepter" required value="1"> <b>Je reconnais avoir pris connaissance des conditions d\'utilisation de l\'emprunt de matériel Moviezen et jure sur l\'honneur de m\'y tenir, sans quoi Satan viendra moisonner mon âme</b></label>
