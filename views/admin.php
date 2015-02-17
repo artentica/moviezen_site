@@ -434,7 +434,6 @@ background-size: cover;">
 
       </div>
       <div class="modal-footer">
-      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <input type="submit" class="button dark_grey" value="Supprimer cette projection" disabled/>
       </div>
     </div>
