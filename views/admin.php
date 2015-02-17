@@ -51,29 +51,6 @@
 
 
 
-    //GESTION DES LOTS
-
-
-
-    //MODIFICATION DE LOTS
-                    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
-                        $nom="";
-                        if(!empty($_FILES["modif_lot_photo"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
-                            }
-                        }
-                        if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
-                            $modifie = true;
-                        }
-                        else{
-                            $modifie = false;
-                        }
-                    }
 
 
 
@@ -103,11 +80,13 @@
     <script>
         $(function(){
             $( ".datepicker" ).datetimepicker({
-                minDate:'-1970/01/01',
-                format: 'Y/m/d h:m:s'
+                lang:'fr',
+                closeOnDateSelect:false,
+                timepicker:true,
+                step:10,
+                format:"d/m/Y H:i"
             });
             $( document ).ready(function() {
-                $( "#datepicker" ).datetimepicker( "option", "dateFormat", "yy/MMM/dd hh:mm:ss" );
                 $(":file").filestyle({buttonText: " Image",buttonBefore: true,badge: false});
             });
         });
@@ -142,7 +121,7 @@ background-size: cover;">
                             <fieldset>
     <legend id="mdpchange">Modifier votre mot de passe</legend>
                                 <input type="hidden" name="modif_id" id="modif_id" value="'.$_SESSION["id"].'"></input>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_mdp">Nouveau <span title="Mot de passe">MDP</span> : </label></span><input type="password" name="modif_mdp" id="modif_mdp" placeholder="azertyU²&io$p" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_mdp">Nouveau <span title="Mot de passe">MDP</span> : </label></span><input type="password" name="modif_mdp" id="modif_mdp" placeholder="p4$$w08d" class="form-control" required/></div>
                                 <input type="submit" class="button dark_grey" value="Modifier votre mot de passe"/>
                             </fieldset></form>
 
@@ -151,10 +130,10 @@ background-size: cover;">
                     //CHANGEMENT DE MDP
                     if(!empty($_POST["modif_mdp"]) && $_SESSION["authentifie"]){
                          if(modifMDP($_POST["modif_id"],$_POST["modif_mdp"])){
-                             echo('<div>Votre mot de passe a été changé avec succés !</div>');
+                             echo('<div class="alert alert-success message">Votre mot de passe a été changé avec succés !</div>');
                          }
                         else{
-                            echo('Une erreur s\'est déclenchée durant le changement de votre mot de passe');
+                            echo('<div class="alert alert-danger message">Une erreur s\'est déclenchée durant le changement de votre mot de passe</div>');
                         }
                     }
 
@@ -165,14 +144,17 @@ background-size: cover;">
                             <fieldset>
     <legend id="add_admin">Ajouter un administrateur</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="azertyU²&io$p" class="form-control" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mail">Adresse mail : </label></span><input type="mail" name="add_mail" id="add_mail" placeholder="test@gmail.com" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="p4$$w08d" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mail">Adresse mail : </label></span><input type="mail" name="add_mail" id="add_mail" placeholder="admin@gmail.com" class="form-control" required/></div>
                                 <label class="checkbox"><input type="checkbox" name="add_respons" value="1">Faire de cet administrateur un responsable des emprunts ?</label>
                                 <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
                             </fieldset></form>
                         ');
+
                     //AJOUT D'ADMINISTRATEUR
+
                     if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && !empty($_POST["add_mail"]) && $_SESSION["authentifie"]){
+
                         if(!empty($_POST["add_respons"])){
                             $respons = 1;
                         }
@@ -180,10 +162,10 @@ background-size: cover;">
                             $respons = 0;
                         }
                         if(addAdmin($_POST["add_id"],$_POST["add_mdp"],$_POST["add_mail"],$respons)){
-                            echo('<div class="alert alert-success">L\'administrateur '.protect($_POST["add_id"]).' a bien été ajouté à la base de données !</div>');
+                            echo('<div class="alert message alert-success">L\'administrateur "'.protect($_POST["add_id"]).'" a bien été ajouté à la base de données !</div>');
                         }
                         else{
-                            echo('<div class="alert alert-danger">L\'administrateur '.protect($_POST["add_id"]).' n\'a pas pu être ajouté à la base de données !</div>');
+                            echo('<div class="alert message alert-danger">L\'administrateur "'.protect($_POST["add_id"]).'" n\'a pas pu être ajouté à la base de données !</div>');
                         }
                     }
 
@@ -193,7 +175,7 @@ background-size: cover;">
                             <form method="post" action="admin.php#change_respons" id="form-register">
                             <fieldset>
     <legend id="change_respons">Mettre un administrateur responsable des emprunts</legend>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id">Nouveau <span title="Mot de passe">MDP</span> : </label></span><select name="add_respons_id" id="add_respons_id">');
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id">Identifiant : </label></span><select name="add_respons_id" id="add_respons_id">');
                         $result = recupAdmin();
                         while ($row = $result->fetch_array(MYSQLI_ASSOC))
                         {
@@ -212,8 +194,16 @@ background-size: cover;">
 
                             <form method="post" action="admin.php#del_admin" id="form-register"><fieldset>
     <legend id="del_admin">Supprimer un administrateur</legend>
-    <p>Attention, cette action est irréversible</p>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="suppr_admin">Identifiant : </label></span><input name="suppr_admin" id="suppr_admin" type="text" placeholder="Turing" class="form-control" required/></div>
+    <p class="be_aware">Attention, cette action est irréversible</p>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="suppr_admin">Identifiant : </label></span><select name="suppr_admin" id="suppr_admin">');
+                     $result = recupAdmin();
+                        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                        {
+                            $id = $row["identifiant"];
+                            echo('<option value="'.$id.'">'.$id.'</option>');
+                        }
+                        $result->close();
+                    echo('</select></div>
 
                                 <input type="submit" class="button dark_grey" value="Supprimer cet administrateur"/>
                             </fieldset></form>
@@ -223,14 +213,14 @@ background-size: cover;">
                     if(!empty($_POST["suppr_admin"]) && $_SESSION["authentifie"]){
                         if(strcmp($_POST["suppr_admin"],$_SESSION["id"])!=0){
                             if(supprAdmin($_POST["suppr_admin"])){
-                                echo('<div>L\'administrateur '.protect($_POST["suppr_admin"]).' a bien été retiré de la base de données</div>');
+                                echo('<div class="alert alert-success message">L\'administrateur "'.protect($_POST["suppr_admin"]).'" a bien été retiré de la base de données</div>');
                             }
                             else{
-                                echo('<div>Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
+                                echo('<div class="alert alert-danger message">Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
                             }
                         }
                         else{
-                            echo('<div>Vous ne pouvez pas vous supprimer vous même !</div>');
+                            echo('<div class="alert alert-danger message">Vous ne pouvez pas vous supprimer vous même !</div>');
                         }
                     }
                     echo '</div></div><div class="panel panel-default">
@@ -241,10 +231,10 @@ background-size: cover;">
                         <form method="post" action="admin.php#add_proj" id="form-register" enctype="multipart/form-data"><fieldset>
     <legend id="add_proj">Ajouter une Projection</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Nom du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="projection_release" id="projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="projection_release" id="projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="projection_date" id="projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><input type="textarea" name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" required/></div>
                             <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"></span>--><input type="file"  name="projection_affiche" id="projection_affiche" class="form-control" required/></div>
                             <input type="submit" class="button dark_grey" value="Ajouter cette projection"/>
                         </fieldset></form>
@@ -270,15 +260,15 @@ background-size: cover;">
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
                                 $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/".$nom.".".$extension_upload;
+                                $nom = "../Images/affiche/".$nom.".".$extension_upload;
                                 $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
                             }
                         }
                         if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom)){
-                            echo('<div class="message">La projection'.$_POST["projection_nom"].'a bien été ajoutée dans la base de données !</div>');
+                            echo('<div class="alert alert-success message">La projection "'.$_POST["projection_nom"].'" a bien été ajoutée dans la base de données !</div>');
                         }
                         else{
-                            echo('<div class="message">La projection'.$_POST["projection_nom"].'n\'a pas pu être ajoutée dans la base de données !</div>');
+                            echo('<div class="alert alert-danger message">La projection "'.$_POST["projection_nom"].'" n\'a pas pu être ajoutée dans la base de données !</div>');
                         }
                     }
 
@@ -300,8 +290,7 @@ background-size: cover;">
                 {
                     $nom = $row["nom"];
                     $date = $row["date_projection"];
-                    $date = date("d/m/Y", strtotime($date));
-                    echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                    echo('<option value="'.$nom.'">'.$nom.' projeté le '.date("d/m/Y", $date).' à '.date("H\hi", $date).'</option>');
                 }
                 $result->close();
 
@@ -323,13 +312,13 @@ background-size: cover;">
                             $commentaires = $row["commentaires"];
                             echo('<form method="post" action="admin.php#mod_proj" id="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$nom.'" name="old_projection_nom" id="old_projection_nom"/>
-                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_release">Date de release : </label></span><input  name="new_projection_release" id="new_projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" value="'.$date_release.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_date">Date de projection : </label></span><input  name="new_projection_date" id="new_projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" required value="'.$date_projection.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_description">Description : </label></span><input type="text" name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required value="'.$description.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label"><label for="new_projection_commentaires">Commentaires : </label></span><input type="text" name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" value="'.$commentaires.'"/></div>
-                            <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span>--><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="form-control" required/></div>
-                            <input type="submit" class="button dark_grey" value="Modifier cette projection"/>
+                           <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="new_projection_release" id="new_projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" value="'.date("d/m/Y", $date_release).' '.date("H:i", $date_release).'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="new_projection_date" id="new_projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" required value="'.date("d/m/Y", $date_projection).' '.date("H:i", $date_projection).'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><input type="text" name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required value="'.$description.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" value="'.$commentaires.'"/></div>
+                            <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span>--><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="form-control"/></div>
+                            <input type="submit" class="button dark_grey" value="Sauvegarder les changements"/>
 
 
 
@@ -360,15 +349,15 @@ background-size: cover;">
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
                                 $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/".$nom.".".$extension_upload;
+                                $nom = "../Images/affiche/".$nom.".".$extension_upload;
                                 $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
                             }
                         }
                         if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"])){
-                            echo("<div class='message'>Cette projection a bien été modifiée !</div>");
+                            echo("<div class='alert alert-success message'>Cette projection a bien été modifiée !</div>");
                         }
                         else{
-                            echo("<div class='message'>Une erreur s'est produite lors de la modification de cette projection</div>");
+                            echo("<div class='alert alert-danger message'>Une erreur s'est produite lors de la modification de cette projection</div>");
                         }
                     }
 
@@ -386,8 +375,7 @@ background-size: cover;">
                             {
                                 $nom = $row["nom"];
                                 $date = $row["date_projection"];
-                                $date = date("d/m/Y", strtotime($date));
-                                echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                                echo('<option value="'.$nom.'">'.$nom.' projeté le '.date("d/m/Y", $date).' à '.date("H\hi", $date).'</option>');
                             }
                             $result->close();
                     echo('
@@ -398,10 +386,10 @@ background-size: cover;">
                     //ACTIVATION DE PROJECTION
                     if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
                         if(activateProj($_POST["activ_proj"])){
-                            echo('<div class="message">Cette projection a bien été activée dans le Ciné de l\'ISEN</div>');
+                            echo('<div class="alert alert-success message">Cette projection a bien été activée dans le Ciné de l\'ISEN</div>');
                         }
                         else{
-                            echo('<div class="message">Cette projection n\'a pu être activée...</div>');
+                            echo('<div class="alert alert-danger message">Cette projection n\'a pu être activée...</div>');
                         }
                     }
 
@@ -413,29 +401,54 @@ background-size: cover;">
 
                             <form method="post" action="admin.php#del_proj" id="form-register"><fieldset>
     <legend id="del_proj">Supprimer une projection</legend>
-    <p>Attention, cette action est irréversible</p>
+    <p class="be_aware">Attention, cette action est irréversible</p>
                                 <div class="input-group max center"><span class="input-group-addon form-label"><select name="suppr_proj" id="suppr_proj">');
                     $result = recupProjDesc();
                     while ($row = $result->fetch_array(MYSQLI_ASSOC))
                     {
                         $nom = $row["nom"];
                         $date = $row["date_projection"];
-                        $date = date("d/m/Y", strtotime($date));
-                        echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                        echo('<option value="'.$nom.'">'.$nom.' projeté le '.date("d/m/Y", $date).' à '.date("H\hi", $date).'</option>');
                     }
                     $result->close();
                     echo('</select></div>
 
-                                <input type="submit" class="button dark_grey" value="Supprimer cette projection"/>
+
+                                <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" onClick="suppr_projec_conf()">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="projectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="projectionModalLabel">Suppression de projections</h4>
+      </div>
+      <div id="proj_texte_suppr" class="modal-body">
+
+          <input type="textarea" id="anim_proj_to_suppr" placeholder="Nom de la projection" onkeyup="verif_same($(this))" class="form-control" required>
+
+
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" class="button dark_grey" value="Supprimer cette projection" disabled/>
+      </div>
+    </div>
+  </div>
+</div>
                             </fieldset></form>');
 
                     //SUPPRESSION DE PROJECTION
                     if(!empty($_POST["suppr_proj"]) &&  $_SESSION["authentifie"]){
                         if(supprProj($_POST["suppr_proj"])){
-                            echo('<div class="alert alert-success">La projection'.$_POST["suppr_proj"].'a bien été retirée dans la base de données !</div>');
+                            echo('<div class="alert message alert-success">La projection "'.$_POST["suppr_proj"].'" a bien été retirée dans la base de données !</div>');
                         }
                         else{
-                            echo('<div class="alert alert-danger">Une erreur s\'est produite lors de la requête</div>');
+                            echo('<div class="alert message alert-danger">Une erreur s\'est produite lors de la requête</div>');
                         }
                     }
 
@@ -443,6 +456,37 @@ background-size: cover;">
 
 echo '</div></div><div class="panel panel-default">
 		<div class="panel-body">';
+
+
+
+                    //GESTION DES LOTS
+
+
+
+    //MODIFICATION DE LOTS
+
+                    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
+                        $nom="";
+
+                        if(!empty($_FILES["modif_lot_photo"])){
+                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
+                            if ( in_array($extension_upload,$extensions_valides) ){
+                                $nom = md5(uniqid(rand(), true));
+                                $nom = "../Images/lot/".$nom.".".$extension_upload;
+                                $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+                            }
+                        }
+                        if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
+                            $modifie = true;
+                        }
+                        else{
+                            $modifie = false;
+                        }
+                    }
+
+
+
                     echo('
 
                     <h1>Gestion des lots</h1>
@@ -465,16 +509,16 @@ echo '</div></div><div class="panel panel-default">
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['add_lot_photo']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
                                 $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/".$nom.".".$extension_upload;
+                                $nom = "../Images/lot/".$nom.".".$extension_upload;
                                 $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
                             }
                         }
                         if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])){
 
-                            echo('<div class="alert alert-success">Ce lot a bien été ajouté dans la base de données</div>');
+                            echo('<div class="alert message alert-success">Ce lot a bien été ajouté dans la base de données</div>');
                         }
                         else{
-                            echo('<div class="alert alert-danger">Ce lot n\'a pas pu être ajouté dans la base de données</div>');
+                            echo('<div class="alert message alert-danger">Ce lot n\'a pas pu être ajouté dans la base de données</div>');
                         }
                     }
 
@@ -513,11 +557,11 @@ echo '</div></div><div class="panel panel-default">
                             echo('<form method="post" action="admin.php#modifie_lot" id="form-register" enctype="multipart/form-data">
 
                             <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id">Identifiant du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Nom" class="form-control" required value="'.$id.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_compo">Date de release : </label></span><input type="text" name="modif_lot_compo" id="modif_lot_compo"  class="form-control" value="'.$composition.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_caution">Caution du lot (en euros) : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150" class="form-control" value="'.$caution.'"/></div>
-                            <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"><label for="modif_lot_photo">Photo du lot: </label></span>--><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="form-control" required/></div>
-                            <input type="submit" class="button dark_grey" value="Modifier ce lot"/>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required value="'.$id.'"/></div>
+                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_compo">Description: </label></span><input type="textarea" name="modif_lot_compo" id="modif_lot_compo" placeholder="Caméra sony avec 3 batteries" class="form-control" required value="'.$composition.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150&euro;" class="form-control" required value="'.$caution.'"/></div>
+                            <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"><label for="modif_lot_photo">Photo du lot: </label></span>--><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="form-control"/></div>
+                            <input type="submit" class="button dark_grey" value="Sauvegarder les changements"/>
 
 
 
@@ -539,7 +583,7 @@ echo '</div></div><div class="panel panel-default">
 
                             <form method="post" action="admin.php#supprimer_lot" id="form-register"><fieldset>
     <legend id="supprimer_lot">Supprimer un lot</legend>
-    <p>Attention, cette action est irréversible</p>
+    <p class="be_aware">Attention, cette action est irréversible</p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><select name="suppr_lot" id="suppr_lot">');
                 $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -558,10 +602,10 @@ echo '</div></div><div class="panel panel-default">
                 //SUPPRESSION DE LOTS
                 if(!empty($_POST["suppr_lot"]) && $_SESSION["authentifie"]){
                     if(supprLot($_POST["suppr_lot"])){
-                        echo('<div class="alert alert-success">Ce lot a bien été supprimé !</div>');
+                        echo('<div class="alert message alert-success">Ce lot a bien été supprimé !</div>');
                     }
                     else{
-                        echo('<div class="alert alert-danger">Ce lot n\'a pas pu être supprimé !</div>');
+                        echo('<div class="alert message alert-danger">Ce lot n\'a pas pu être supprimé !</div>');
                     }
                 }
 
@@ -571,8 +615,8 @@ echo '</div></div><div class="panel panel-default">
                 echo('<h1>Espace d\'administration</h1>
 
             <form method="post" action="admin.php" id="form-register">
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Nom" class="form-control" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Prénom" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Username" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Password" class="form-control" required/></div>
 
                 <input type="submit" class="button dark_grey" value="Se connecter"/>
             </form>');
@@ -580,9 +624,54 @@ echo '</div></div><div class="panel panel-default">
 
 
             ?>
+
+
+
+
 		</div>
 	</div>
 
+<script>
+    function suppr_projec_conf(){
+        $('#projectionModal').modal({backdrop: true,keyboard: true});
+        var proj = $('#suppr_proj').val();
+        $( "#proj_texte_suppr p" ).remove();
+        $( "#proj_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+proj+'">'+proj+'</span>" ?</p>');
 
-</body>
+    }
+
+    function suppr_lot_conf(){
+        $('#projectionModal').modal({backdrop: true,keyboard: true});
+        var lot = $('#suppr_proj').val();
+        $( "#proj_texte_suppr p" ).remove();
+        $( "#proj_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+lot+'">'+lot+'</span>" ?</p>');
+
+    }
+
+
+    function suppr_admin_conf(){
+        $('#projectionModal').modal({backdrop: true,keyboard: true});
+        var admin = $('#suppr_proj').val();
+        $( "#proj_texte_suppr p" ).remove();
+        $( "#proj_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+admin+'">'+admin+'</span>" ?</p>');
+
+    }
+
+    function verif_same(e){
+        var to_suppr = e.parent().children("p").children("span").text();
+
+        var currentval = e.val();
+        var input = e.parent().parent().children(".modal-footer").children("input.button.dark_grey");
+        (to_suppr==currentval)?input.attr('disabled',false):input.attr('disabled',true);
+/*
+        console.log(currentval+"  "+to_suppr);
+*/
+/*
+        console.log(to_suppr);
+*/
+    }
+</script>
+
+
+    </body>
 </html>

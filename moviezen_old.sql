@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
--- Client: localhost
--- Généré le: Mar 17 Février 2015 à 17:28
--- Version du serveur: 5.5.40-0ubuntu0.14.04.1
--- Version de PHP: 5.5.9-1ubuntu4.5
+-- Client :  127.0.0.1
+-- Généré le :  Mer 11 Février 2015 à 10:16
+-- Version du serveur :  5.6.17
+-- Version de PHP :  5.5.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de données: `moviezen`
+-- Base de données :  `moviezen`
 --
 
 -- --------------------------------------------------------
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`) VALUES
-('Artentica', '$2y$10$fBOFmT.E4oBoYrkrWJcho.k/D3WhRR7aPGKBxRbidQ4/FtkD5EftW', '', 1),
+('Artentica', '$2y$10$4JkBOdcgvDL3IjDegV98wu.NQWnmnwpQxpu0s93bYwtWJAldIyk86', '', 0),
 ('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS', 'fanch.toquer@laposte.net', 0);
 
 -- --------------------------------------------------------
@@ -451,8 +451,8 @@ CREATE TABLE IF NOT EXISTS `inscrits` (
 CREATE TABLE IF NOT EXISTS `inscrits_lots` (
   `inscrit_mail` varchar(255) COLLATE utf8_bin NOT NULL,
   `lots` varchar(2) COLLATE utf8_bin NOT NULL,
-  `date_emprunt` double NOT NULL,
-  `date_retour` double NOT NULL,
+  `date_emprunt` DOUBLE NOT NULL,
+  `date_retour` DOUBLE NOT NULL,
   KEY `inscri` (`inscrit_mail`),
   KEY `lot` (`lots`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -487,8 +487,8 @@ INSERT INTO `lots` (`id`, `composition`, `image`, `caution`) VALUES
 
 CREATE TABLE IF NOT EXISTS `projections` (
   `nom` varchar(255) COLLATE utf8_bin NOT NULL,
-  `date_release` double NOT NULL,
-  `date_projection` double NOT NULL,
+  `date_release` DOUBLE NOT NULL,
+  `date_projection` DOUBLE NOT NULL,
   `description` text COLLATE utf8_bin NOT NULL,
   `commentaires` text COLLATE utf8_bin NOT NULL,
   `affiche` text COLLATE utf8_bin NOT NULL,
@@ -499,9 +499,6 @@ CREATE TABLE IF NOT EXISTS `projections` (
 --
 -- Contenu de la table `projections`
 --
-
-INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`) VALUES
-('azer', 1423758000, 1423843800, 'fd', 'fd', '../Images/affiche/c1311999a04d7f1d370c480b47901d88.jpg', 0);
 
 -- --------------------------------------------------------
 

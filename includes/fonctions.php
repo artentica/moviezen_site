@@ -582,8 +582,12 @@
         $description = protect($description);
         $commentaires = protect($commentaires);
         $affiche = protect($affiche);
-        $date_release = date("Y-m-d", strtotime($date_release));
-        $date_projection = date("Y-m-d", strtotime($date_projection));
+        $date_release .= ":00";
+
+        $date_projection .= ":00";
+
+        $date_release = strtotime(str_replace('/', '-',$date_release));
+        $date_projection = strtotime(str_replace('/', '-',$date_projection));
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections VALUES(?,?,?,?,?,?,?)");
         $active = 0;
         $query->bind_param('ssssssi',$nom,$date_release,$date_projection,$description,$commentaires,$affiche, $active);
@@ -596,6 +600,12 @@
     //FONCTION DE SUPPRESSION D'UNE PROJECTION DE LA BDD
     function supprProj($nom){
         $nom = protect($nom);
+        $query2 = "SELECT  `affiche` FROM  `projections` WHERE  `nom` ='".$nom."'";
+            $result = $GLOBALS["bdd"]->query($query2);
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $imagetodelete = $row["affiche"];
+            }
+            unlink($imagetodelete);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections WHERE nom=?");
         $query->bind_param('s',$nom);
         $query->execute();
@@ -615,10 +625,28 @@
         $description = protect($description);
         $commentaires = protect($commentaires);
         $ancien_nom = protect($ancien_nom);
-        $date_release = date("Y-m-d", strtotime($date_release));
-        $date_projection = date("Y-m-d", strtotime($date_projection));
-        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, commentaires=?, affiche=? WHERE nom=?");
-        $query->bind_param('sssssss',$nom,$date_release,$date_projection,$description,$commentaires,$affiche,$ancien_nom);
+
+         $date_release .= ":00";
+
+        $date_projection .= ":00";
+
+        $date_release = strtotime(str_replace('/', '-',$date_release));
+        $date_projection = strtotime(str_replace('/', '-',$date_projection));
+        if($affiche!=''){
+            $query2 = "SELECT  `affiche` FROM  `projections` WHERE  `nom` ='".$ancien_nom."'";
+            $result = $GLOBALS["bdd"]->query($query2);
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $imagetodelete = $row["affiche"];
+            }
+            unlink($imagetodelete);
+
+            $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, affiche=?, commentaires=? WHERE nom=?");
+        $query->bind_param('siissss',$nom,$date_release,$date_projection,$description,$affiche,$commentaires,$ancien_nom);
+        }else{
+             $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, commentaires=? WHERE nom=?");
+        $query->bind_param('siisss',$nom,$date_release,$date_projection,$description,$commentaires,$ancien_nom);
+        }
+
         $query->execute();
         $query->close();
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections_inscrits SET projection=? WHERE projection=?");
@@ -735,6 +763,12 @@
     //FONCTION DE SUPPRESSION D'UN LOT
     function supprLot($identifiant){
         $identifiant = protect($identifiant);
+        $query = "SELECT image from lots WHERE id='".$identifiant."'";
+            $result = $GLOBALS["bdd"]->query($query);
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $imagetodelete = $row["image"];
+            }
+         unlink($imagetodelete);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM lots WHERE id=?");
         $query->bind_param('s',$identifiant);
         $query->execute();
@@ -764,9 +798,19 @@
             while($row = $result->fetch_array(MYSQLI_ASSOC)){
                 $image = $row["image"];
             }
+            $query = $GLOBALS["bdd"]->prepare("UPDATE `lots` SET `id`=?,`composition`=?,`caution`=? WHERE `id`=?");
+        $query->bind_param('ssis',$identifiant,$composition,$caution,$ancien_identifiant);
+        }else{
+            $query = "SELECT image from lots WHERE id='".$ancien_identifiant."'";
+            $result = $GLOBALS["bdd"]->query($query);
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $imagetodelete = $row["image"];
+            }
+            unlink($imagetodelete);
+            $query = $GLOBALS["bdd"]->prepare("UPDATE `lots` SET `id`=?,`composition`=?,`image`=?,`caution`=? WHERE `id`=?");
+        $query->bind_param('sssis',$identifiant,$composition,$image,$caution,$ancien_identifiant);
         }
-        $query = $GLOBALS["bdd"]->prepare("UPDATE lots SET id=?, composition=?, image=?, caution=?  WHERE id=?");
-        $query->bind_param('sssss',$identifiant,$composition,$image,$caution,$ancien_identifiant);
+
         $query->execute();
         $query->close();
         modifDispoLot($identifiant,$ancien_identifiant);

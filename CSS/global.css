@@ -83,6 +83,11 @@ h1{
     height: 42px;
 }
 
+form select{
+    height: 44px;
+}
+
+
 p, li {
     margin: 0 0 10px;
     font-size: 16px;
@@ -144,6 +149,10 @@ span#basic-addon1, span#basic-addon2{
     .form-control {
         height: 47px;
     }
+
+    form select{
+    height: 49px;
+}
 
 }
 
@@ -312,7 +321,7 @@ border: none;
 }
 
 #form-register{
-    margin-top: 45px;
+    margin-top: 55px;
 }
 
 .checkbox{
@@ -332,6 +341,10 @@ table img{
 .table tbody > tr > td,
 .table tfoot > tr > td {
     vertical-align: middle;
+}
+
+.table{
+    margin-bottom: 50px;
 }
 
 th {
@@ -366,4 +379,122 @@ margin-top: 20px;
           box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     border-radius: 4px;
 
+}
+
+/*RESPONSIVE TABLE*/
+
+table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+	/* Zebra striping */
+
+	th {
+		background: #3B3E45;
+		color: white;
+		font-weight: bold;
+	}
+	td, th {
+		padding: 6px;
+		border: 1px solid #ccc;
+		text-align: center;
+	}
+
+
+
+	/*
+	Max width before this PARTICULAR table gets nasty
+	This query will take effect for any screen smaller than 760px
+	and also iPads specifically.
+	*/
+	@media
+	only screen and (max-width: 760px),
+	(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+		tr { border: 1px solid #ccc; }
+
+		.table tbody > tr > td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			padding-left: 50%;
+            text-align: center;
+		}
+
+		td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 45%;
+			padding-right: 10px;
+			white-space: nowrap;
+		}
+
+		/*
+		Label the data
+		*/
+		td:nth-of-type(1):before { content: "Image du lot"; }
+		td:nth-of-type(2):before { content: "Sescripion du lot"; }
+		td:nth-of-type(3):before { content: "Disponible"; }
+		td:nth-of-type(4):before { content: "lot"; }
+		td:nth-of-type(5):before { content: "Indisponibilité"; }
+		td:nth-of-type(6):before { content: "Caution du lot"; }
+	}
+
+	/* Smartphones (portrait and landscape) ----------- */
+	@media only screen
+	and (min-device-width : 320px)
+	and (max-device-width : 480px) {
+		body {
+			padding: 0;
+			margin: 0;
+			width: 320px; }
+		}
+
+	/* iPads (portrait and landscape) ----------- */
+	@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+		body {
+			width: 495px;
+		}
+	}
+
+	tr:nth-of-type(even) {
+background: rgba(211, 211, 211, 0.46);
+}
+
+tr:nth-of-type(odd) {
+background: rgba(255, 255, 255, 0.47);
+}
+
+.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
+background-color: initial;
+}
+/*BUTTON RATIO*/
+input[type="radio"], .checkbox input[type="checkbox"] {
+    margin: 6px 7px 0;
+    float: none;
+}
+
+input{
+    line-height:100%;
+}
+
+.be_aware{
+    color: rgba(189, 0, 0, 0.68);
+font-weight: bold;
 }
