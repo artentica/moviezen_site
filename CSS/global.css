@@ -212,7 +212,7 @@ input.button {
     text-decoration: none;
     text-shadow: 0 1px 0 #fafafa; }
 
-input.button:hover {
+input.button:hover:enabled {
     background: #e4e4e4;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#e4e4e4), to(#ededed));
     background: -moz-linear-gradient(#e4e4e4, #ededed);
@@ -221,7 +221,7 @@ input.button:hover {
     border-bottom: solid 3px #b2b1b1;
     box-shadow: inset 0 0 0 1px #efefef; }
 
-input.button:active {
+input.button:active:enabled {
     background: #dfdfdf;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#dfdfdf), to(#e3e3e3));
     background: -moz-linear-gradient(#dfdfdf, #e3e3e3);
@@ -235,6 +235,20 @@ input.button:active {
 /**
  * Dark Grey
  */
+input.button.dark_grey:disabled,button.button.dark_grey:disabled {
+    margin-top: 15px;
+    cursor: not-allowed;
+    background: #EAEAEA;
+    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#EAEAEA), to(#C7C7C7));
+    background: -moz-linear-gradient(#EAEAEA, #C7C7C7);
+    background: linear-gradient(#EAEAEA, #C7C7C7);
+    border: solid 1px #D2D2D2;
+    border-bottom: solid 3px #A5A5A5;
+    box-shadow: inset 0 0 0 1px #E3E3E3;
+    color: #949494;
+    text-shadow: 0 1px 0 #E0E0E0;
+}
+
 input.button.dark_grey,button.button.dark_grey {
     margin-top: 15px;
     background: #d1d1d1;
@@ -247,7 +261,7 @@ input.button.dark_grey,button.button.dark_grey {
     color: #555;
     text-shadow: 0 1px 0 #d6d6d6; }
 
-input.button.dark_grey:hover {
+input.button.dark_grey:hover:enabled {
     background: #b7b7b7;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#b7b7b7), to(#c2c2c2));
     background: -moz-linear-gradient(#b7b7b7, #c2c2c2);
@@ -373,12 +387,6 @@ th {
 
 .message{
 margin-top: 20px;
-  background-image: none;
-  outline: 0;
-  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    border-radius: 4px;
-
 }
 
 /*RESPONSIVE TABLE*/
@@ -499,13 +507,43 @@ input{
 font-weight: bold;
 }
 
-.modal-footer input:disabled {
+.modal-footer input.button.dark_grey {
+
+    background: linear-gradient(#CB8282, #E74949);
+    border: solid 1px #B4B4B4;
+    border-bottom: solid 3px #BE7070;
+    box-shadow: inset 0 0 0 1px #CAB4B4;
+    color: #555;
+    text-shadow: inherit;
+}
+
+.modal-footer input.button.dark_grey:disabled {
 color: rgba(189, 0, 0, 0.38);
+    cursor: not-allowed;
 border: solid 1px rgba(189, 0, 0, 0.19);
 border-bottom-color: rgba(189, 0, 0, 0.19);
 border-bottom-style: solid;
 border-bottom-width: 3px;
+background: linear-gradient(#D1D1D1, #AFAFAF);
+
 }
+
+
+
+.modal-footer input.button:hover:enabled {
+    background: linear-gradient(#E74949, #CB8282);
+    border-bottom-style: solid;
+    border-bottom-width: 3px;
+    border-color: #B4B4B4;
+    border-bottom-color: #BE7070;
+    box-shadow: inset 0 0 0 1px #CAB4B4;
+    text-shadow: inherit;
+}
+
+.modal-footer input.button:active:enabled {
+    border: solid 1px #959595;
+    top:2px;}
+
 
 .modal-footer {
     padding: 0px 20px 20px;
@@ -518,4 +556,16 @@ border-bottom-width: 3px;
     margin: 0;
     line-height: 1.428571429;
     color: rgba(189, 0, 0, 0.68);
+}
+
+form button.button{
+    font: bold 15px Arial, Helvetica, Clean, sans-serif;
+
+padding: 16px 28px;
+}
+
+span.glyphicon.glyphicon-warning-sign{
+    color: rgba(189, 0, 0, 0.68);
+    margin-left: 5px;
+    margin-right: 4px;
 }

@@ -676,7 +676,7 @@
 
     //FONCTION VERIFIANT SI L'UTILISATEUR EST CONNU OU NON
     function recupAdmin(){
-        $query = "SELECT identifiant FROM admin";
+        $query = "SELECT identifiant, responsable_emprunt FROM admin";
         return $GLOBALS["bdd"]->query($query);
     }
 
@@ -709,15 +709,31 @@
 
 
     //FONCTION DE CHANGEMENT DE MOT DE PASSE POUR L'ADMINISTRATEUR COURANT
-    function modifMDP($identifiant, $mdp){
+    function modifMDP($identifiant, $mdp, $oldMDP){
         $identifiant = protect($identifiant);
         $mdp = protect($mdp);
+
+        $query = "SELECT * FROM admin WHERE identifiant='".$identifiant."'";
+        $result = $GLOBALS["bdd"]->query($query) or trigger_error($GLOBALS["bdd"]->error.$query);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $hash = $row["mdp"];
+        }
+        $result->free();
+
+        if(password_verify($oldMDP, $hash)){
+
+
+
+
         $mdp = password_hash($mdp,PASSWORD_DEFAULT);
         $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET mdp=? WHERE identifiant=?");
         $query->bind_param('ss',$mdp,$identifiant);
         $query->execute();
         $query->close();
         return true;
+        }
+        return false;
     }
 
     //FONCTION DE CHANGEMENT DE RESPONSABILITES POUR UN ADMINISTRATEUR (devenir responsable emprunts pour le moment)

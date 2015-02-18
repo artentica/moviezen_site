@@ -5,7 +5,6 @@
     connect();
 
 
-
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
@@ -31,28 +30,172 @@
     }
 
 
+//  Fonction de suppression et modification en tout genre
 
 
+    //var
+    $modifMDP = 0;
+    $addAdmini = 0;
+    $changeResp = 0;
+    $supprAdmin = 0;
+    $addProjection = 0;
+    $modifProj = 0;
+    $activeProj = 0;
+    $supprProj = 0;
+    $ajoutLot = 0;
+    $supprLot = 0;
 
+        //modif MDP
+if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSION["authentifie"]){
+                         if(modifMDP($_POST["modif_id"],$_POST["modif_mdp"],$_POST["ancien_modif_mdp"])){
+                             $modifMDP = 1;
+                         }
+                        else $modifMDP = 2;
+}
+    //Ajout Admin
+ if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && !empty($_POST["add_mail"]) && $_SESSION["authentifie"]){
+
+                        if(!empty($_POST["add_respons"])){
+                            $respons = 1;
+                        }
+                        else{
+                            $respons = 0;
+                        }
+     if(addAdmin($_POST["add_id"],$_POST["add_mdp"],$_POST["add_mail"],$respons)) $addAdmini=1;
+     else $addAdmini = 2;
+ }
+
+    //change resp Admin
 
     if(!empty($_POST["add_respons_id"]) && isset($_POST["add_respons"])){
-        changeAdmin($_POST["add_respons_id"],$_POST["add_respons"]);
+        if(changeAdmin($_POST["add_respons_id"],$_POST["add_respons"])) $changeResp = 1;
+        else $changeResp = 2;
+
+    }
+
+    //Supprimer Admin
+    if(!empty($_POST["suppr_admin"]) && $_SESSION["authentifie"]){
+         if(strcmp($_POST["suppr_admin"],$_SESSION["id"])!=0){
+                if(supprAdmin($_POST["suppr_admin"])) $supprAdmin = 1;
+                else $supprAdmin = 2;
+          }
+          else $supprAdmin = 3;
+
+    }
+
+    //Ajout de Projection
+    if(!empty($_POST["projection_nom"]) && !empty($_POST["projection_date"]) && !empty($_POST["projection_description"]) && $_SESSION["authentifie"]){
+                        $nom="";
+                        if(empty($_POST["projection_release"])){
+                           $date_release = "";
+                        }
+                        else{
+                            $date_release = $_POST["projection_release"];
+                        }
+                        if(empty($_POST["projection_commentaires"])){
+                            $commentaires = "";
+                        }
+                        else{
+                            $commentaires = $_POST["projection_commentaires"];
+                        }
+                        if(!empty($_FILES["projection_affiche"])){
+                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
+                            if ( in_array($extension_upload,$extensions_valides) ){
+                                $nom = md5(uniqid(rand(), true));
+                                $nom = "../Images/affiche/".$nom.".".$extension_upload;
+                                $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
+                            }
+                        }
+                                        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom))  $addProjection =1;
+                else $addProjection = 2;
     }
 
 
+    //MODIFICATION DE PROJECTION
+                    if(!empty($_POST["new_projection_nom"]) && !empty($_POST["new_projection_date"]) && !empty($_POST["new_projection_description"]) && !empty($_POST["old_projection_nom"]) && $_SESSION["authentifie"]){
+                        if(empty($_POST["new_projection_release"])){
+                           $date_release = "";
+                        }
+                        else{
+                            $date_release = $_POST["new_projection_release"];
+                        }
+                        if(empty($_POST["new_projection_commentaires"])){
+                            $commentaires = "";
+                        }
+                        else{
+                            $commentaires = $_POST["new_projection_commentaires"];
+                        }
+                        $nom="";
+                        if(!empty($_FILES["new_projection_affiche"])){
+                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
+                            if ( in_array($extension_upload,$extensions_valides) ){
+                                $nom = md5(uniqid(rand(), true));
+                                $nom = "../Images/affiche/".$nom.".".$extension_upload;
+                                $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
+                            }
+                        }
+                                                if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"])) $modifProj = 1;
+                        else $modifProj = 2;
+                    }
 
-    //GESTION DES PROJECTIONS
+
+    //ACTIVATION DE PROJECTION
+                    if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
+                        if(activateProj($_POST["activ_proj"])) $activeProj = 1;
+                        else $activeProj = 2;
+                    }
+
+    //SUPPRESSION DE PROJECTION
+                    if(!empty($_POST["suppr_proj"]) &&  $_SESSION["authentifie"]){
+                        if(supprProj($_POST["suppr_proj"])) $supprProj = 1;
+                        else $supprProj = 2;
+                    }
+     //AJOUT DE LOTS
+                    if(!empty($_POST["add_lot_id"]) && !empty($_POST["add_lot_composition"]) && !empty($_POST["add_lot_caution"]) && $_SESSION["authentifie"]){
+                        $nom="";
+                        if(!empty($_FILES["add_lot_photo"])){
+                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extension_upload = strtolower(  substr(  strrchr($_FILES['add_lot_photo']['name'], '.')  ,1)  );
+                            if ( in_array($extension_upload,$extensions_valides) ){
+                                $nom = md5(uniqid(rand(), true));
+                                $nom = "../Images/lot/".$nom.".".$extension_upload;
+                                $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
+                            }
+                        }
+                        if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])) $ajoutLot = 1;
+                        else $ajoutLot = 2;
+                    }
+
+    //MODIFICATION DE LOTS
+
+                    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
+                        $nom="";
+
+                        if(!empty($_FILES["modif_lot_photo"])){
+                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
+                            if ( in_array($extension_upload,$extensions_valides) ){
+                                $nom = md5(uniqid(rand(), true));
+                                $nom = "../Images/lot/".$nom.".".$extension_upload;
+                                $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+                            }
+                        }
+                        if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
+                            $modifie = true;
+                        }
+                        else{
+                            $modifie = false;
+                        }
+                    }
 
 
-
-
-
-
-
-
-
-
-
+        //SUPPRESSION DE LOTS
+                if(!empty($_POST["suppr_lot"]) && $_SESSION["authentifie"]){
+                    if(supprLot($_POST["suppr_lot"])) $supprLot = 1;
+                    else $supprLot = 2;
+                }
 
 
 
@@ -121,21 +264,27 @@ background-size: cover;">
                             <fieldset>
     <legend id="mdpchange">Modifier votre mot de passe</legend>
                                 <input type="hidden" name="modif_id" id="modif_id" value="'.$_SESSION["id"].'"></input>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_mdp">Ancien <span title="Mot de passe">MDP</span> : </label></span><input type="password" name="ancien_modif_mdp" id="ancien_modif_mdp" placeholder="p4$$w08d" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_mdp">Nouveau <span title="Mot de passe">MDP</span> : </label></span><input type="password" name="modif_mdp" id="modif_mdp" placeholder="p4$$w08d" class="form-control" required/></div>
-                                <input type="submit" class="button dark_grey" value="Modifier votre mot de passe"/>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_mdp">Confirmation : </label></span><input type="password" onkeyup="verif_same_new_mdp($(this))" placeholder="p4$$w08d" class="form-control" required/></div>
+                                <input id="valid_new_mdp" type="submit" class="button dark_grey" value="Modifier votre mot de passe" disabled/>
                             </fieldset></form>
 
                         ');
 
-                    //CHANGEMENT DE MDP
-                    if(!empty($_POST["modif_mdp"]) && $_SESSION["authentifie"]){
-                         if(modifMDP($_POST["modif_id"],$_POST["modif_mdp"])){
-                             echo('<div class="alert alert-success message">Votre mot de passe a été changé avec succés !</div>');
+                    //MESSAGE CHANGEMENT DE MDP
+                         if($modifMDP == 1){
+                             echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                              Votre mot de passe a été changé avec succés !
+                            </div>');
                          }
-                        else{
-                            echo('<div class="alert alert-danger message">Une erreur s\'est déclenchée durant le changement de votre mot de passe</div>');
+                        elseif($modifMDP == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                              Une erreur s\'est déclenchée durant le changement de votre mot de passe</div>');
                         }
-                    }
+
 
                     echo('
 
@@ -153,19 +302,19 @@ background-size: cover;">
 
                     //AJOUT D'ADMINISTRATEUR
 
-                    if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && !empty($_POST["add_mail"]) && $_SESSION["authentifie"]){
 
-                        if(!empty($_POST["add_respons"])){
-                            $respons = 1;
+                        if($addAdmini == 1){
+
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                              L\'administrateur "'.protect($_POST["add_id"]).'" a bien été ajouté à la base de données !
+                            </div>');
                         }
-                        else{
-                            $respons = 0;
-                        }
-                        if(addAdmin($_POST["add_id"],$_POST["add_mdp"],$_POST["add_mail"],$respons)){
-                            echo('<div class="alert message alert-success">L\'administrateur "'.protect($_POST["add_id"]).'" a bien été ajouté à la base de données !</div>');
-                        }
-                        else{
-                            echo('<div class="alert message alert-danger">L\'administrateur "'.protect($_POST["add_id"]).'" n\'a pas pu être ajouté à la base de données !</div>');
+                        elseif($addAdmini == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                              L\'administrateur "'.protect($_POST["add_id"]).'" n\'a pas pu être ajouté à la base de données !
+                            </div>');
                         }
                     }
 
@@ -180,7 +329,10 @@ background-size: cover;">
                         while ($row = $result->fetch_array(MYSQLI_ASSOC))
                         {
                             $id = $row["identifiant"];
-                            echo('<option value="'.$id.'">'.$id.'</option>');
+                            $resp = $row["responsable_emprunt"];
+                            echo('<option value="'.$id.'">'.$id);
+                            if($resp) echo('   (Responsable)');
+                            echo('</option>');
                         }
                         $result->close();
 
@@ -189,12 +341,24 @@ background-size: cover;">
                                 <label class="checkbox"><input type="radio" name="add_respons" value="1" checked>Faire de cet administrateur un responsable des emprunts</label>
                                 <label class="checkbox"><input type="radio" name="add_respons" value="0">Ne plus faire de cet administrateur un responsable des emprunts</label>
                                 <input type="submit" class="button dark_grey" value="Modifier cet administrateur"/>
-                            </fieldset></form>
+                            </fieldset></form>');
+                            //Changer Resp Admin
 
+                        if($changeResp == 1){
+                                echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                              L\'administrateur "'.protect($_POST["add_respons_id"]).'" ');
 
+                                if($_POST["add_respons"])echo('est maintenant responsable des emprunts</div>');
+                                else echo('n\'est plus responsable des emprunts</div>');
+                            }
+                            elseif($changeResp == 2) echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
+
+                        echo('
                             <form method="post" action="admin.php#del_admin" id="form-register"><fieldset>
     <legend id="del_admin">Supprimer un administrateur</legend>
-    <p class="be_aware">Attention, cette action est irréversible</p>
+    <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Attention, cette action est irréversible <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="suppr_admin">Identifiant : </label></span><select name="suppr_admin" id="suppr_admin">');
                      $result = recupAdmin();
                         while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -205,24 +369,52 @@ background-size: cover;">
                         $result->close();
                     echo('</select></div>
 
-                                <input type="submit" class="button dark_grey" value="Supprimer cet administrateur"/>
+
+                                                                                                <!-- Button trigger modal -->
+<input type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_admin_conf()" value="Confirmer suppression">
+
+
+<!-- Modal -->
+<div class="modal fade" id="adminModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="lotModalLabel"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Suppression d\'un Administrateur <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></h4>
+      </div>
+      <div id="admin_texte_suppr" class="modal-body">
+
+          <input type="textarea" id="admin_proj_to_suppr" placeholder="Nom de l\'administrateur" onkeyup="verif_same($(this))" class="form-control" required>
+
+
+      </div>
+      <div class="modal-footer">
+        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span><input type="submit" class="button dark_grey" value="Supprimer cet Administrateur" disabled/><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
                             </fieldset></form>
                     ');
 
                     //SUPPRESSION D'ADMINISTRATEUR
-                    if(!empty($_POST["suppr_admin"]) && $_SESSION["authentifie"]){
-                        if(strcmp($_POST["suppr_admin"],$_SESSION["id"])!=0){
-                            if(supprAdmin($_POST["suppr_admin"])){
-                                echo('<div class="alert alert-success message">L\'administrateur "'.protect($_POST["suppr_admin"]).'" a bien été retiré de la base de données</div>');
+
+
+                            if($supprAdmin ==1){
+                                echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>L\'administrateur "'.protect($_POST["suppr_admin"]).'" a bien été retiré de la base de données</div>');
                             }
-                            else{
-                                echo('<div class="alert alert-danger message">Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
+                            elseif($supprAdmin == 2){
+                                echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite en essayant de supprimer l\'administrateur: "'.protect($_POST["suppr_admin"]).'"</div>');
                             }
-                        }
-                        else{
+
+                        if($supprAdmin == 3){
                             echo('<div class="alert alert-danger message">Vous ne pouvez pas vous supprimer vous même !</div>');
                         }
-                    }
+
                     echo '</div></div><div class="panel panel-default">
 		<div class="panel-body">';
                     echo('
@@ -240,37 +432,16 @@ background-size: cover;">
                         </fieldset></form>
 
                         ');
-                    //AJOUT DE PROJECTION
-                    if(!empty($_POST["projection_nom"]) && !empty($_POST["projection_date"]) && !empty($_POST["projection_description"]) && $_SESSION["authentifie"]){
-                        $nom="";
-                        if(empty($_POST["projection_release"])){
-                           $date_release = "";
+
+                        if($addProjection == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection "'.$_POST["projection_nom"].'" a bien été ajoutée dans la base de données !</div>');
                         }
-                        else{
-                            $date_release = $_POST["projection_release"];
+                        elseif($addProjection == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection "'.$_POST["projection_nom"].'" n\'a pas pu être ajoutée dans la base de données !</div>');
                         }
-                        if(empty($_POST["projection_commentaires"])){
-                            $commentaires = "";
-                        }
-                        else{
-                            $commentaires = $_POST["projection_commentaires"];
-                        }
-                        if(!empty($_FILES["projection_affiche"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
-                            }
-                        }
-                        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom)){
-                            echo('<div class="alert alert-success message">La projection "'.$_POST["projection_nom"].'" a bien été ajoutée dans la base de données !</div>');
-                        }
-                        else{
-                            echo('<div class="alert alert-danger message">La projection "'.$_POST["projection_nom"].'" n\'a pas pu être ajoutée dans la base de données !</div>');
-                        }
-                    }
+
 
 
 
@@ -330,36 +501,15 @@ background-size: cover;">
 
 
                     //MODIFICATION DE PROJECTION
-                    if(!empty($_POST["new_projection_nom"]) && !empty($_POST["new_projection_date"]) && !empty($_POST["new_projection_description"]) && !empty($_POST["old_projection_nom"]) && $_SESSION["authentifie"]){
-                        if(empty($_POST["new_projection_release"])){
-                           $date_release = "";
+                     if($modifProj == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["new_projection_nom"].'" a bien été modifiée !</div>');
                         }
-                        else{
-                            $date_release = $_POST["new_projection_release"];
+                        elseif($modifProj == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite lors de la modification de la projection: "'.$_POST["new_projection_nom"].'"</div>');
                         }
-                        if(empty($_POST["new_projection_commentaires"])){
-                            $commentaires = "";
-                        }
-                        else{
-                            $commentaires = $_POST["new_projection_commentaires"];
-                        }
-                        $nom="";
-                        if(!empty($_FILES["new_projection_affiche"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
-                            }
-                        }
-                        if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"])){
-                            echo("<div class='alert alert-success message'>Cette projection a bien été modifiée !</div>");
-                        }
-                        else{
-                            echo("<div class='alert alert-danger message'>Une erreur s'est produite lors de la modification de cette projection</div>");
-                        }
-                    }
+
 
 
                     echo('
@@ -384,14 +534,16 @@ background-size: cover;">
                         </fieldset></form>');
 
                     //ACTIVATION DE PROJECTION
-                    if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
-                        if(activateProj($_POST["activ_proj"])){
-                            echo('<div class="alert alert-success message">Cette projection a bien été activée dans le Ciné de l\'ISEN</div>');
+
+                        if($activeProj == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["activ_proj"].'" a bien été activée dans le Ciné de l\'ISEN</div>');
                         }
-                        else{
-                            echo('<div class="alert alert-danger message">Cette projection n\'a pu être activée...</div>');
+                        elseif($activeProj == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["activ_proj"].'" n\'a pu être activée</div>');
                         }
-                    }
+
 
 
 
@@ -401,7 +553,7 @@ background-size: cover;">
 
                             <form method="post" action="admin.php#del_proj" id="form-register"><fieldset>
     <legend id="del_proj">Supprimer une projection</legend>
-    <p class="be_aware">Attention, cette action est irréversible</p>
+    <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Attention, cette action est irréversible<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
                                 <div class="input-group max center"><span class="input-group-addon form-label"><select name="suppr_proj" id="suppr_proj">');
                     $result = recupProjDesc();
                     while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -415,8 +567,8 @@ background-size: cover;">
 
 
                                 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" onClick="suppr_projec_conf()">
-  Launch demo modal
+<button type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_projec_conf()">
+  Confirmer suppression
 </button>
 
 <!-- Modal -->
@@ -425,7 +577,7 @@ background-size: cover;">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="projectionModalLabel">Suppression de projections</h4>
+        <h4 class="modal-title" id="projectionModalLabel"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Suppression de projections<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></h4>
       </div>
       <div id="proj_texte_suppr" class="modal-body">
 
@@ -434,7 +586,7 @@ background-size: cover;">
 
       </div>
       <div class="modal-footer">
-        <input type="submit" class="button dark_grey" value="Supprimer cette projection" disabled/>
+        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span><input type="submit" class="button dark_grey" value="Supprimer cette projection" disabled/><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
       </div>
     </div>
   </div>
@@ -442,14 +594,16 @@ background-size: cover;">
                             </fieldset></form>');
 
                     //SUPPRESSION DE PROJECTION
-                    if(!empty($_POST["suppr_proj"]) &&  $_SESSION["authentifie"]){
-                        if(supprProj($_POST["suppr_proj"])){
-                            echo('<div class="alert message alert-success">La projection "'.$_POST["suppr_proj"].'" a bien été retirée dans la base de données !</div>');
+
+                        if($supprProj == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection "'.$_POST["suppr_proj"].'" a bien été retirée dans la base de données !</div>');
                         }
-                        else{
-                            echo('<div class="alert message alert-danger">Une erreur s\'est produite lors de la requête</div>');
+                        elseif($supprProj == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite lors de la suppression de: "'.$_POST["suppr_proj"].'" </div>');
                         }
-                    }
+
 
 
 
@@ -461,28 +615,6 @@ echo '</div></div><div class="panel panel-default">
                     //GESTION DES LOTS
 
 
-
-    //MODIFICATION DE LOTS
-
-                    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
-                        $nom="";
-
-                        if(!empty($_FILES["modif_lot_photo"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
-                            }
-                        }
-                        if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
-                            $modifie = true;
-                        }
-                        else{
-                            $modifie = false;
-                        }
-                    }
 
 
 
@@ -501,25 +633,17 @@ echo '</div></div><div class="panel panel-default">
                             ');
 
                     //AJOUT DE LOTS
-                    if(!empty($_POST["add_lot_id"]) && !empty($_POST["add_lot_composition"]) && !empty($_POST["add_lot_caution"]) && $_SESSION["authentifie"]){
-                        $nom="";
-                        if(!empty($_FILES["add_lot_photo"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['add_lot_photo']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
-                            }
-                        }
-                        if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])){
 
-                            echo('<div class="alert message alert-success">Ce lot a bien été ajouté dans la base de données</div>');
+                        if($ajoutLot == 1){
+
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["add_lot_id"].'" a bien été ajouté dans la base de données</div>');
                         }
-                        else{
-                            echo('<div class="alert message alert-danger">Ce lot n\'a pas pu être ajouté dans la base de données</div>');
+                        elseif($ajoutLot == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["add_lot_id"].'" n\'a pas pu être ajouté dans la base de données</div>');
                         }
-                    }
+
 
 
 
@@ -572,18 +696,20 @@ echo '</div></div><div class="panel panel-default">
 
                     if(!empty($modifie)){
                         if($modifie){
-                            echo('<div class="alert alert-success">Ce lot a été correctement modifié !</div>');
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["modif_lot_id"].'" a été correctement modifié !</div>');
                         }
                         else{
-                            echo('<div class="alert alert-danger">Ce lot n\'a pas pu être modifié....</div>');
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["modif_lot_id"].'" n\'a pas pu être modifié !</div>');
                         }
                     }
                         echo('
 
                             <form method="post" action="admin.php#supprimer_lot" id="form-register"><fieldset>
     <legend id="supprimer_lot">Supprimer un lot</legend>
-    <p class="be_aware">Attention, cette action est irréversible</p>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><select name="suppr_lot" id="suppr_lot">');
+    <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Attention, cette action est irréversible<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><span class="input-group-addon form-label start_span"><label>Lot(s) : </label></span><select name="suppr_lot" id="suppr_lot">');
                 $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -594,22 +720,48 @@ echo '</div></div><div class="panel panel-default">
                 $result->close();
                     echo('</select></div>
 
-                                <input type="submit" class="button dark_grey" value="Supprimer ce lot"/>
+                                                                <!-- Button trigger modal -->
+<button type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_lot_conf()">
+  Confirmer suppression
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="lotModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="lotModalLabel"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Suppression de Lot<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></h4>
+      </div>
+      <div id="lot_texte_suppr" class="modal-body">
+
+          <input type="textarea" id="lot_proj_to_suppr" placeholder="Nom du lot" onkeyup="verif_same($(this))" class="form-control" required>
+
+
+      </div>
+      <div class="modal-footer">
+        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span><input type="submit" class="button dark_grey" value="Supprimer ce lot" disabled/><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</div>
                             </fieldset></form>
                 ');
 
                 //SUPPRESSION DE LOTS
-                if(!empty($_POST["suppr_lot"]) && $_SESSION["authentifie"]){
-                    if(supprLot($_POST["suppr_lot"])){
-                        echo('<div class="alert message alert-success">Ce lot a bien été supprimé !</div>');
+
+                    if($supprLot == 1){
+                        echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" a bien été supprimé !</div>');
                     }
-                    else{
-                        echo('<div class="alert message alert-danger">Ce lot n\'a pas pu être supprimé !</div>');
+                    elseif($supprLot == 2){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" n\'a pas pu être supprimé !</div>');
                     }
-                }
+
 
                 }
-            }
+
             else{
                 echo('<h1>Espace d\'administration</h1>
 
@@ -640,20 +792,24 @@ echo '</div></div><div class="panel panel-default">
     }
 
     function suppr_lot_conf(){
-        $('#projectionModal').modal({backdrop: true,keyboard: true});
-        var lot = $('#suppr_proj').val();
-        $( "#proj_texte_suppr p" ).remove();
-        $( "#proj_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+lot+'">'+lot+'</span>" ?</p>');
+        $('#lotModal').modal({backdrop: true,keyboard: true});
+        var lot = $('#suppr_lot').val();
+        $( "#lot_texte_suppr p" ).remove();
+        $( "#lot_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+lot+'">'+lot+'</span>" ?</p>');
 
     }
 
 
     function suppr_admin_conf(){
-        $('#projectionModal').modal({backdrop: true,keyboard: true});
-        var admin = $('#suppr_proj').val();
-        $( "#proj_texte_suppr p" ).remove();
-        $( "#proj_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+admin+'">'+admin+'</span>" ?</p>');
+        $('#adminModal').modal({backdrop: true,keyboard: true});
+        var admin = $('#suppr_admin').val();
+        $( "#admin_texte_suppr p" ).remove();
+        $( "#admin_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+admin+'">'+admin+'</span>" ?</p>');
 
+    }
+
+    function verif_same_new_mdp(e){
+        ($("#modif_mdp").val()==e.val())?$("#valid_new_mdp").attr('disabled',false):$("#valid_new_mdp").attr('disabled',true);
     }
 
     function verif_same(e){
