@@ -518,7 +518,7 @@ background-size: cover;">
                         <form method="post" action="admin.php#act_proj" id="form-register">
                         <fieldset>
     <legend id="act_proj">Rendre une projection active</legend>
-                            <div class="input-group max center"><select name="activ_proj" id="activ_proj">
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Projection : </label></span><select name="activ_proj" id="activ_proj">
                                 ');
                             $result = recupProjDesc();
                             while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -528,9 +528,9 @@ background-size: cover;">
                                 echo('<option value="'.$nom.'">'.$nom.' projeté le '.date("d/m/Y", $date).' à '.date("H\hi", $date).'</option>');
                             }
                             $result->close();
-                    echo('
+                    echo('</select></div>
                             <input type="submit" class="button dark_grey" value="Activer cette projection"/>
-                            </select></div>
+
                         </fieldset></form>');
 
                     //ACTIVATION DE PROJECTION
@@ -554,7 +554,7 @@ background-size: cover;">
                             <form method="post" action="admin.php#del_proj" id="form-register"><fieldset>
     <legend id="del_proj">Supprimer une projection</legend>
     <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Attention, cette action est irréversible<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
-                                <div class="input-group max center"><span class="input-group-addon form-label"><select name="suppr_proj" id="suppr_proj">');
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Projection : </label></span><select name="suppr_proj" id="suppr_proj">');
                     $result = recupProjDesc();
                     while ($row = $result->fetch_array(MYSQLI_ASSOC))
                     {
@@ -709,7 +709,7 @@ echo '</div></div><div class="panel panel-default">
                             <form method="post" action="admin.php#supprimer_lot" id="form-register"><fieldset>
     <legend id="supprimer_lot">Supprimer un lot</legend>
     <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Attention, cette action est irréversible<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><span class="input-group-addon form-label start_span"><label>Lot(s) : </label></span><select name="suppr_lot" id="suppr_lot">');
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Lot(s) : </label></span><select name="suppr_lot" id="suppr_lot">');
                 $result = recupLot();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -773,9 +773,8 @@ echo '</div></div><div class="panel panel-default">
             </form>');
             }
 
-
+if(empty(recupLot()))echo 'plein';else echo 'vide';
             ?>
-
 
 
 
