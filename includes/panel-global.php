@@ -28,16 +28,17 @@ echo'
             if($page=="emprunt.php")echo(" class=current_page_item");
     echo'><a href="emprunt.php" class="nav-btn">Emprunt de matériel</a></li>
                                             <li';
-            if($page=="admin.php")echo(" class=current_page_item");
-    echo'><a href="admin.php" class="nav-btn">Espace Administrateur</a></li>
-                                            <li';
+
             if($page=="calendrier.php")echo(" class=current_page_item");
-    echo'><a href="calendrier.php" class="nav-btn">Calendrier des emprunts</a></li>
-                                            <li';
+    echo'><a href="calendrier.php" class="nav-btn">Calendrier des emprunts</a></li>';
 if(!empty($_SESSION["authentifie"])){
+    echo '<li';
     if($page=="projection.php")echo(" class=current_page_item");
     echo'><a href="projection.php" class="nav-btn">Espace liste de projection</a></li>';
 }
+echo '<li';
+ if($page=="admin.php")echo(" class=current_page_item");
+    echo'><a href="admin.php" class="nav-btn">Espace Administrateur</a></li>';
             echo ' </ul>
                                     </nav>';
                             if(!empty($_SESSION["authentifie"])){
