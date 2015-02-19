@@ -83,6 +83,11 @@ h1{
     height: 42px;
 }
 
+form textarea.form-control{
+    height: 42px;
+    padding-top: 10px;
+}
+
 form select{
     height: 44px;
 }
@@ -150,9 +155,13 @@ span#basic-addon1, span#basic-addon2{
         height: 47px;
     }
 
+    form textarea.form-control{
+        height: 47px;
+    }
+
     form select{
-    height: 49px;
-}
+        height: 49px;
+    }
 
 }
 
@@ -514,7 +523,7 @@ font-weight: bold;
     border-bottom: solid 3px #BE7070;
     box-shadow: inset 0 0 0 1px #CAB4B4;
     color: #555;
-    text-shadow: inherit;
+    text-shadow: inherit;100.667
 }
 
 .modal-footer input.button.dark_grey:disabled {
@@ -568,4 +577,8 @@ span.glyphicon.glyphicon-warning-sign{
     color: rgba(189, 0, 0, 0.68);
     margin-left: 5px;
     margin-right: 4px;
+}
+
+textarea{
+    resize: vertical;
 }

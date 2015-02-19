@@ -4,7 +4,8 @@
     include_once("../includes/function_global.php");
     connect();
 
-
+    $wrongIDMDP = 0;
+    $return = 0;
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
@@ -16,7 +17,9 @@
         {
             $hash = $row["mdp"];
             $id = $row["identifiant"];
+            $return++;
         }
+        if ($return == 0) $wrongIDMDP = 1;
         $result->free();
         if(!empty($hash)){
             if(password_verify($mdp, $hash) && strcmp($id,$temp)==0){
@@ -25,6 +28,7 @@
             }
             else{
                 unset($_SESSION["authentifie"]);
+                $wrongIDMDP = 1;
             }
         }
     }
@@ -34,6 +38,7 @@
 
 
     //var
+
     $modifMDP = 0;
     $addAdmini = 0;
     $changeResp = 0;
@@ -197,7 +202,36 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                     else $supprLot = 2;
                 }
 
+//Nb of admin or 'lot' or projection
 
+    //Nr d'admin
+        $nbradmin = 0;
+        $temp = recupAdmin();
+                while ($row = $temp->fetch_array(MYSQLI_ASSOC))
+                {
+                    $nbradmin++;
+                }
+                $temp->close();
+
+
+    //Nr de proj
+        $nbrproj = 0;
+        $temp = recupProjDesc();
+                while ($row = $temp->fetch_array(MYSQLI_ASSOC))
+                {
+                    $nbrproj++;
+                }
+                $temp->close();
+
+
+    //Nr de lot
+        $nbrLot = 0;
+        $temp = recupLot();
+                while ($row = $temp->fetch_array(MYSQLI_ASSOC))
+                {
+                    $nbrLot++;
+                }
+                $temp->close();
 
 ?>
 <!doctype html>
@@ -340,7 +374,9 @@ background-size: cover;">
                     echo('</select></div>
                                 <label class="checkbox"><input type="radio" name="add_respons" value="1" checked>Faire de cet administrateur un responsable des emprunts</label>
                                 <label class="checkbox"><input type="radio" name="add_respons" value="0">Ne plus faire de cet administrateur un responsable des emprunts</label>
-                                <input type="submit" class="button dark_grey" value="Modifier cet administrateur"/>
+                                <input type="submit" class="button dark_grey" value="Modifier la responsabilité"');
+                            if($nbradmin == 0)echo " disabled ";
+                            echo('/>
                             </fieldset></form>');
                             //Changer Resp Admin
 
@@ -371,7 +407,9 @@ background-size: cover;">
 
 
                                                                                                 <!-- Button trigger modal -->
-<input type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_admin_conf()" value="Confirmer suppression">
+<input type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_admin_conf()" value="Confirmer suppression"');
+                            if($nbradmin == 0)echo " disabled ";
+                            echo('/>
 
 
 <!-- Modal -->
@@ -384,7 +422,7 @@ background-size: cover;">
       </div>
       <div id="admin_texte_suppr" class="modal-body">
 
-          <input type="textarea" id="admin_proj_to_suppr" placeholder="Nom de l\'administrateur" onkeyup="verif_same($(this))" class="form-control" required>
+          <input type="text" id="admin_proj_to_suppr" placeholder="Nom de l\'administrateur" onkeyup="verif_same($(this))" class="form-control" required>
 
 
       </div>
@@ -423,10 +461,10 @@ background-size: cover;">
                         <form method="post" action="admin.php#add_proj" id="form-register" enctype="multipart/form-data"><fieldset>
     <legend id="add_proj">Ajouter une Projection</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Nom du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="projection_release" id="projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="projection_date" id="projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><input type="textarea" name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="projection_release" id="projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="projection_date" id="projection_date" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required></textarea></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" required></textarea></div>
                             <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"></span>--><input type="file"  name="projection_affiche" id="projection_affiche" class="form-control" required/></div>
                             <input type="submit" class="button dark_grey" value="Ajouter cette projection"/>
                         </fieldset></form>
@@ -467,7 +505,9 @@ background-size: cover;">
 
                   echo('  </select></div>
 
-                    <input type="submit" class="button dark_grey" value="Modifier cette projection"/>
+                    <input type="submit" class="button dark_grey" value="Modifier cette projection"');
+                            if($nbrproj == 0)echo " disabled ";
+                            echo('/>
                         </fieldset></form>
 
                         ');
@@ -480,16 +520,20 @@ background-size: cover;">
                             $date_release = $row["date_release"];
                             $date_projection = $row["date_projection"];
                             $description = $row["description"];
+
+                            $description = preg_replace("/\r/\n",'<br/>',$description);
                             $commentaires = $row["commentaires"];
                             echo('<form method="post" action="admin.php#mod_proj" id="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$nom.'" name="old_projection_nom" id="old_projection_nom"/>
                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="new_projection_release" id="new_projection_release" placeholder="AAAA-MM-JJ" class="form-control datepicker" value="'.date("d/m/Y", $date_release).' '.date("H:i", $date_release).'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="new_projection_date" id="new_projection_date" placeholder="AAAA-MM-JJ" class="form-control datepicker" required value="'.date("d/m/Y", $date_projection).' '.date("H:i", $date_projection).'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><input type="text" name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required value="'.$description.'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><input type="text" name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" value="'.$commentaires.'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="new_projection_release" id="new_projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" value="'.date("d/m/Y", $date_release).' '.date("H\hi", $date_release).'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="new_projection_date" id="new_projection_date" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required value="'.date("d/m/Y", $date_projection).' '.date("H\hi", $date_projection).'"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required> '.$description.'</textarea></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control">'.$commentaires.'</textarea></div>
                             <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span>--><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="form-control"/></div>
-                            <input type="submit" class="button dark_grey" value="Sauvegarder les changements"/>
+                            <input type="submit" class="button dark_grey" value="Sauvegarder les changements"');
+                            if($nbrproj == 0)echo " disabled ";
+                            echo('/>
 
 
 
@@ -567,7 +611,9 @@ background-size: cover;">
 
 
                                 <!-- Button trigger modal -->
-<button type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_projec_conf()">
+<button type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_projec_conf()"');
+                            if($nbrproj == 0)echo " disabled ";
+                            echo('>
   Confirmer suppression
 </button>
 
@@ -581,7 +627,7 @@ background-size: cover;">
       </div>
       <div id="proj_texte_suppr" class="modal-body">
 
-          <input type="textarea" id="anim_proj_to_suppr" placeholder="Nom de la projection" onkeyup="verif_same($(this))" class="form-control" required>
+          <input type="text" id="anim_proj_to_suppr" placeholder="Nom de la projection" onkeyup="verif_same($(this))" class="form-control" required>
 
 
       </div>
@@ -625,7 +671,7 @@ echo '</div></div><div class="panel panel-default">
                             <fieldset>
     <legend id="ajoute_lot">Ajouter un lot</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="add_lot_id" id="add_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_composition">Description: </label></span><input type="textarea" name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_composition">Description: </label></span><textarea name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" required></textarea></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="add_lot_caution" id="add_lot_caution" placeholder="150&euro;" class="form-control" required/></div>
                                 <div class="input-group max center"><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control" required/></div>
                                 <input type="submit" class="button dark_grey" value="Ajouter ce lot"/>
@@ -665,7 +711,9 @@ echo '</div></div><div class="panel panel-default">
                 $result->close();
                   echo('
                                 </select></div>
-                                <input type="submit" class="button dark_grey" value="Modifier ce lot"/>
+                                <input type="submit" class="button dark_grey" value="Modifier ce lot"');
+                            if($nbrLot == 0)echo " disabled ";
+                            echo('/>
                             </fieldset></form>
 
                       ');
@@ -681,7 +729,7 @@ echo '</div></div><div class="panel panel-default">
 
                             <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required value="'.$id.'"/></div>
-                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_compo">Description: </label></span><input type="textarea" name="modif_lot_compo" id="modif_lot_compo" placeholder="Caméra sony avec 3 batteries" class="form-control" required value="'.$composition.'"/></div>
+                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_compo">Description: </label></span><textarea name="modif_lot_compo" id="modif_lot_compo" placeholder="Caméra sony avec 3 batteries" class="form-control" required>'.$composition.'</textarea></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150&euro;" class="form-control" required value="'.$caution.'"/></div>
                             <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"><label for="modif_lot_photo">Photo du lot: </label></span>--><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Sauvegarder les changements"/>
@@ -721,7 +769,9 @@ echo '</div></div><div class="panel panel-default">
                     echo('</select></div>
 
                                                                 <!-- Button trigger modal -->
-<button type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_lot_conf()">
+<button type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_lot_conf()"');
+                            if($nbrLot == 0)echo " disabled ";
+                            echo('>
   Confirmer suppression
 </button>
 
@@ -735,7 +785,7 @@ echo '</div></div><div class="panel panel-default">
       </div>
       <div id="lot_texte_suppr" class="modal-body">
 
-          <input type="textarea" id="lot_proj_to_suppr" placeholder="Nom du lot" onkeyup="verif_same($(this))" class="form-control" required>
+          <input type="text" id="lot_proj_to_suppr" placeholder="Nom du lot" onkeyup="verif_same($(this))" class="form-control" required>
 
 
       </div>
@@ -763,9 +813,10 @@ echo '</div></div><div class="panel panel-default">
                 }
 
             else{
-                echo('<h1>Espace d\'administration</h1>
-
-            <form method="post" action="admin.php" id="form-register">
+                echo('<h1>Espace d\'administration</h1>');
+                if($wrongIDMDP == 1) echo ('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Mauvais Username ou Mot de passe !</div>');
+            echo ('<form method="post" action="admin.php" id="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Username" class="form-control" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Password" class="form-control" required/></div>
 
@@ -773,8 +824,10 @@ echo '</div></div><div class="panel panel-default">
             </form>');
             }
 
-if(empty(recupLot()))echo 'plein';else echo 'vide';
             ?>
+
+
+
 
 
 

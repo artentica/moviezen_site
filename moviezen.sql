@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Mar 17 Février 2015 à 17:28
+-- Généré le: Jeu 19 Février 2015 à 16:10
 -- Version du serveur: 5.5.40-0ubuntu0.14.04.1
 -- Version de PHP: 5.5.9-1ubuntu4.5
 
@@ -39,8 +39,9 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`) VALUES
-('Artentica', '$2y$10$fBOFmT.E4oBoYrkrWJcho.k/D3WhRR7aPGKBxRbidQ4/FtkD5EftW', '', 1),
-('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS', 'fanch.toquer@laposte.net', 0);
+('Artentica', '$2y$10$ZD1R1mcxcDQguhZR8FBq6efRqwhTo4aj3.MvG58D42g2Mx35zl1ne', 'yolo@penis.com', 1),
+('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS', 'fanch.toquer@laposte.net', 0),
+('test', '$2y$10$CykxRBL7DBJB4RNmWIW2V.fdDXV9xWKQXgpjryKS9rL4AHjsFI02m', 'test@gmail.com', 0);
 
 -- --------------------------------------------------------
 
@@ -442,6 +443,14 @@ CREATE TABLE IF NOT EXISTS `inscrits` (
   PRIMARY KEY (`mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Contenu de la table `inscrits`
+--
+
+INSERT INTO `inscrits` (`nom`, `prenom`, `tel`, `mail`, `classe`) VALUES
+('Vincent', 'kjn', '', 'kjgv@jhgfc.fr', 'CSI1'),
+('Artentica', 'kj', '', 'kjhn@hkgv.hjgcv', 'CSI3');
+
 -- --------------------------------------------------------
 
 --
@@ -471,14 +480,6 @@ CREATE TABLE IF NOT EXISTS `lots` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
---
--- Contenu de la table `lots`
---
-
-INSERT INTO `lots` (`id`, `composition`, `image`, `caution`) VALUES
-('A', 'testetst', '../Images/0aad423939fc3279e5de8a014e35f768.jpg', 300),
-('B', 'Ceci est un test', '../Images/6da21c7bf4954a0311a4fb878d881154.png', 300);
-
 -- --------------------------------------------------------
 
 --
@@ -501,7 +502,8 @@ CREATE TABLE IF NOT EXISTS `projections` (
 --
 
 INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`) VALUES
-('azer', 1423758000, 1423843800, 'fd', 'fd', '../Images/affiche/c1311999a04d7f1d370c480b47901d88.jpg', 0);
+('jyt', 1424955600, 1423573200, 'n', 'n', '../Images/d1a3ad439aa07037763ccd68aee122b6.jpg', 0),
+('yolol', 1424948400, 1424085000, '   aze\\r\\nujhgbjkhb\\r\\nhjbkjhlkjhnbjknjj', 'dfhg', '../Images/affiche/baf487c25f3aae299ae6561b27b7dbe1.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -515,6 +517,48 @@ CREATE TABLE IF NOT EXISTS `projections_inscrits` (
   KEY `inscrit` (`inscrit_mail`),
   KEY `projection` (`projection`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `projections_inscrits`
+--
+
+INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES
+('kjhn@hkgv.hjgcv', 'jyt'),
+('kjhn@hkgv.hjgcv', 'jyt'),
+('kjgv@jhgfc.fr', 'yolol');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `promotion`
+--
+
+CREATE TABLE IF NOT EXISTS `promotion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `promotion` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `promotion` (`promotion`),
+  KEY `promotion_index` (`promotion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=14 ;
+
+--
+-- Contenu de la table `promotion`
+--
+
+INSERT INTO `promotion` (`id`, `promotion`) VALUES
+(3, 'BTSPREPA1'),
+(6, 'BTSPREPA2'),
+(2, 'CIR1'),
+(5, 'CIR2'),
+(8, 'CIR3'),
+(1, 'CSI1'),
+(4, 'CSI2'),
+(7, 'CSI3'),
+(9, 'ITII3'),
+(11, 'ITII4'),
+(13, 'ITII5'),
+(10, 'M1'),
+(12, 'M2');
 
 --
 -- Contraintes pour les tables exportées

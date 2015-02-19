@@ -38,12 +38,10 @@ include_once("../includes/function_global.php");
 
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
-   <link rel="stylesheet" href="../CSS/select2.css" type="text/css"/>
-      <script type="text/javascript" src="../js/select2.js"></script>
+
        <?php
         include '../includes/include_on_all_page.php';
     ?>
-
 
 </head>
 <body>
@@ -58,7 +56,8 @@ background-size: cover;">
        include '../includes/panel-global.php';
       ?>
 
-    <div class="wrapper style1">
+    <div class="wrapper style1" style="background-image: url('../Images/affiche/test.png');
+                                       background-size: cover;">
 		<div class="panel-body">
 
             <?php
@@ -70,8 +69,7 @@ background-size: cover;">
                 {
                     $nom_actif = $row["nom"];
                     $date_projection = $row["date_projection"];
-                    setlocale (LC_TIME, 'fr_FR','fra');
-                    $date_projection = utf8_encode(strftime("%d %B %Y",strtotime($date_projection)));
+                    $date_projection = date("d/m/Y", $date_projection)." à ".date("H\hi", $date_projection);
                     $description  = $row["description"];
                     $commentaires  = $row["commentaires"];
                     $affiche = $row["affiche"];
@@ -87,13 +85,17 @@ background-size: cover;">
 
 
 
-            if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){
+            /*if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){*/
 
                 echo('<div class="panel panel-default">
-		<div class="panel-body"><h1 id="inscr">S\'inscrire pour la projection</h1>
-            <p>Merci de renseigner tout les champs</p>
+		<div class="panel-body">
 
-			<form method="post" action="cine.php#inscr" id="form-register">
+
+
+			<form method="post" action="cine.php#inscr" id="form-register" style="margin-top: 10px;">
+            <fieldset>
+                <legend>S\'inscrire pour la projection</legend>
+                <p>Merci de renseigner tout les champs</p>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><select name="classe" id="classe">');
@@ -112,7 +114,7 @@ background-size: cover;">
                 </div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control"  required/></div>
 
-                <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><span><select name="select_projection" id="select_projection"><option></option>
+                <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><span><select name="select_projection" id="select_projection">
                     ');
 
                 $result = recupProjDesc();
@@ -120,7 +122,7 @@ background-size: cover;">
                 {
                     $nom = $row["nom"];
                     $date = $row["date_projection"];
-                    $date = date("d/m/Y", strtotime($date));
+                    $date = date("d/m/Y", $date)." à ".date("H\hi", $date);
                     echo('<option value="'.$nom.'" ');
                     if(strcmp($nom_actif,$nom)==0){
                         echo('selected="selected"');
@@ -131,20 +133,33 @@ background-size: cover;">
                 echo('
                 </select></div>
                 <input type="submit" class="button dark_grey inscrval" id="save_cine" value="S\'inscrire pour le film"/>
-            </form></div></div>
+            </fieldset></form>
+
+
+            <form method="post" action="cine.php#desinscr"  id="form-register">
+            <fieldset>
+                <legend id="desinscr">Se désinscrire pour la projection</legend>
+                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="del_email">@ ISEN : </label></span><input type="email" name="del_mail" class="form-control" placeholder="prenom.nom@isen.fr" required/></div>
+                <input type="submit" class="button dark_grey inscrval" value="Se désinscrire de '.$nom_actif.'"/>
+                </fieldset></form>
+
+            </div>
+
+            </div>
 
             ');
 
-            }
+           /* }
 
             else{
                 echo('<h1 id="inscr">Se désinscrire de la projection</h1>
             <form method="post" action="cine.php" id="form-register">
+
                 <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'"/>
                 <input type="submit" class="button dark_grey" id="save_cine" value="Se désinscrire"/>
             </form>');
 
-            }
+            }*/
 
             ?>
 
@@ -152,14 +167,6 @@ background-size: cover;">
 		</div>
 	</div>
 
-    <script>
-        $(document).ready(function() {
-  $("#select_projection").select2({
-          placeholder: "Sélectionnez une séance",
-          allowClear: true,
-          width:"100%"
-        });
-    });
-    </script>
+
 </body>
 </html>
