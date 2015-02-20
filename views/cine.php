@@ -112,26 +112,11 @@ background-size: cover;">
 
                     </select>
                 </div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control"  required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" required/></div>
 
-                <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><span><select name="select_projection" id="select_projection">
-                    ');
+                <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><input type="text"  name="select_projection" class="form-control" value="'.$nom_actif.'" readonly/>
 
-                $result = recupProjDesc();
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $nom = $row["nom"];
-                    $date = $row["date_projection"];
-                    $date = date("d/m/Y", $date)." à ".date("H\hi", $date);
-                    echo('<option value="'.$nom.'" ');
-                    if(strcmp($nom_actif,$nom)==0){
-                        echo('selected="selected"');
-                    }
-                    echo('>'.$nom.' projeté le '.$date.'</option>');
-                }
-                $result->close();
-                echo('
-                </select></div>
+                </div>
                 <input type="submit" class="button dark_grey inscrval" id="save_cine" value="S\'inscrire pour le film"/>
             </fieldset></form>
 
