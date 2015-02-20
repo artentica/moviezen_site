@@ -576,21 +576,22 @@
 
 
     //FONCTION D'AJOUT D'UNE PROJECTION A LA BDD
-    function addProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche){
+    function addProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$afficheback){
         $date_release = protect($date_release);
         $date_projection = protect($date_projection);
         $description = protect($description);
         $commentaires = protect($commentaires);
         $affiche = protect($affiche);
+        $affiche = protect($afficheback);
         $date_release .= ":00";
 
         $date_projection .= ":00";
 
         $date_release = strtotime(str_replace('/', '-',$date_release));
         $date_projection = strtotime(str_replace('/', '-',$date_projection));
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections VALUES(?,?,?,?,?,?,?)");
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO `projections`(`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`) VALUES (?,?,?,?,?,?,?,?)");
         $active = 0;
-        $query->bind_param('ssssssi',$nom,$date_release,$date_projection,$description,$commentaires,$affiche, $active);
+        $query->bind_param('ssssssis',$nom,$date_release,$date_projection,$description,$commentaires,$affiche,$active,$afficheback);
         $query->execute();
         $query->close();
         return true;
@@ -606,6 +607,12 @@
                 $imagetodelete = $row["affiche"];
             }
             unlink($imagetodelete);
+        $query2 = "SELECT  `back_affiche` FROM  `projections` WHERE  `nom` ='".$nom."'";
+            $result = $GLOBALS["bdd"]->query($query2);
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $imagetodelete = $row["back_affiche"];
+            }
+            unlink($imagetodelete);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections WHERE nom=?");
         $query->bind_param('s',$nom);
         $query->execute();
@@ -618,7 +625,7 @@
     }
 
     //FONCTION DE MODIFICATION D'UNE PROJECTION
-    function modifProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$ancien_nom){
+    function modifProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$ancien_nom,$afficheback){
         $nom = protect($nom);
         $date_release = protect($date_release);
         $date_projection = protect($date_projection);
@@ -632,6 +639,22 @@
 
         $date_release = strtotime(str_replace('/', '-',$date_release));
         $date_projection = strtotime(str_replace('/', '-',$date_projection));
+
+        if($afficheback!=''){//magic at work don't touch, even with your eyes
+            $query3 = "SELECT `back_affiche` FROM  `projections` WHERE  `nom` ='".$ancien_nom."'";
+            $result = $GLOBALS["bdd"]->query($query3);
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $imagetodelete = $row["back_affiche"];
+            }
+            unlink($imagetodelete);
+
+            $query = $GLOBALS["bdd"]->prepare("UPDATE `projections` SET `back_affiche`=? WHERE nom=?");
+            $query->bind_param('ss',$afficheback,$ancien_nom);
+            $query->execute();
+            $query->close();
+        }
+
+
         if($affiche!=''){
             $query2 = "SELECT  `affiche` FROM  `projections` WHERE  `nom` ='".$ancien_nom."'";
             $result = $GLOBALS["bdd"]->query($query2);
@@ -649,6 +672,9 @@
 
         $query->execute();
         $query->close();
+
+
+
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections_inscrits SET projection=? WHERE projection=?");
         $query->bind_param('ss',$nom,$ancien_nom);
         $query->execute();

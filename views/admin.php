@@ -112,7 +112,17 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                                 $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
                             }
                         }
-                                        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom))  $addProjection =1;
+
+                        if(!empty($_FILES["back_affiche"])){
+                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
+                            if ( in_array($extension_upload,$extensions_valides) ){
+                                $nomback = md5(uniqid(rand(), true));
+                                $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
+                                $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                            }
+                        }
+                                        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom,$nomback))  $addProjection =1;
                 else $addProjection = 2;
     }
 
@@ -132,6 +142,7 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                             $commentaires = $_POST["new_projection_commentaires"];
                         }
                         $nom="";
+                        $nomback="";
                         if(!empty($_FILES["new_projection_affiche"])){
                             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
@@ -140,8 +151,18 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                                 $nom = "../Images/affiche/".$nom.".".$extension_upload;
                                 $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
                             }
+
+                        if(!empty($_FILES["back_affiche"])){
+                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
+                            if ( in_array($extension_upload,$extensions_valides) ){
+                                $nomback = md5(uniqid(rand(), true));
+                                $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
+                                $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                            }
                         }
-                                                if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"])) $modifProj = 1;
+                        }
+                                                if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"],$nomback)) $modifProj = 1;
                         else $modifProj = 2;
                     }
 
@@ -169,6 +190,9 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                                 $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
                             }
                         }
+
+
+
                         if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])) $ajoutLot = 1;
                         else $ajoutLot = 2;
                     }
@@ -187,6 +211,9 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                                 $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
                             }
                         }
+
+
+
                         if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
                             $modifie = true;
                         }
@@ -264,7 +291,10 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                 format:"d/m/Y H:i"
             });
             $( document ).ready(function() {
-                $(":file").filestyle({buttonText: " Image",buttonBefore: true,badge: false});
+                $(".back_affiche").filestyle({buttonText: " Affiche de fond",buttonBefore: true,badge: false});
+                $(".affiche").filestyle({buttonText: " Affiche du film",buttonBefore: true,badge: false});
+                $(".img_lot").filestyle({buttonText: " Image du lot",buttonBefore: true,badge: false});
+
             });
         });
     </script>
@@ -328,7 +358,7 @@ background-size: cover;">
     <legend id="add_admin">Ajouter un administrateur</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="p4$$w08d" class="form-control" required/></div>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mail">Adresse mail : </label></span><input type="mail" name="add_mail" id="add_mail" placeholder="admin@gmail.com" class="form-control" required/></div>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mail">Adresse mail : </label></span><input type="email" name="add_mail" id="add_mail" placeholder="admin@gmail.com" class="form-control" required/></div>
                                 <label class="checkbox"><input type="checkbox" name="add_respons" value="1">Faire de cet administrateur un responsable des emprunts ?</label>
                                 <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
                             </fieldset></form>
@@ -460,12 +490,13 @@ background-size: cover;">
 
                         <form method="post" action="admin.php#add_proj" id="form-register" enctype="multipart/form-data"><fieldset>
     <legend id="add_proj">Ajouter une Projection</legend>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Nom du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Titre du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="projection_release" id="projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="projection_date" id="projection_date" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required></textarea></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" required></textarea></div>
-                            <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"></span>--><input type="file"  name="projection_affiche" id="projection_affiche" class="form-control" required/></div>
+                            <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"></span>--><input type="file"  name="projection_affiche" id="projection_affiche" class="affiche form-control" required/></div>
+                            <div class="input-group max center"><input type="file" name="back_affiche" id="back_affiche" class="back_affiche form-control" required/></div>
                             <input type="submit" class="button dark_grey" value="Ajouter cette projection"/>
                         </fieldset></form>
 
@@ -525,12 +556,13 @@ background-size: cover;">
                             $commentaires = $row["commentaires"];
                             echo('<form method="post" action="admin.php#mod_proj" id="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$nom.'" name="old_projection_nom" id="old_projection_nom"/>
-                           <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Nom du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
+                           <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Titre du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="new_projection_release" id="new_projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" value="'.date("d/m/Y", $date_release).' '.date("H\hi", $date_release).'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="new_projection_date" id="new_projection_date" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required value="'.date("d/m/Y", $date_projection).' '.date("H\hi", $date_projection).'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required> '.$description.'</textarea></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control">'.$commentaires.'</textarea></div>
-                            <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span>--><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="form-control"/></div>
+                            <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span>--><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="affiche form-control"/></div>
+                            <div class="input-group max center"><input type="file" name="back_affiche" class="back_affiche form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Sauvegarder les changements"');
                             if($nbrproj == 0)echo " disabled ";
                             echo('/>
@@ -673,7 +705,7 @@ echo '</div></div><div class="panel panel-default">
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="add_lot_id" id="add_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_composition">Description: </label></span><textarea name="add_lot_composition" id="add_lot_composition" placeholder="Caméra sony avec 3 batteries" class="form-control" required></textarea></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="add_lot_caution" id="add_lot_caution" placeholder="150&euro;" class="form-control" required/></div>
-                                <div class="input-group max center"><input type="file" name="add_lot_photo" id="add_lot_photo" class="form-control" required/></div>
+                                <div class="input-group max center"><input type="file" name="add_lot_photo" id="add_lot_photo" class="img_lot form-control" required/></div>
                                 <input type="submit" class="button dark_grey" value="Ajouter ce lot"/>
                             </fieldset></form>
                             ');
@@ -731,7 +763,7 @@ echo '</div></div><div class="panel panel-default">
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required value="'.$id.'"/></div>
                              <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_compo">Description: </label></span><textarea name="modif_lot_compo" id="modif_lot_compo" placeholder="Caméra sony avec 3 batteries" class="form-control" required>'.$composition.'</textarea></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150&euro;" class="form-control" required value="'.$caution.'"/></div>
-                            <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"><label for="modif_lot_photo">Photo du lot: </label></span>--><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="form-control"/></div>
+                            <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"><label for="modif_lot_photo">Photo du lot: </label></span>--><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="img_lot form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Sauvegarder les changements"/>
 
 

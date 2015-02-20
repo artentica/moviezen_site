@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Jeu 19 Février 2015 à 16:10
+-- Généré le: Ven 20 Février 2015 à 11:57
 -- Version du serveur: 5.5.40-0ubuntu0.14.04.1
 -- Version de PHP: 5.5.9-1ubuntu4.5
 
@@ -42,6 +42,20 @@ INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`) VALUES
 ('Artentica', '$2y$10$ZD1R1mcxcDQguhZR8FBq6efRqwhTo4aj3.MvG58D42g2Mx35zl1ne', 'yolo@penis.com', 1),
 ('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS', 'fanch.toquer@laposte.net', 0),
 ('test', '$2y$10$CykxRBL7DBJB4RNmWIW2V.fdDXV9xWKQXgpjryKS9rL4AHjsFI02m', 'test@gmail.com', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `desincription`
+--
+
+CREATE TABLE IF NOT EXISTS `desincription` (
+  `mail` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `désinscription_code` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `raison` text CHARACTER SET utf8 COLLATE utf8_bin,
+  `done` tinyint(1) NOT NULL DEFAULT '0',
+  `projection` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -477,6 +491,7 @@ CREATE TABLE IF NOT EXISTS `lots` (
   `composition` text COLLATE utf8_bin NOT NULL,
   `image` text COLLATE utf8_bin NOT NULL,
   `caution` int(11) NOT NULL,
+  `quantité` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -494,6 +509,7 @@ CREATE TABLE IF NOT EXISTS `projections` (
   `commentaires` text COLLATE utf8_bin NOT NULL,
   `affiche` text COLLATE utf8_bin NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
+  `back_affiche` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -501,9 +517,8 @@ CREATE TABLE IF NOT EXISTS `projections` (
 -- Contenu de la table `projections`
 --
 
-INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`) VALUES
-('jyt', 1424955600, 1423573200, 'n', 'n', '../Images/d1a3ad439aa07037763ccd68aee122b6.jpg', 0),
-('yolol', 1424948400, 1424085000, '   aze\\r\\nujhgbjkhb\\r\\nhjbkjhlkjhnbjknjj', 'dfhg', '../Images/affiche/baf487c25f3aae299ae6561b27b7dbe1.jpg', 1);
+INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`) VALUES
+('qs', 0, 0, '    s', 's', '../Images/affiche/34daa7ea2e5ff2e406e65b191431c025.jpg', 0, '../Images/affiche/764110934d57feaa6e63932db6ea1f19.jpg');
 
 -- --------------------------------------------------------
 
@@ -517,15 +532,6 @@ CREATE TABLE IF NOT EXISTS `projections_inscrits` (
   KEY `inscrit` (`inscrit_mail`),
   KEY `projection` (`projection`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Contenu de la table `projections_inscrits`
---
-
-INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES
-('kjhn@hkgv.hjgcv', 'jyt'),
-('kjhn@hkgv.hjgcv', 'jyt'),
-('kjgv@jhgfc.fr', 'yolol');
 
 -- --------------------------------------------------------
 
