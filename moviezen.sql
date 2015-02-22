@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
--- Client: localhost
--- Généré le: Ven 20 Février 2015 à 11:57
--- Version du serveur: 5.5.40-0ubuntu0.14.04.1
--- Version de PHP: 5.5.9-1ubuntu4.5
+-- Client :  127.0.0.1
+-- Généré le :  Ven 20 Février 2015 à 17:41
+-- Version du serveur :  5.6.17
+-- Version de PHP :  5.5.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de données: `moviezen`
+-- Base de données :  `moviezen`
 --
 
 -- --------------------------------------------------------
@@ -50,12 +50,13 @@ INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `desincription` (
-  `mail` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `mail`  varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `désinscription_code` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `raison` text CHARACTER SET utf8 COLLATE utf8_bin,
   `done` tinyint(1) NOT NULL DEFAULT '0',
-  `projection` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `projection`  varchar(255) NOT NULL,
+   PRIMARY KEY (`mail`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -462,8 +463,17 @@ CREATE TABLE IF NOT EXISTS `inscrits` (
 --
 
 INSERT INTO `inscrits` (`nom`, `prenom`, `tel`, `mail`, `classe`) VALUES
+('ef', 'e', '', 'e.*@e.e', 'CIR2'),
+('aze', 'qsd', '', 'e@xn--lzg.fr', 'CIR1'),
+('e', 'ez', '', 'er@re.Vrf', 'BTSPREPA1'),
+('knkjn', 'kjnkjn', '', 'jhbfd@hgv.fr', 'CIR2'),
+('f', 'f', '', 'jn@hbf.fr', 'CSI1'),
+('jhbjhbbhjbk', 'jk', '', 'jngv@hgv.fr', 'BTSPREPA2'),
 ('Vincent', 'kjn', '', 'kjgv@jhgfc.fr', 'CSI1'),
-('Artentica', 'kj', '', 'kjhn@hkgv.hjgcv', 'CSI3');
+('Artentica', 'kj', '', 'kjhn@hkgv.hjgcv', 'CSI3'),
+('r', 'r', '', 'rrrr@jhbr.fr', 'CSI1'),
+('dytu', 'u', '', 'u@g.fr', 'ITII5'),
+('wfdg', 'fwgwf', '', 'wfg@gfds.Fr', 'CIR2');
 
 -- --------------------------------------------------------
 
@@ -491,7 +501,6 @@ CREATE TABLE IF NOT EXISTS `lots` (
   `composition` text COLLATE utf8_bin NOT NULL,
   `image` text COLLATE utf8_bin NOT NULL,
   `caution` int(11) NOT NULL,
-  `quantité` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -518,7 +527,8 @@ CREATE TABLE IF NOT EXISTS `projections` (
 --
 
 INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`) VALUES
-('qs', 0, 0, '    s', 's', '../Images/affiche/34daa7ea2e5ff2e406e65b191431c025.jpg', 0, '../Images/affiche/764110934d57feaa6e63932db6ea1f19.jpg');
+('qs', 0, 0, '    s', 's', '../Images/affiche/34daa7ea2e5ff2e406e65b191431c025.jpg', 0, '../Images/affiche/764110934d57feaa6e63932db6ea1f19.jpg'),
+('qsd', 1424353800, 1424872200, 'qsd', 'qsd', '../Images/affiche/98a6f3689f0ddfa7c0a37f27417f4a9e.jpg', 1, '../Images/affiche/98a6f3689f0ddfa7c0a37f27417f4a9e.jpg');
 
 -- --------------------------------------------------------
 
@@ -532,6 +542,13 @@ CREATE TABLE IF NOT EXISTS `projections_inscrits` (
   KEY `inscrit` (`inscrit_mail`),
   KEY `projection` (`projection`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `projections_inscrits`
+--
+
+INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES
+('jhbfd@hgv.fr', 'qsd');
 
 -- --------------------------------------------------------
 

@@ -4,23 +4,87 @@
 include_once("../includes/function_global.php");
 
     connect();
+
+
+
+
+
+    $nom_actif = "";
+            $result = recupProjActive();
+            if($result->num_rows){
+
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $nom_actif = $row["nom"];
+                    $date_projection = $row["date_projection"];
+                    $date_projection = date("d/m/Y", $date_projection)." à ".date("H\hi", $date_projection);
+                    $description  = $row["description"];
+                    $commentaires  = $row["commentaires"];
+                    $affiche = $row["affiche"];
+                }
+                $result->close();
+
+
+//VAR
+
+            $inscrit = 0;
+
+
+              $count = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$_POST["mail"]."' AND projection='qs'";
+
+        $result = $GLOBALS["bdd"]->query($count);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+                  //  echo $row["COUNT(*)"];
+
+        $result->close();
+
+       echo $row["COUNT(*)"];
+
+
+
+
+
+
     $_SESSION["inscrit"]=0;
 
     if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
-        if(ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"])){
+
+        $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
+        if($temp == 2) $inscrit = 2;
+        elseif($temp == TRUE){
             $_SESSION["select_projection"]=$_POST["select_projection"];
             $_SESSION["inscrit"]=1;
             $mail = protect($_POST["mail"]);
             $_SESSION["mail"]=$mail;
+            $inscrit = 1;
         }
+
     }
 
+
+
+
+
+
+
+
+
+
     if(!empty($_POST["del_mail"])){
-        if(supprInscrit($_SESSION["mail"],$_POST["del_mail"])){
+       /* if(supprInscrit($_SESSION["mail"],$_POST["del_mail"])){
             $_SESSION["inscrit"]=0;
             unset($_SESSION["mail"]);
-        }
+        }*/
+        send_mail($nom_actif,$date_projection,$_POST["del_mail"]);
     }
+
+
+
+
+
+
+    //sending mail
 
 ?>
 <!doctype html>
@@ -54,6 +118,16 @@ background-size: cover;">
 
         <?php
        include '../includes/panel-global.php';
+                        $count = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$_POST["mail"]."' AND projection='".$nom_actif."'";
+
+        $result = $GLOBALS["bdd"]->query($count);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+                  //  echo $row["COUNT(*)"];
+
+        $result->close();
+
+       echo $row["COUNT(*)"];
       ?>
 
     <div class="wrapper style1" style="background-image: url('../Images/affiche/test.png');
@@ -61,20 +135,7 @@ background-size: cover;">
 		<div class="panel-body">
 
             <?php
-            $nom_actif = "";
-            $result = recupProjActive();
-            if($result->num_rows){
 
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $nom_actif = $row["nom"];
-                    $date_projection = $row["date_projection"];
-                    $date_projection = date("d/m/Y", $date_projection)." à ".date("H\hi", $date_projection);
-                    $description  = $row["description"];
-                    $commentaires  = $row["commentaires"];
-                    $affiche = $row["affiche"];
-                }
-                $result->close();
                 echo('<h1>'.$nom_actif.'</h1>
                 <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest</h3>
                 <img src="'.$affiche.'" alt="affiche" class="affiche" style=""/>
@@ -118,9 +179,26 @@ background-size: cover;">
 
                 </div>
                 <input type="submit" class="button dark_grey inscrval" id="save_cine" value="S\'inscrire pour le film"/>
-            </fieldset></form>
+            </fieldset></form>');
+
+            if($inscrit!=0){
+                        if($inscrit == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>deja inscrit !</div>');
+                        }
+                        elseif($inscrit){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Mr/Mme '.$_POST["nom"].' '.$_POST["prenom"].' ('.$_POST["mail"].') de la classe '.$_POST["classe"].' avez bien été incrit pour le film "'.$_POST["select_projection"].'" du '.$date_projection.' !</div>');
+                        }
+
+                        else{
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur est survenue vous n\'avez pas pu être inscrit !</div>');
+                        }
+                    }
 
 
+            echo ('
             <form method="post" action="cine.php#desinscr"  id="form-register">
             <fieldset>
                 <legend id="desinscr">Se désinscrire pour la projection</legend>

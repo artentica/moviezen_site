@@ -29,6 +29,57 @@
 
 //################################################################################################################################################################
 
+    //SEND MAILS
+    function send_mail($seance,$date,$email){
+    $to = $email;
+
+    $nombre_random = md5(uniqid(rand(), true));
+
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO  `desincription` (  `mail` ,  `désinscription_code` ,  `projection` ) VALUES (?,?,?)");
+        $query->bind_param('sss',$email,$nombre_random,$seance);
+        $query->execute();
+        $query->close();
+
+
+
+     $subject = 'Désinscription de la séance Moviezen pour: "'.$seance.'"';
+     $message = '
+     <html>
+      <head>
+       <title>TEST compléter mail</title>
+      </head>
+      <body>
+       <p>Vous </p>
+
+      </body>
+     </html>voulez vous désinscrire pour la séance "'.$seance.'" du '.$date.'
+     ';
+
+
+
+        // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
+
+     $headers = 'From: Moviezen Brest <moviezen@isen-bretagne.fr>' . "\r\n";
+
+
+
+
+
+
+      // En-têtes additionnels
+/*
+     $headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
+*/
+     /*$headers = 'From: Riouallon Vincent <riouallonvincent@gmail.com>' . "\r\n";*/
+/*     $headers .= 'Cc: anniversaire_archive@example.com' . "\r\n";
+     $headers .= 'Bcc: anniversaire_verif@example.com' . "\r\n";*/
+
+     // Envoi
+     mail($to, $subject, $message, $headers);
+    }
+
+//################################################################################################################################################################
+
     //FONCTIONS GESTION DES INSCRITS
 
 
@@ -41,11 +92,31 @@
         $classe = protect($classe);
         $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
         $query->execute();
-        $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO projections_inscrits VALUES (?, ?)");
+                $query->close();
+
+
+        $count = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$mail."' AND projection='".$projection."'";
+
+
+        $result = $GLOBALS["bdd"]->query($count);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+                  //  echo $row["COUNT(*)"];
+           $temp = $row["COUNT(*)"];
+        $result->close();
+
+        if($temp==0){
+
+
+        $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO `projections_inscrits`(`inscrit_mail`, `projection`) VALUES (?, ?)");
         $query2->bind_param('ss', $mail, $projection);
         $query2->execute();
-        $query->close();
-        return true;
+        $query2->close();
+                    return true;
+
+        }
+        else return "2";      ////////////////A fiNIR
+
     }
 
 
