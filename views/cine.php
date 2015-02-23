@@ -22,6 +22,9 @@ include_once("../includes/function_global.php");
                     $commentaires  = $row["commentaires"];
                     $affiche = $row["affiche"];
                     $affiche_back = $row["back_affiche"];
+		$langue= $row["langue"];
+		$prix = $row["prix"];
+		$bande_annonce = $row["bande_annonce"];
 
                 }
                 $result->close();
@@ -30,7 +33,16 @@ include_once("../includes/function_global.php");
 //VAR
 
             $inscrit = 0;
+                    $toreplace = array('\"');
+                    $by   = array('"');
+ 		    $toreplace2 = array("\'");
+                    $by2   = array("'");
 
+                    $description  = str_replace($toreplace, $by, $description);
+                    $description  = str_replace($toreplace2, $by2, $description);
+
+                    $commentaires  = str_replace($toreplace, $by, $commentaires);
+                    $commentaires  = str_replace($toreplace2, $by2, $commentaires);
 
 
 
@@ -126,7 +138,11 @@ background-size: cover;">
                 ');
             }
 
-
+		echo ('<!-- 16:9 aspect ratio -->
+<div class="embed-responsive embed-responsive-16by9">
+  <iframe class="embed-responsive-item" src="'.$bande_annonce.'" frameborder="0" allowfullscreen></iframe>
+</div>
+');
 
             /*if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){*/
 
@@ -137,7 +153,7 @@ background-size: cover;">
 			<form method="post" action="cine.php#inscr" id="form-register" style="margin-top: 10px;">
             <fieldset>
                 <legend>S\'inscrire pour la projection</legend>
-                <p>Merci de renseigner tout les champs</p>
+                <p>Merci de renseigner tous les champs</p>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="classe">Classe : </label></span><select name="classe" id="classe">');
