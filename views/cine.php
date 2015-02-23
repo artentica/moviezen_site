@@ -30,16 +30,7 @@ include_once("../includes/function_global.php");
             $inscrit = 0;
 
 
-              $count = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$_POST["mail"]."' AND projection='qs'";
 
-        $result = $GLOBALS["bdd"]->query($count);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
-
-                  //  echo $row["COUNT(*)"];
-
-        $result->close();
-
-       echo $row["COUNT(*)"];
 
 
 
@@ -52,7 +43,7 @@ include_once("../includes/function_global.php");
 
         $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
         if($temp == 2) $inscrit = 2;
-        elseif($temp == TRUE){
+        elseif($temp == 1){
             $_SESSION["select_projection"]=$_POST["select_projection"];
             $_SESSION["inscrit"]=1;
             $mail = protect($_POST["mail"]);
@@ -69,14 +60,17 @@ include_once("../includes/function_global.php");
 
 
 
-
+$mailsend = 0;
 
     if(!empty($_POST["del_mail"])){
        /* if(supprInscrit($_SESSION["mail"],$_POST["del_mail"])){
             $_SESSION["inscrit"]=0;
             unset($_SESSION["mail"]);
         }*/
-        send_mail($nom_actif,$date_projection,$_POST["del_mail"]);
+        $temp = send_mail($nom_actif,$date_projection,$_POST["del_mail"]);
+        if($temp == 1)$mailsend = 1;
+        if($temp == 2)$mailsend = 2;
+        else $mailsend = 3;
     }
 
 
@@ -99,13 +93,13 @@ include_once("../includes/function_global.php");
 
 
 
-
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
 	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
 
        <?php
         include '../includes/include_on_all_page.php';
     ?>
+    <script src="../js/bootstrap.js"></script>
 
 </head>
 <body>
@@ -118,16 +112,7 @@ background-size: cover;">
 
         <?php
        include '../includes/panel-global.php';
-                        $count = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$_POST["mail"]."' AND projection='".$nom_actif."'";
 
-        $result = $GLOBALS["bdd"]->query($count);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
-
-                  //  echo $row["COUNT(*)"];
-
-        $result->close();
-
-       echo $row["COUNT(*)"];
       ?>
 
     <div class="wrapper style1" style="background-image: url('../Images/affiche/test.png');
@@ -150,7 +135,6 @@ background-size: cover;">
 
                 echo('<div class="panel panel-default">
 		<div class="panel-body">
-
 
 
 			<form method="post" action="cine.php#inscr" id="form-register" style="margin-top: 10px;">
@@ -184,7 +168,7 @@ background-size: cover;">
             if($inscrit!=0){
                         if($inscrit == 2){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>deja inscrit !</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le mail '.$_POST["mail"].' est déjà incrit pour le film "'.$_POST["select_projection"].'" du '.$date_projection.' !</div>');
                         }
                         elseif($inscrit){
                             echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
@@ -204,8 +188,22 @@ background-size: cover;">
                 <legend id="desinscr">Se désinscrire pour la projection</legend>
                  <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="del_email">@ ISEN : </label></span><input type="email" name="del_mail" class="form-control" placeholder="prenom.nom@isen.fr" required/></div>
                 <input type="submit" class="button dark_grey inscrval" value="Se désinscrire de '.$nom_actif.'"/>
-                </fieldset></form>
+                </fieldset></form>');
 
+            if($mailsend == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail de désinscription a été envoyé veuillez suivre le lien reçu pour confirmer la désinscription. Le mail provient de "moviezen Brest", et envoyé à '.$_POST["del_mail"].' !</div>');
+                        }
+                        elseif($mailsend == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le mail '.$_POST["del_mail"].' n\'est pas inscrit pour la séance: "'.$nom_actif.'."</div>');
+                        }
+                        elseif($mailsend == 3){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un problème est survenue et le mail n\a pas pu être envoyé ! Réessayé plus tard.</div>');
+                        }
+
+            echo('
             </div>
 
             </div>

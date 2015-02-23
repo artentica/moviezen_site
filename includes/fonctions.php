@@ -35,6 +35,19 @@
 
     $nombre_random = md5(uniqid(rand(), true));
 
+        $verif = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$email."' AND projection='".$seance."'";
+
+
+        $result = $GLOBALS["bdd"]->query($verif);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+
+        $temp = $row["COUNT(*)"];
+        $result->close();
+
+        if($temp == 0) return 2;
+
+
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO  `desincription` (  `mail` ,  `désinscription_code` ,  `projection` ) VALUES (?,?,?)");
         $query->bind_param('sss',$email,$nombre_random,$seance);
         $query->execute();
@@ -42,18 +55,21 @@
 
 
 
+                $desincode = "SELECT `désinscription_code` FROM `desincription` WHERE `mail`='".$email."' AND `projection`='".$seance."'";
+
+
+        $result = $GLOBALS["bdd"]->query($desincode);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+
+        $temp = $row["désinscription_code"];
+        $result->close();
+
      $subject = 'Désinscription de la séance Moviezen pour: "'.$seance.'"';
      $message = '
-     <html>
-      <head>
-       <title>TEST compléter mail</title>
-      </head>
-      <body>
-       <p>Vous </p>
 
-      </body>
-     </html>voulez vous désinscrire pour la séance "'.$seance.'" du '.$date.'
-     ';
+       Vous voulez vous désinscrire pour la séance "'.$seance.'" du '.$date.'.
+       Pour vous désinscrire: www.vincentriouallon.com/desinscription.php?codedesin='.$temp.'';
 
 
 
@@ -75,7 +91,7 @@
      $headers .= 'Bcc: anniversaire_verif@example.com' . "\r\n";*/
 
      // Envoi
-     mail($to, $subject, $message, $headers);
+     return mail($to, $subject, $message, $headers);
     }
 
 //################################################################################################################################################################
@@ -112,10 +128,10 @@
         $query2->bind_param('ss', $mail, $projection);
         $query2->execute();
         $query2->close();
-                    return true;
+                    return 1;
 
         }
-        else return "2";      ////////////////A fiNIR
+        else return 2;      ////////////////A fiNIR
 
     }
 

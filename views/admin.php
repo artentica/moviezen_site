@@ -114,7 +114,7 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                         }
 
                         if(!empty($_FILES["back_affiche"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extensions_valides = array( 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
                                 $nomback = md5(uniqid(rand(), true));
@@ -153,7 +153,7 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                             }
 
                         if(!empty($_FILES["back_affiche"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                            $extensions_valides = array( 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
                                 $nomback = md5(uniqid(rand(), true));
@@ -291,7 +291,7 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                 format:"d/m/Y H:i"
             });
             $( document ).ready(function() {
-                $(".back_affiche").filestyle({buttonText: " Affiche de fond",buttonBefore: true,badge: false});
+                $(".back_affiche").filestyle({buttonText: " Affiche de fond (.png)",buttonBefore: true,badge: false});
                 $(".affiche").filestyle({buttonText: " Affiche du film",buttonBefore: true,badge: false});
                 $(".img_lot").filestyle({buttonText: " Image du lot",buttonBefore: true,badge: false});
 
