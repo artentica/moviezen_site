@@ -34,7 +34,7 @@
     $to = $email;
 
     $nombre_random = md5(uniqid(rand(), true));
-
+        //verif si personne inscrit
         $verif = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$email."' AND projection='".$seance."'";
 
 
@@ -47,22 +47,59 @@
 
         if($temp == 0) return 2;
 
+        //verif anti spam
+        $verif = "SELECT last_send FROM desinscription WHERE mail='".$email."' AND projection='".$seance."'";
 
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO  `desincription` (  `mail` ,  `désinscription_code` ,  `projection` ) VALUES (?,?,?)");
-        $query->bind_param('sss',$email,$nombre_random,$seance);
+
+        $result = $GLOBALS["bdd"]->query($verif);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+
+        $temp = $row["last_send"];
+        $result->close();
+
+        $date = date_create();
+        $date=date_timestamp_get($date);
+        $time = $date - $temp;
+
+        if($time < 300 ) return 4;
+
+
+        $verif = "SELECT COUNT(*) FROM desinscription WHERE mail='".$email."' AND projection='".$seance."'";
+
+
+        $result = $GLOBALS["bdd"]->query($verif);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+
+        $temp = $row["COUNT(*)"];
+        $result->close();
+
+
+
+
+        if($temp == 0){
+        //on fourre le tout dans la bdd
+
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO  `desinscription` (  `mail` ,  `desinscription_code` ,  `projection` , `last_send`) VALUES (?,?,?,?)");
+        $query->bind_param('sssi',$email,$nombre_random,$seance,$date);
         $query->execute();
         $query->close();
+        }else{
+        $query = $GLOBALS["bdd"]->prepare("UPDATE `desinscription` SET `last_send`=? WHERE mail=? AND projection=?");
+        $query->bind_param('iss',$date,$email,$seance);
+        $query->execute();
+        $query->close();
+        }
 
 
-
-                $desincode = "SELECT `désinscription_code` FROM `desincription` WHERE `mail`='".$email."' AND `projection`='".$seance."'";
+        $desincode = "SELECT `desinscription_code` FROM `desinscription` WHERE `mail`='".$email."' AND `projection`='".$seance."'";
 
 
         $result = $GLOBALS["bdd"]->query($desincode);
         $row = $result->fetch_array(MYSQLI_ASSOC);
 
-
-        $temp = $row["désinscription_code"];
+        $temp = $row["desinscription_code"];
         $result->close();
 
      $subject = 'Désinscription de la séance Moviezen pour: "'.$seance.'"';
@@ -75,7 +112,7 @@
 
         // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
 
-     $headers = 'From: Moviezen Brest <moviezen@isen-bretagne.fr>' . "\r\n";
+     $headers = 'From: Moviezen Brest <moviezen.brest@gmail.com>' . "\r\n";
 
 
 
@@ -156,6 +193,17 @@
         $mail = protect($mail);
         $projection = protect($projection);
         $query->bind_param('ss', $mail,$projection);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+//FONCTION SUPPRESSION Demande désinscription  (UTILISATEUR)
+    function supprdesinc($nb){
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM `desinscription` WHERE desinscription_code=?");
+        $mail = protect($mail);
+        $projection = protect($projection);
+        $query->bind_param('s', $nb);
         $query->execute();
         $query->close();
         return true;
@@ -708,6 +756,10 @@
         $query2->bind_param('s',$nom);
         $query2->execute();
         $query2->close();
+        $query2 = $GLOBALS["bdd"]->prepare("DELETE FROM desinscription WHERE projection=?");
+        $query2->bind_param('s',$nom);
+        $query2->execute();
+        $query2->close();
         return true;
     }
 
@@ -763,6 +815,10 @@
 
 
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections_inscrits SET projection=? WHERE projection=?");
+        $query->bind_param('ss',$nom,$ancien_nom);
+        $query->execute();
+        $query->close();
+        $query = $GLOBALS["bdd"]->prepare("UPDATE desinscription SET projection=? WHERE projection=?");
         $query->bind_param('ss',$nom,$ancien_nom);
         $query->execute();
         $query->close();

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Client :  127.0.0.1
--- Généré le :  Ven 20 Février 2015 à 17:41
--- Version du serveur :  5.6.17
--- Version de PHP :  5.5.12
+-- Client: localhost
+-- Généré le: Lun 23 Février 2015 à 17:44
+-- Version du serveur: 5.5.40-0ubuntu0.14.04.1
+-- Version de PHP: 5.5.9-1ubuntu4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de données :  `moviezen`
+-- Base de données: `moviezen`
 --
 
 -- --------------------------------------------------------
@@ -40,22 +40,22 @@ CREATE TABLE IF NOT EXISTS `admin` (
 
 INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`) VALUES
 ('Artentica', '$2y$10$ZD1R1mcxcDQguhZR8FBq6efRqwhTo4aj3.MvG58D42g2Mx35zl1ne', 'yolo@penis.com', 1),
-('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS', 'fanch.toquer@laposte.net', 0),
-('test', '$2y$10$CykxRBL7DBJB4RNmWIW2V.fdDXV9xWKQXgpjryKS9rL4AHjsFI02m', 'test@gmail.com', 0);
+('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS', 'fanch.toquer@laposte.net', 0);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `desincription`
+-- Structure de la table `desinscription`
 --
 
-CREATE TABLE IF NOT EXISTS `desincription` (
-  `mail`  varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `désinscription_code` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `raison` text CHARACTER SET utf8 COLLATE utf8_bin,
+CREATE TABLE IF NOT EXISTS `desinscription` (
+  `mail` varchar(255) COLLATE utf8_bin NOT NULL,
+  `desinscription_code` text COLLATE utf8_bin NOT NULL,
+  `raison` text COLLATE utf8_bin,
   `done` tinyint(1) NOT NULL DEFAULT '0',
-  `projection`  varchar(255) NOT NULL,
-   PRIMARY KEY (`mail`)
+  `projection` varchar(255) COLLATE utf8_bin NOT NULL,
+  `last_send` double DEFAULT NULL,
+  PRIMARY KEY (`mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -463,17 +463,7 @@ CREATE TABLE IF NOT EXISTS `inscrits` (
 --
 
 INSERT INTO `inscrits` (`nom`, `prenom`, `tel`, `mail`, `classe`) VALUES
-('ef', 'e', '', 'e.*@e.e', 'CIR2'),
-('aze', 'qsd', '', 'e@xn--lzg.fr', 'CIR1'),
-('e', 'ez', '', 'er@re.Vrf', 'BTSPREPA1'),
-('knkjn', 'kjnkjn', '', 'jhbfd@hgv.fr', 'CIR2'),
-('f', 'f', '', 'jn@hbf.fr', 'CSI1'),
-('jhbjhbbhjbk', 'jk', '', 'jngv@hgv.fr', 'BTSPREPA2'),
-('Vincent', 'kjn', '', 'kjgv@jhgfc.fr', 'CSI1'),
-('Artentica', 'kj', '', 'kjhn@hkgv.hjgcv', 'CSI3'),
-('r', 'r', '', 'rrrr@jhbr.fr', 'CSI1'),
-('dytu', 'u', '', 'u@g.fr', 'ITII5'),
-('wfdg', 'fwgwf', '', 'wfg@gfds.Fr', 'CIR2');
+('albert', 'hb', '', 'riouallonvincent@gmail.com', 'CSI1');
 
 -- --------------------------------------------------------
 
@@ -527,8 +517,7 @@ CREATE TABLE IF NOT EXISTS `projections` (
 --
 
 INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`) VALUES
-('qs', 0, 0, '    s', 's', '../Images/affiche/34daa7ea2e5ff2e406e65b191431c025.jpg', 0, '../Images/affiche/764110934d57feaa6e63932db6ea1f19.jpg'),
-('qsd', 1424353800, 1424872200, 'qsd', 'qsd', '../Images/affiche/98a6f3689f0ddfa7c0a37f27417f4a9e.jpg', 1, '../Images/affiche/98a6f3689f0ddfa7c0a37f27417f4a9e.jpg');
+('American Sniper', 0, 1424980800, '                    A compléter', 'A compléter', '../Images/affiche/758dd493503f0fc006d309db67951041.jpg', 1, '../Images/affiche/f130b49fd814f9b429bcb1c65f469c99.png');
 
 -- --------------------------------------------------------
 
@@ -548,7 +537,7 @@ CREATE TABLE IF NOT EXISTS `projections_inscrits` (
 --
 
 INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES
-('jhbfd@hgv.fr', 'qsd');
+('riouallonvincent@gmail.com', 'American Sniper');
 
 -- --------------------------------------------------------
 

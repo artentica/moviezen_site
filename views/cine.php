@@ -21,6 +21,8 @@ include_once("../includes/function_global.php");
                     $description  = $row["description"];
                     $commentaires  = $row["commentaires"];
                     $affiche = $row["affiche"];
+                    $affiche_back = $row["back_affiche"];
+
                 }
                 $result->close();
 
@@ -54,12 +56,6 @@ include_once("../includes/function_global.php");
     }
 
 
-
-
-
-
-
-
 $mailsend = 0;
 
     if(!empty($_POST["del_mail"])){
@@ -67,13 +63,14 @@ $mailsend = 0;
             $_SESSION["inscrit"]=0;
             unset($_SESSION["mail"]);
         }*/
-        $temp = send_mail($nom_actif,$date_projection,$_POST["del_mail"]);
-        if($temp == 1)$mailsend = 1;
-        if($temp == 2)$mailsend = 2;
+        $repmail = send_mail($nom_actif,$date_projection,$_POST["del_mail"]);
+
+        if($repmail == 1)$mailsend = 1;
+        elseif($repmail == 2)$mailsend = 2;
+        elseif($repmail == 4)$mailsend = 4;
+
         else $mailsend = 3;
     }
-
-
 
 
 
@@ -112,11 +109,11 @@ background-size: cover;">
 
         <?php
        include '../includes/panel-global.php';
-
+                echo '<div class="wrapper style1" style="background-image: url(\''.$affiche_back.'\');
+                                       background-size: cover;">';
       ?>
 
-    <div class="wrapper style1" style="background-image: url('../Images/affiche/test.png');
-                                       background-size: cover;">
+
 		<div class="panel-body">
 
             <?php
@@ -192,7 +189,7 @@ background-size: cover;">
 
             if($mailsend == 1){
                             echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail de désinscription a été envoyé veuillez suivre le lien reçu pour confirmer la désinscription. Le mail provient de "moviezen Brest", et envoyé à '.$_POST["del_mail"].' !</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail de désinscription a été envoyé veuillez suivre le lien reçu pour confirmer la désinscription. <br> Le mail provient de "moviezen Brest", et envoyé à '.$_POST["del_mail"].' !</div>');
                         }
                         elseif($mailsend == 2){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
@@ -200,7 +197,28 @@ background-size: cover;">
                         }
                         elseif($mailsend == 3){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un problème est survenue et le mail n\a pas pu être envoyé ! Réessayé plus tard.</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un problème est survenue et le mail n\a pas pu être envoyé ! <br> Réessayez plus tard.</div>');
+                        }
+                        elseif($mailsend == 4){
+
+                            $verif = "SELECT last_send FROM desinscription WHERE mail='".$_POST["del_mail"]."' AND projection='".$nom_actif."'";
+
+                            $result = $GLOBALS["bdd"]->query($verif);
+                            $row = $result->fetch_array(MYSQLI_ASSOC);
+                            $temp = $row["last_send"];
+                            $result->close();
+
+                            $date = date_create();
+                            $date=date_timestamp_get($date);
+                            $time = $date - $temp;
+
+                            $min=floor($time/60);
+                            $sec= $time%60;
+
+
+
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail a déjà été envoyé il y a '.$min.'min et '.$sec.'s veuillez attendre 5min entre chaque essais. <br> Vérifiez vos spams.</div>');
                         }
 
             echo('
