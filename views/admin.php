@@ -50,28 +50,27 @@
     $ajoutLot = 0;
     $supprLot = 0;
 
-        //modif MDP
-if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSION["authentifie"]){
-                         if(modifMDP($_POST["modif_id"],$_POST["modif_mdp"],$_POST["ancien_modif_mdp"])){
-                             $modifMDP = 1;
-                         }
-                        else $modifMDP = 2;
-}
-    //Ajout Admin
- if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && !empty($_POST["add_mail"]) && $_SESSION["authentifie"]){
+    //modif MDP
+    if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSION["authentifie"]){
+        if(modifMDP($_POST["modif_id"],$_POST["modif_mdp"],$_POST["ancien_modif_mdp"])){
+                $modifMDP = 1;
+        }
+        else $modifMDP = 2;
+    }
 
-                        if(!empty($_POST["add_respons"])){
-                            $respons = 1;
-                        }
-                        else{
-                            $respons = 0;
-                        }
-     if(addAdmin($_POST["add_id"],$_POST["add_mdp"],$_POST["add_mail"],$respons)) $addAdmini=1;
-     else $addAdmini = 2;
- }
+    //Ajout Admin
+     if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && !empty($_POST["add_mail"]) && $_SESSION["authentifie"]){
+            if(!empty($_POST["add_respons"])){
+                $respons = 1;
+            }
+            else{
+                $respons = 0;
+            }
+         if(addAdmin($_POST["add_id"],$_POST["add_mdp"],$_POST["add_mail"],$respons)) $addAdmini=1;
+         else $addAdmini = 2;
+     }
 
     //change resp Admin
-
     if(!empty($_POST["add_respons_id"]) && isset($_POST["add_respons"])){
         if(changeAdmin($_POST["add_respons_id"],$_POST["add_respons"])) $changeResp = 1;
         else $changeResp = 2;
@@ -85,86 +84,86 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                 else $supprAdmin = 2;
           }
           else $supprAdmin = 3;
-
     }
 
     //Ajout de Projection
     if(!empty($_POST["projection_nom"]) && !empty($_POST["projection_date"]) && !empty($_POST["projection_description"]) && $_SESSION["authentifie"]){
-                        $nom="";
-                        if(empty($_POST["projection_release"])){
-                           $date_release = "";
-                        }
-                        else{
-                            $date_release = $_POST["projection_release"];
-                        }
-                        if(empty($_POST["projection_commentaires"])){
-                            $commentaires = "";
-                        }
-                        else{
-                            $commentaires = $_POST["projection_commentaires"];
-                        }
-                        if(!empty($_FILES["projection_affiche"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
-                            }
-                        }
+        $nom="";
+        if(empty($_POST["projection_release"])){
+            $date_release = "";
+        }
+        else{
+            $date_release = $_POST["projection_release"];
+        }
+        if(empty($_POST["projection_commentaires"])){
+            $commentaires = "";
+        }
+        else{
+            $commentaires = $_POST["projection_commentaires"];
+        }
+        if(!empty($_FILES["projection_affiche"])){
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
+            if ( in_array($extension_upload,$extensions_valides) ){
+                $nom = md5(uniqid(rand(), true));
+                $nom = "../Images/affiche/".$nom.".".$extension_upload;
+                $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
+            }
+        }
 
-                        if(!empty($_FILES["back_affiche"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nomback = md5(uniqid(rand(), true));
-                                $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
-                            }
-                        }
-                                        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom,$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"]))  $addProjection =1;
-                else $addProjection = 2;
+        if(!empty($_FILES["back_affiche"])){
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
+            if ( in_array($extension_upload,$extensions_valides) ){
+                $nomback = md5(uniqid(rand(), true));
+                $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
+                $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+            }
+        }
+
+        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom,$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"]))  $addProjection =1;
+        else $addProjection = 2;
     }
 
 
     //MODIFICATION DE PROJECTION
-                    if(!empty($_POST["new_projection_nom"]) && !empty($_POST["new_projection_date"]) && !empty($_POST["new_projection_description"]) && !empty($_POST["old_projection_nom"]) && $_SESSION["authentifie"]){
-                        if(empty($_POST["new_projection_release"])){
-                           $date_release = "";
-                        }
-                        else{
-                            $date_release = $_POST["new_projection_release"];
-                        }
-                        if(empty($_POST["new_projection_commentaires"])){
-                            $commentaires = "";
-                        }
-                        else{
-                            $commentaires = $_POST["new_projection_commentaires"];
-                        }
-                        $nom="";
-                        $nomback="";
-                        if(!empty($_FILES["new_projection_affiche"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
-                            }
+    if(!empty($_POST["new_projection_nom"]) && !empty($_POST["new_projection_date"]) && !empty($_POST["new_projection_description"]) && !empty($_POST["old_projection_nom"]) && $_SESSION["authentifie"]){
+        if(empty($_POST["new_projection_release"])){
+            $date_release = "";
+        }
+        else{
+            $date_release = $_POST["new_projection_release"];
+        }
+        if(empty($_POST["new_projection_commentaires"])){
+            $commentaires = "";
+        }
+        else{
+            $commentaires = $_POST["new_projection_commentaires"];
+        }
+        $nom="";
+        $nomback="";
+        if(!empty($_FILES["new_projection_affiche"])){
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
+            if ( in_array($extension_upload,$extensions_valides) ){
+                $nom = md5(uniqid(rand(), true));
+                $nom = "../Images/affiche/".$nom.".".$extension_upload;
+                $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
+            }
 
-                        if(!empty($_FILES["back_affiche"])){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                $nomback = md5(uniqid(rand(), true));
-                                $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
-                            }
-                        }
-                        }
-                                                if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"],$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"])) $modifProj = 1;
+            if(!empty($_FILES["back_affiche"])){
+                $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
+                if ( in_array($extension_upload,$extensions_valides) ){
+                    $nomback = md5(uniqid(rand(), true));
+                    $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
+                    $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                }
+            }
+        }
+        if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"],$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"])) $modifProj = 1;
                         else $modifProj = 2;
-                    }
+    }
 
 
     //ACTIVATION DE PROJECTION
@@ -491,10 +490,10 @@ background-size: cover;">
                         <form method="post" action="admin.php#add_proj" id="form-register" enctype="multipart/form-data"><fieldset>
     <legend id="add_proj">Ajouter une Projection</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Titre du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" required/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="projection_release" id="projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="projection_release" id="projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="projection_date" id="projection_date" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required></textarea></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" required></textarea></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control"></textarea></div>
 
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Langue : </label></span><input type="text" name="langue" placeholder="VO sous-titré français/VF..." class="form-control" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Prix (en &euro;) : </label></span><input type="text" name="prix" placeholder="4" class="form-control" required/></div>
