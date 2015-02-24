@@ -16,7 +16,7 @@
 
     //FONCTION DE PROTECTION DES CHAINES UTILISATEURS
     function protect($chaine){
-        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes(html_entity_decode ($chaine)));
+        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes(html_entity_decode($chaine)));
         return $protect;
     }
 
@@ -31,6 +31,7 @@
 
     //SEND MAILS
     function send_mail($seance,$date,$email){
+    $email = protect($email);
     $to = $email;
 
     $nombre_random = md5(uniqid(rand(), true));
@@ -39,10 +40,8 @@
 
 
         $result = $GLOBALS["bdd"]->query($verif);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
 
-
-        $temp = $row["COUNT(*)"];
+        $temp = $result->num_rows;
         $result->close();
 
         if($temp == 0) return 2;
@@ -67,12 +66,9 @@
 
         $verif = "SELECT COUNT(*) FROM desinscription WHERE mail='".$email."' AND projection='".$seance."'";
 
-
         $result = $GLOBALS["bdd"]->query($verif);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
 
-
-        $temp = $row["COUNT(*)"];
+        $temp = $result->num_rows;
         $result->close();
 
 
@@ -81,15 +77,17 @@
         if($temp == 0){
         //on fourre le tout dans la bdd
 
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO  `desinscription` (  `mail` ,  `desinscription_code` ,  `projection` , `last_send`) VALUES (?,?,?,?)");
-        $query->bind_param('sssi',$email,$nombre_random,$seance,$date);
-        $query->execute();
-        $query->close();
-        }else{
-        $query = $GLOBALS["bdd"]->prepare("UPDATE `desinscription` SET `last_send`=? WHERE mail=? AND projection=?");
-        $query->bind_param('iss',$date,$email,$seance);
-        $query->execute();
-        $query->close();
+            $query = $GLOBALS["bdd"]->prepare("INSERT INTO  `desinscription` (  `mail` ,  `desinscription_code` ,  `projection` , `last_send`) VALUES (?,?,?,?)");
+            $query->bind_param('sssi',$email,$nombre_random,$seance,$date);
+            $query->execute();
+            $query->close();
+        }
+        else
+        {
+            $query = $GLOBALS["bdd"]->prepare("UPDATE `desinscription` SET `last_send`=? WHERE mail=? AND projection=?");
+            $query->bind_param('iss',$date,$email,$seance);
+            $query->execute();
+            $query->close();
         }
 
 
@@ -102,8 +100,8 @@
         $temp = $row["desinscription_code"];
         $result->close();
 
-     $subject = 'Désinscription de la séance Moviezen pour: "'.$seance.'"';
-     $message = '
+        $subject = 'Désinscription de la séance Moviezen pour: "'.$seance.'"';
+        $message = '
 
        Vous voulez vous désinscrire pour la séance "'.$seance.'" du '.$date.'.
        Pour vous désinscrire: www.vincentriouallon.com/desinscription.php?codedesin='.$temp.'';
@@ -112,23 +110,22 @@
 
         // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
 
-     $headers = 'From: Moviezen Brest <moviezen.brest@gmail.com>' . "\r\n";
+        $headers = 'From: Moviezen Brest <moviezen.brest@gmail.com>' . "\r\n";
 
 
 
 
 
 
-      // En-têtes additionnels
-/*
-     $headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
-*/
-     /*$headers = 'From: Riouallon Vincent <riouallonvincent@gmail.com>' . "\r\n";*/
-/*     $headers .= 'Cc: anniversaire_archive@example.com' . "\r\n";
-     $headers .= 'Bcc: anniversaire_verif@example.com' . "\r\n";*/
+        // En-têtes additionnels
 
-     // Envoi
-     return mail($to, $subject, $message, $headers);
+        // $headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
+        // $headers = 'From: Riouallon Vincent <riouallonvincent@gmail.com>' . "\r\n";*/
+        // $headers .= 'Cc: anniversaire_archive@example.com' . "\r\n";
+        // $headers .= 'Bcc: anniversaire_verif@example.com' . "\r\n";*/
+
+         // Envoi
+         return mail($to, $subject, $message, $headers);
     }
 
 //################################################################################################################################################################
@@ -145,17 +142,14 @@
         $classe = protect($classe);
         $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
         $query->execute();
-                $query->close();
-
+        $query->close();
 
         $count = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$mail."' AND projection='".$projection."'";
 
-
         $result = $GLOBALS["bdd"]->query($count);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
 
-                  //  echo $row["COUNT(*)"];
-           $temp = $row["COUNT(*)"];
+        //  echo $row["COUNT(*)"];
+        $temp = $result->num_rows;
         $result->close();
 
         if($temp==0){
@@ -891,16 +885,12 @@
         $result->free();
 
         if(password_verify($oldMDP, $hash)){
-
-
-
-
-        $mdp = password_hash($mdp,PASSWORD_DEFAULT);
-        $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET mdp=? WHERE identifiant=?");
-        $query->bind_param('ss',$mdp,$identifiant);
-        $query->execute();
-        $query->close();
-        return true;
+            $mdp = password_hash($mdp,PASSWORD_DEFAULT);
+            $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET mdp=? WHERE identifiant=?");
+            $query->bind_param('ss',$mdp,$identifiant);
+            $query->execute();
+            $query->close();
+            return true;
         }
         return false;
     }

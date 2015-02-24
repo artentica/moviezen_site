@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Lun 23 Février 2015 à 17:44
--- Version du serveur: 5.5.40-0ubuntu0.14.04.1
--- Version de PHP: 5.5.9-1ubuntu4.5
+-- Généré le: Mar 24 Février 2015 à 13:47
+-- Version du serveur: 5.5.41-0ubuntu0.14.04.1
+-- Version de PHP: 5.5.9-1ubuntu4.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -39,8 +39,11 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`) VALUES
+('AlexF', '$2y$10$FEtjUvCtEZKDYs8AC99vSePN8kRoq6jyUa71s1b3NRiTbiLMyZRlC', 'alexandre.ferreira@isen-bretagne.fr', 1),
 ('Artentica', '$2y$10$ZD1R1mcxcDQguhZR8FBq6efRqwhTo4aj3.MvG58D42g2Mx35zl1ne', 'yolo@penis.com', 1),
-('Fanch', '$2y$10$kNl2Zmst6UtTo2Bzytz11eEQZGNWGwuQReCnPsA1uXKSINlCiW9jS', 'fanch.toquer@laposte.net', 0);
+('Fanch', '$2y$10$qWEPaFJNPHx64YauKxTXae7eOQzakxeNziSvIKpCZeWXf1zQUr9/6', 'fanch.toquer@laposte.net', 0),
+('elisbihani.oumeima', '$2y$10$lZKM3WXY/Qefl76BGzJLN.NjarZ1RmoMP0/DwZwFb544MzKhA/g96', 'elisbihani.oumeima17@hotmail.fr', 0),
+('ned29', '$2y$10$vDUBYRoTMqMlzFS1ynSz0OhUB0sl2ilMbyqpaQaKXCg2HJCXRj5oW', 'antoinenedelec21@gmail.com', 0);
 
 -- --------------------------------------------------------
 
@@ -57,6 +60,13 @@ CREATE TABLE IF NOT EXISTS `desinscription` (
   `last_send` double DEFAULT NULL,
   PRIMARY KEY (`mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `desinscription`
+--
+
+INSERT INTO `desinscription` (`mail`, `desinscription_code`, `raison`, `done`, `projection`, `last_send`) VALUES
+('ftoque17@isen-bretagne.fr', 'e2ca7ce304f494565d4c21fddee9c1d0', NULL, 0, 'American Sniper (VOST)', 1424723313);
 
 -- --------------------------------------------------------
 
@@ -463,7 +473,11 @@ CREATE TABLE IF NOT EXISTS `inscrits` (
 --
 
 INSERT INTO `inscrits` (`nom`, `prenom`, `tel`, `mail`, `classe`) VALUES
-('albert', 'hb', '', 'riouallonvincent@gmail.com', 'CSI1');
+('Ferreira', 'Alexandre', '', 'alexandre.ferreira@isen-bretagne.fr', 'CSI3'),
+('Nédélec', 'Antoine', '', 'antoinenedelec21@gmail.com', 'M1'),
+('Toquer', 'Francois', '', 'ftoque17@isen-bretagne.fr', 'CIR3'),
+('Riouallon', 'Vincent', '', 'riouallonvincent@gmail.com', 'CIR3'),
+('Toqier', 'Fanch', '', 'tart@isen-bretagne.fr', 'CIR3');
 
 -- --------------------------------------------------------
 
@@ -509,6 +523,9 @@ CREATE TABLE IF NOT EXISTS `projections` (
   `affiche` text COLLATE utf8_bin NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
   `back_affiche` text COLLATE utf8_bin NOT NULL,
+  `langue` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT 'VF',
+  `prix` float NOT NULL DEFAULT '4',
+  `bande_annonce` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -516,8 +533,8 @@ CREATE TABLE IF NOT EXISTS `projections` (
 -- Contenu de la table `projections`
 --
 
-INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`) VALUES
-('American Sniper', 0, 1424980800, '                    A compléter', 'A compléter', '../Images/affiche/758dd493503f0fc006d309db67951041.jpg', 1, '../Images/affiche/f130b49fd814f9b429bcb1c65f469c99.png');
+INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`, `langue`, `prix`, `bande_annonce`) VALUES
+('American Sniper (VOST)', 1424235600, 1424995800, '           Tireur d\\''élite des Navy SEAL, Chris Kyle est envoyé en Irak dans un seul but : protéger ses camarades. Sa précision chirurgicale sauve d\\''innombrables vies humaines sur le champ de bataille et, tandis que les récits de ses exploits se multiplient, il décroche le surnom de \\"La Légende\\". Cependant, sa réputation se propage au-delà des lignes ennemies, si bien que sa tête est mise à prix et qu\\''il devient une cible privilégiée des insurgés. Malgré le danger, et l\\''angoisse dans laquelle vit sa famille, Chris participe à quatre batailles décisives parmi les plus terribles de la guerre en Irak, s\\''imposant ainsi comme l\\''incarnation vivante de la devise des SEAL : \\"Pas de quartier \\" Mais en rentrant au pays, Chris prend conscience qu\\''il ne parvient pas à retrouver une vie normale.', '', '../Images/affiche/758dd493503f0fc006d309db67951041.jpg', 1, '../Images/affiche/f130b49fd814f9b429bcb1c65f469c99.png', 'VO sous-titré français', 4, 'https://www.youtube.com/embed/p-7cwVPTNBw');
 
 -- --------------------------------------------------------
 
@@ -537,7 +554,10 @@ CREATE TABLE IF NOT EXISTS `projections_inscrits` (
 --
 
 INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES
-('riouallonvincent@gmail.com', 'American Sniper');
+('riouallonvincent@gmail.com', 'American Sniper (VOST)'),
+('alexandre.ferreira@isen-bretagne.fr', 'American Sniper (VOST)'),
+('antoinenedelec21@gmail.com', 'American Sniper (VOST)'),
+('ftoque17@isen-bretagne.fr', 'American Sniper (VOST)');
 
 -- --------------------------------------------------------
 

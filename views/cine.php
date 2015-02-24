@@ -1,7 +1,7 @@
 <?php
     session_start();
     include_once("../includes/fonctions.php");
-include_once("../includes/function_global.php");
+    include_once("../includes/function_global.php");
 
     connect();
 
@@ -10,62 +10,54 @@ include_once("../includes/function_global.php");
 
 
     $nom_actif = "";
-            $result = recupProjActive();
-            if($result->num_rows){
-
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $nom_actif = $row["nom"];
-                    $date_projection = $row["date_projection"];
-                    $date_projection = date("d/m/Y", $date_projection)." à ".date("H\hi", $date_projection);
-                    $description  = $row["description"];
-                    $commentaires  = $row["commentaires"];
-                    $affiche = $row["affiche"];
-                    $affiche_back = $row["back_affiche"];
-		$langue= $row["langue"];
-		$prix = $row["prix"];
-		$bande_annonce = $row["bande_annonce"];
-
-                }
-                $result->close();
-
-
-//VAR
-
-            $inscrit = 0;
-                    $toreplace = array('\"');
-                    $by   = array('"');
- 		    $toreplace2 = array("\'");
-                    $by2   = array("'");
-
-                    $description  = str_replace($toreplace, $by, $description);
-                    $description  = str_replace($toreplace2, $by2, $description);
-
-                    $commentaires  = str_replace($toreplace, $by, $commentaires);
-                    $commentaires  = str_replace($toreplace2, $by2, $commentaires);
-
-
-
-
-
-
-
-
-    $_SESSION["inscrit"]=0;
-
-    if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
-
-        $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
-        if($temp == 2) $inscrit = 2;
-        elseif($temp == 1){
-            $_SESSION["select_projection"]=$_POST["select_projection"];
-            $_SESSION["inscrit"]=1;
-            $mail = protect($_POST["mail"]);
-            $_SESSION["mail"]=$mail;
-            $inscrit = 1;
+    $result = recupProjActive();
+    if($result->num_rows){
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $nom_actif = $row["nom"];
+            $date_projection = $row["date_projection"];
+            $date_projection = date("d/m/Y", $date_projection)." à ".date("H\hi", $date_projection);
+            $description  = $row["description"];
+            $commentaires  = $row["commentaires"];
+            $affiche = $row["affiche"];
+            $affiche_back = $row["back_affiche"];
+		    $langue= $row["langue"];
+		    $prix = $row["prix"];
+		    $bande_annonce = $row["bande_annonce"];
         }
 
-    }
+        $result->close();
+
+
+        //VAR
+        $inscrit = 0;
+        $toreplace = array('\"');
+        $by   = array('"');
+        $toreplace2 = array("\'");
+        $by2   = array("'");
+
+        $description  = str_replace($toreplace, $by, $description);
+        $description  = str_replace($toreplace2, $by2, $description);
+
+        $commentaires  = str_replace($toreplace, $by, $commentaires);
+        $commentaires  = str_replace($toreplace2, $by2, $commentaires);
+
+
+
+        $_SESSION["inscrit"]=0;
+
+        if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
+
+            $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
+            if($temp == 2) $inscrit = 2;
+            elseif($temp == 1){
+                $_SESSION["select_projection"]=$_POST["select_projection"];
+                $_SESSION["inscrit"]=1;
+                $mail = protect($_POST["mail"]);
+                $_SESSION["mail"]=$mail;
+                $inscrit = 1;
+            }
+        }
 
 
 $mailsend = 0;
