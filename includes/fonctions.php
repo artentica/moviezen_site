@@ -20,6 +20,21 @@
         return $protect;
     }
 
+    ////////////////////////////REPLACE FUNCTION/////////////////////::
+
+    function replace_chara($texte){
+        $toreplace = array('\"');
+        $by   = array('"');
+        $toreplace2 = array("\'");
+        $by2   = array("'");
+
+        $texte  = str_replace($toreplace, $by, $texte);
+        $texte  = str_replace($toreplace2, $by2, $texte);
+        return $texte;
+    }
+
+
+
     //FONCTION DE RECUPERATION DES PROMOS DISPONIBLES
     function recupPromo(){
         $query = "SELECT * from promotion ORDER BY id";
@@ -31,10 +46,10 @@
 
     //SEND MAILS
     function send_mail($seance,$date,$email){
-    $email = protect($email);
-    $to = $email;
+        $email = protect($email);
+        $to = $email;
 
-    $nombre_random = md5(uniqid(rand(), true));
+        $nombre_random = md5(uniqid(rand(), true));
         //verif si personne inscrit
         $verif = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$email."' AND projection='".$seance."'";
 
@@ -153,13 +168,12 @@
         $result->close();
 
         if($temp==0){
+            $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO `projections_inscrits`(`inscrit_mail`, `projection`) VALUES (?, ?)");
+            $query2->bind_param('ss', $mail, $projection);
+            $query2->execute();
+            $query2->close();
 
-
-        $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO `projections_inscrits`(`inscrit_mail`, `projection`) VALUES (?, ?)");
-        $query2->bind_param('ss', $mail, $projection);
-        $query2->execute();
-        $query2->close();
-                    return 1;
+            return 1;
 
         }
         else return 2;      ////////////////A fiNIR
@@ -192,11 +206,9 @@
         return true;
     }
 
-//FONCTION SUPPRESSION Demande désinscription  (UTILISATEUR)
+    //FONCTION SUPPRESSION Demande désinscription  (UTILISATEUR)
     function supprdesinc($nb){
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM `desinscription` WHERE desinscription_code=?");
-        $mail = protect($mail);
-        $projection = protect($projection);
         $query->bind_param('s', $nb);
         $query->execute();
         $query->close();
@@ -711,13 +723,13 @@
         $description = protect($description);
         $commentaires = protect($commentaires);
         $affiche = protect($affiche);
-        $affiche = protect($afficheback);
+        $afficheback = protect($afficheback);
+
         $date_release .= ":00";
-
         $date_projection .= ":00";
-
         $date_release = strtotime(str_replace('/', '-',$date_release));
         $date_projection = strtotime(str_replace('/', '-',$date_projection));
+
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO `projections`(`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`, `langue`, `prix`, `bande_annonce`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
         $active = 0;
         $query->bind_param('ssssssissds',$nom,$date_release,$date_projection,$description,$commentaires,$affiche,$active,$afficheback,$langue,$prix,$bande_annonce);
@@ -731,17 +743,21 @@
     function supprProj($nom){
         $nom = protect($nom);
         $query2 = "SELECT  `affiche` FROM  `projections` WHERE  `nom` ='".$nom."'";
-            $result = $GLOBALS["bdd"]->query($query2);
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                $imagetodelete = $row["affiche"];
-            }
-            unlink($imagetodelete);
+        $result = $GLOBALS["bdd"]->query($query2);
+
+        while($row = $result->fetch_array(MYSQLI_ASSOC)){
+            $imagetodelete = $row["affiche"];
+        }
+        unlink($imagetodelete);
+
         $query2 = "SELECT  `back_affiche` FROM  `projections` WHERE  `nom` ='".$nom."'";
-            $result = $GLOBALS["bdd"]->query($query2);
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                $imagetodelete = $row["back_affiche"];
-            }
-            unlink($imagetodelete);
+        $result = $GLOBALS["bdd"]->query($query2);
+
+        while($row = $result->fetch_array(MYSQLI_ASSOC)){
+             $imagetodelete = $row["back_affiche"];
+        }
+        unlink($imagetodelete);
+
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections WHERE nom=?");
         $query->bind_param('s',$nom);
         $query->execute();
@@ -766,10 +782,8 @@
         $commentaires = protect($commentaires);
         $ancien_nom = protect($ancien_nom);
 
-         $date_release .= ":00";
-
+        $date_release .= ":00";
         $date_projection .= ":00";
-
         $date_release = strtotime(str_replace('/', '-',$date_release));
         $date_projection = strtotime(str_replace('/', '-',$date_projection));
 
@@ -797,10 +811,12 @@
             unlink($imagetodelete);
 
             $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, affiche=?, commentaires=?, `langue`=?, `prix`=?, `bande_annonce`=? WHERE nom=?");
-        $query->bind_param('siisssssds',$nom,$date_release,$date_projection,$description,$affiche,$commentaires,$langue,$prix,$bande_annonce,$ancien_nom);
-        }else{
+            $query->bind_param('siisssssds',$nom,$date_release,$date_projection,$description,$affiche,$commentaires,$langue,$prix,$bande_annonce,$ancien_nom);
+        }
+        else
+        {
              $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, commentaires=?, `langue`=?, `prix`=?, `bande_annonce`=? WHERE nom=?");
-        $query->bind_param('siisssdss',$nom,$date_release,$date_projection,$description,$commentaires,$langue,$prix,$bande_annonce,$ancien_nom);
+            $query->bind_param('siisssdss',$nom,$date_release,$date_projection,$description,$commentaires,$langue,$prix,$bande_annonce,$ancien_nom);
         }
 
         $query->execute();
@@ -842,7 +858,6 @@
         $query = "SELECT identifiant, responsable_emprunt FROM admin";
         return $GLOBALS["bdd"]->query($query);
     }
-
 
 
     //FONCTION D'AJOUT D'UN ADMIN DANS LA BASE
@@ -939,11 +954,11 @@
     function supprLot($identifiant){
         $identifiant = protect($identifiant);
         $query = "SELECT image from lots WHERE id='".$identifiant."'";
-            $result = $GLOBALS["bdd"]->query($query);
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                $imagetodelete = $row["image"];
-            }
-         unlink($imagetodelete);
+        $result = $GLOBALS["bdd"]->query($query);
+        while($row = $result->fetch_array(MYSQLI_ASSOC)){
+            $imagetodelete = $row["image"];
+        }
+        unlink($imagetodelete);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM lots WHERE id=?");
         $query->bind_param('s',$identifiant);
         $query->execute();
@@ -1042,6 +1057,7 @@
             $date_retour_formatée = date_create_from_format("Y-m-d H:m:s", $date_retour);
             $date_retour_formatée = date_format($date_retour_formatée,'U');
             $modulo = $i % 6;
+            // On fait varier les couleurs pour le calendrier bootstrap
             switch ($modulo) {
                 case 0:
                     $couleur = "important";
@@ -1062,11 +1078,12 @@
                     $couleur = "special";
                     break;
             }
+            // Le retour se fait sous format JSON avec les attributs suivants
             $out[] = array(
                 'id' => $i,
                 'title' => 'Le lot '.$lot.' a été emprunté par '.$id,
                 'url' => '',
-                "class" => "event-".$couleur,
+                "class" => "event-".$couleur, //pour la couleur dans le calendrier
                 "text" => $lot,
                 'start' => strtotime($date_emprunt).'000', // Milliseconds
                 'end' => strtotime($date_retour).'000' // Milliseconds
@@ -1094,18 +1111,5 @@
         $query = "SELECT * FROM inscrits where identifiant='".protect($id)."'";
         return $GLOBALS["bdd"]->query($query);
     }
-////////////////////////////REPLACE FUNCTION/////////////////////::
-
-        function replace_chara($texte){
-            $toreplace = array('\"');
-            $by   = array('"');
- 		    $toreplace2 = array("\'");
-            $by2   = array("'");
-
-            $texte  = str_replace($toreplace, $by, $texte);
-            $texte  = str_replace($toreplace2, $by2, $texte);
-            return $texte;
-        }
-
 
 ?>
