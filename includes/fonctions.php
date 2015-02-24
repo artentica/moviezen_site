@@ -125,7 +125,7 @@
 
         // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
 
-        $headers = 'From: Moviezen Brest <moviezen.brest@gmail.com>' . "\r\n";
+        $headers = 'From: Moviezen Brest <no-reply@moviezen.fr>' . "\r\n";
         $subject = utf8_encode($subject);
         $message = utf8_encode($message);
 
