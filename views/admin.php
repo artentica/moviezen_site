@@ -898,7 +898,7 @@ echo '</div></div><div class="panel panel-default">
         $('#lotModal').modal({backdrop: true,keyboard: true});
         var lot = $('#suppr_lot').val();
         $( "#lot_texte_suppr p" ).remove();
-        $( "#lot_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+lot+'">'+lot+'</span>" ?</p>');
+        $( "#lot_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer le lot: "<span value="'+lot+'">'+lot+'</span>" ?</p>');
 
     }
 
@@ -907,7 +907,7 @@ echo '</div></div><div class="panel panel-default">
         $('#adminModal').modal({backdrop: true,keyboard: true});
         var admin = $('#suppr_admin').val();
         $( "#admin_texte_suppr p" ).remove();
-        $( "#admin_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer la projection: "<span value="'+admin+'">'+admin+'</span>" ?</p>');
+        $( "#admin_texte_suppr" ).prepend('<p>Etes vous sûr(e) de vouloir supprimer l\'administrateur: "<span value="'+admin+'">'+admin+'</span>" ?</p>');
 
     }
 
