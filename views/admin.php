@@ -122,7 +122,7 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                                 $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
                             }
                         }
-                                        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom,$nomback))  $addProjection =1;
+                                        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom,$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"]))  $addProjection =1;
                 else $addProjection = 2;
     }
 
@@ -162,7 +162,7 @@ if(!empty($_POST["modif_mdp"]) && !empty($_POST["ancien_modif_mdp"]) && $_SESSIO
                             }
                         }
                         }
-                                                if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"],$nomback)) $modifProj = 1;
+                                                if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"],$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"])) $modifProj = 1;
                         else $modifProj = 2;
                     }
 
@@ -495,6 +495,11 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="projection_date" id="projection_date" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="projection_description" id="projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required></textarea></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="projection_commentaires" id="projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control" required></textarea></div>
+
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Langue : </label></span><input type="text" name="langue" placeholder="VO sous-titré français/VF..." class="form-control" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Prix (en &euro;) : </label></span><input type="text" name="prix" placeholder="4" class="form-control" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Bande Annonce : </label></span><input type="text" name="bande_annonce" placeholder="https://www.youtube.com/embed/..." class="form-control" required/></div>
+
                             <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"></span>--><input type="file"  name="projection_affiche" id="projection_affiche" class="affiche form-control" required/></div>
                             <div class="input-group max center"><input type="file" name="back_affiche" id="back_affiche" class="back_affiche form-control" required/></div>
                             <input type="submit" class="button dark_grey" value="Ajouter cette projection"/>
@@ -551,9 +556,17 @@ background-size: cover;">
                             $date_release = $row["date_release"];
                             $date_projection = $row["date_projection"];
                             $description = $row["description"];
-
-                            $description = preg_replace("/\r/\n",'<br/>',$description);
+                            $prix = $row["prix"];
+                            $langue = $row["langue"];
+                            $bande_annonce = $row["bande_annonce"];
                             $commentaires = $row["commentaires"];
+
+
+                            $description  = replace_chara($description);
+                            $commentaires  = replace_chara($commentaires);
+                            $nom  = replace_chara($nom);
+
+                            /*$description = preg_replace("/\r/\n",'<br/>',$description);*/
                             echo('<form method="post" action="admin.php#mod_proj" id="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$nom.'" name="old_projection_nom" id="old_projection_nom"/>
                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Titre du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
@@ -561,6 +574,11 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="new_projection_date" id="new_projection_date" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required value="'.date("d/m/Y", $date_projection).' '.date("H\hi", $date_projection).'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required> '.$description.'</textarea></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control">'.$commentaires.'</textarea></div>
+
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Langue : </label></span><input type="text" name="langue" placeholder="VO sous-titré français/VF..." class="form-control" value="'.$langue.'" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Prix (en &euro;) : </label></span><input type="text" name="prix" placeholder="4" class="form-control" value="'.$prix.'" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Bande Annonce : </label></span><input type="text" name="bande_annonce" placeholder="https://www.youtube.com/embed/..." class="form-control" value="'.$bande_annonce.'" required/></div>
+
                             <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span>--><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="affiche form-control"/></div>
                             <div class="input-group max center"><input type="file" name="back_affiche" class="back_affiche form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Sauvegarder les changements"');

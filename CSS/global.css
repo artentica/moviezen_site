@@ -110,7 +110,7 @@ p, li {
 
 span.start_span{
     width:10%;
-    vertical-align: inherit;
+    vertical-align: middle;
 }
 
 
@@ -587,3 +587,17 @@ textarea{
 /*#skel-layers-wrapper{
     height: 100%;
 }*/
+
+.my_embed{
+    max-width: 750px;
+    margin: auto;
+    width: 90%;
+    padding-bottom: 20px;
+}
+
+.description{
+    width: 90%;
+margin: auto;
+padding-top: 25px;
+padding-bottom: 20px;
+}

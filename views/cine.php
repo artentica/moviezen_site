@@ -30,17 +30,13 @@
 
 
         //VAR
+
         $inscrit = 0;
-        $toreplace = array('\"');
-        $by   = array('"');
-        $toreplace2 = array("\'");
-        $by2   = array("'");
 
-        $description  = str_replace($toreplace, $by, $description);
-        $description  = str_replace($toreplace2, $by2, $description);
+        $description  = replace_chara($description);
+        $commentaires  = replace_chara($commentaires);
+        $nom_actif  = replace_chara($nom_actif);
 
-        $commentaires  = str_replace($toreplace, $by, $commentaires);
-        $commentaires  = str_replace($toreplace2, $by2, $commentaires);
 
 
 
@@ -122,18 +118,18 @@ background-size: cover;">
 
             <?php
 
-                echo('<h1>'.$nom_actif.'</h1>
-                <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest</h3>
+                echo('<h1>'.$nom_actif.' ('.$langue.')</h1>
+                <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest<br><br>Prix : '.$prix.'&euro;</h3>
                 <img src="'.$affiche.'" alt="affiche" class="affiche" style=""/>
-                <p>'.$description.'</p>
-                <p>'.$commentaires.'</p>
+                <p class="description">'.$description.'</p>
+                <p class="description">'.$commentaires.'</p>
                 ');
             }
 
-		echo ('<!-- 16:9 aspect ratio -->
+		echo ('<!-- 16:9 aspect ratio --><div class="my_embed">
 <div class="embed-responsive embed-responsive-16by9">
   <iframe class="embed-responsive-item" src="'.$bande_annonce.'" frameborder="0" allowfullscreen></iframe>
-</div>
+</div></div>
 ');
 
             /*if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){*/

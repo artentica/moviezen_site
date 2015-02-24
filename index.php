@@ -55,17 +55,18 @@ background-size: cover;">
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
-			<h1>Moviezen, qu'est-ce que c'est ?</h1>
-            <p>Nous sommes un club vidéo affilié à l'ISEN Brest. Passionés de vidéo et d'image, nous participons à la plupart des événements requérant des caméras ou une présence télévisuelle.</p>
+			<h1>Qu'est-ce que Moviezen ?</h1>
+            <p>Depuis quelques années, Moviezen fait partie intégrante du domaine Isénien en étant le club cinéma de l'école. Passionnés de vidéo et d'image, nous participons à la plupart des événements requérant des caméras ou une présence télévisuelle. Ceci se caractérise par de nombreuses actions et missions telles que :</p>
 
-            <p style="margin-top:25px">Nos missions sont diverses et variées :
-                <ul>
-                    <li>Organisation du Ciné de l'ISEN, des projections de film aux tarifs avantageux en partenariat avec le Multiplexe Liberté de Brest</li>
-                    <li>Montage de vidéos de soirées pour promouvoir les soirées Iséniennes</li>
-                    <li>Organisation de soirées de projections de courts-métrages</li>
-                    <li>Prêt de matériel audiovisuel pour les étudiants de l'ISEN Brest afin de réaliser les courts-métrages demandés en 1ère et 2ème année</li>
+            <p>
+                </p><ul>
+                    <li>Partenariat avec le Multiplexe Liberté sous le nom du "CINE DE L'ISEN" qui offre aux étudiants de regarder des films à prix réduit ainsi que la projection des courts-métrages iséniens avant ces films !</li>
+                    <li>Aide aux étudiants de première et deuxième année à la réalisation de courts-métrages dans le cadre de la FHS.</li>
+                    <li>Prêt de matériel cinématographique durant toute l'année.</li>
+                    <li>Montage des événements ainsi que des soirées ISEN.</li>
+		    <li>Réalisation d'émissions et de vidéos originales.</li>
                 </ul>
-            </p>
+            <p></p>
 		</div>
 	</div>
 <!--	 Footer Wrapper
