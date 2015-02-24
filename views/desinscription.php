@@ -1,7 +1,7 @@
 <?php
     session_start();
     include_once("../includes/fonctions.php");
-include_once("../includes/function_global.php");
+    include_once("../includes/function_global.php");
 
     connect();
 
@@ -11,9 +11,8 @@ include_once("../includes/function_global.php");
 
 
         $result = $GLOBALS["bdd"]->query($count);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
 
-        $temp = $row["COUNT(*)"];
+        $temp = $result->num_rows;
         $result->close();
 
 
@@ -22,12 +21,12 @@ include_once("../includes/function_global.php");
 
             $result=$GLOBALS["bdd"]->query($query);
 
-                    while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                    {
-                        $mail = $row["mail"];
-                        $projection = $row["projection"];
-                    }
-                    $result->close();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $mail = $row["mail"];
+                    $projection = $row["projection"];
+                }
+                $result->close();
 
             $query = "SELECT * from projections WHERE nom='".$projection."'";
             $result=$GLOBALS["bdd"]->query($query);

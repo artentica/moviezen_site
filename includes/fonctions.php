@@ -119,7 +119,7 @@
         $message = '
 
        Vous voulez vous désinscrire pour la séance "'.$seance.'" du '.$date.'.
-       Pour vous désinscrire: www.vincentriouallon.com/desinscription.php?codedesin='.$temp.'';
+       Pour vous désinscrire: www.vincentriouallon.com/views/desinscription.php?codedesin='.$temp.'';
 
 
 
