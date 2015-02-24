@@ -56,21 +56,21 @@
         }
 
 
-$mailsend = 0;
+        $mailsend = 0;
 
-    if(!empty($_POST["del_mail"])){
-       /* if(supprInscrit($_SESSION["mail"],$_POST["del_mail"])){
-            $_SESSION["inscrit"]=0;
-            unset($_SESSION["mail"]);
-        }*/
-        $repmail = send_mail($nom_actif,$date_projection,$_POST["del_mail"]);
+        if(!empty($_POST["del_mail"])){
+           /* if(supprInscrit($_SESSION["mail"],$_POST["del_mail"])){
+                $_SESSION["inscrit"]=0;
+                unset($_SESSION["mail"]);
+            }*/
+            $repmail = send_mail($nom_actif,$date_projection,$_POST["del_mail"]);
 
-        if($repmail == 1)$mailsend = 1;
-        elseif($repmail == 2)$mailsend = 2;
-        elseif($repmail == 4)$mailsend = 4;
+            if($repmail == 1)$mailsend = 1;
+            elseif($repmail == 2)$mailsend = 2;
+            elseif($repmail == 4)$mailsend = 4;
 
-        else $mailsend = 3;
-    }
+            else $mailsend = 3;
+        }
 
 
 
@@ -193,7 +193,7 @@ background-size: cover;">
 
             if($mailsend == 1){
                             echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail de désinscription a été envoyé veuillez suivre le lien reçu pour confirmer la désinscription. <br> Le mail provient de "moviezen Brest", et envoyé à '.$_POST["del_mail"].' !</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail de désinscription vous a été envoyé. Veuillez suivre le lien reçu pour confirmer la désinscription. <br> Le mail provient de "moviezen Brest", et a été envoyé à '.$_POST["del_mail"].' !</div>');
                         }
                         elseif($mailsend == 2){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
@@ -201,7 +201,7 @@ background-size: cover;">
                         }
                         elseif($mailsend == 3){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un problème est survenue et le mail n\a pas pu être envoyé ! <br> Réessayez plus tard.</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un problème est survenu et le mail n\a pas pu être envoyé ! <br> Réessayez plus tard.</div>');
                         }
                         elseif($mailsend == 4){
 
@@ -222,7 +222,7 @@ background-size: cover;">
 
 
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail a déjà été envoyé il y a '.$min.'min et '.$sec.'s veuillez attendre 5min entre chaque essais. <br> Vérifiez vos spams.</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail a déjà été envoyé il y a '.$min.' min et '.$sec.' s, veuillez attendre 5min entre chaque essai. <br> Vérifiez vos spams.</div>');
                         }
 
             echo('
