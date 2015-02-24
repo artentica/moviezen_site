@@ -88,8 +88,8 @@ background-size: cover;">
         <?php
        include '../includes/panel-global.php';
 
-        echo '<div class="wrapper style1" style="background-image: url(\''.$affiche_back.'\');
-                                       background-size: cover;height: inherit;">';
+        if($temp != 0) echo '<div class="wrapper style1" style="background-image: url(\''.$affiche_back.'\');background-size: cover;height: inherit;">';
+        /*else echo '<div class="wrapper style1" style="background-image: url(\'../Images/Logo.png\');background-size: cover;height: inherit;">';*/
       ?>
 
 
@@ -98,6 +98,7 @@ background-size: cover;">
             <h1>Désinscription</h1>
             <?php
                 if($temp != 0) echo "<h3>De la séance '".$projection."' projeté le ".$phrase_date." au Multiplexe Liberté Brest</h3>";
+
 
 
 
@@ -118,6 +119,8 @@ background-size: cover;">
 
 
                 if($temp != 0) echo '<img src="'.$affiche.'" alt="affiche" class="affiche" style="margin-top:25px">';
+                else echo '<img src="../Images/Logo.jpg" alt="affiche" class="affiche" style="margin-top:25px">';
+
             ?>
 
 

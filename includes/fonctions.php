@@ -711,7 +711,7 @@
 
 
     //FONCTION D'AJOUT D'UNE PROJECTION A LA BDD
-    function addProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$afficheback){
+    function addProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$afficheback,$langue,$prix,$bande_annonce){
         $date_release = protect($date_release);
         $date_projection = protect($date_projection);
         $description = protect($description);
@@ -724,9 +724,9 @@
 
         $date_release = strtotime(str_replace('/', '-',$date_release));
         $date_projection = strtotime(str_replace('/', '-',$date_projection));
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO `projections`(`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`) VALUES (?,?,?,?,?,?,?,?)");
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO `projections`(`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`, `langue`, `prix`, `bande_annonce`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
         $active = 0;
-        $query->bind_param('ssssssis',$nom,$date_release,$date_projection,$description,$commentaires,$affiche,$active,$afficheback);
+        $query->bind_param('ssssssissds',$nom,$date_release,$date_projection,$description,$commentaires,$affiche,$active,$afficheback,$langue,$prix,$bande_annonce);
         $query->execute();
         $query->close();
         return true;
@@ -764,7 +764,7 @@
     }
 
     //FONCTION DE MODIFICATION D'UNE PROJECTION
-    function modifProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$ancien_nom,$afficheback){
+    function modifProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$ancien_nom,$afficheback,$langue,$prix,$bande_annonce){
         $nom = protect($nom);
         $date_release = protect($date_release);
         $date_projection = protect($date_projection);
@@ -802,11 +802,11 @@
             }
             unlink($imagetodelete);
 
-            $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, affiche=?, commentaires=? WHERE nom=?");
-        $query->bind_param('siissss',$nom,$date_release,$date_projection,$description,$affiche,$commentaires,$ancien_nom);
+            $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, affiche=?, commentaires=?, `langue`=?, `prix`=?, `bande_annonce`=? WHERE nom=?");
+        $query->bind_param('siisssssds',$nom,$date_release,$date_projection,$description,$affiche,$commentaires,$langue,$prix,$bande_annonce,$ancien_nom);
         }else{
-             $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, commentaires=? WHERE nom=?");
-        $query->bind_param('siisss',$nom,$date_release,$date_projection,$description,$commentaires,$ancien_nom);
+             $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, commentaires=?, `langue`=?, `prix`=?, `bande_annonce`=? WHERE nom=?");
+        $query->bind_param('siisssdss',$nom,$date_release,$date_projection,$description,$commentaires,$langue,$prix,$bande_annonce,$ancien_nom);
         }
 
         $query->execute();
@@ -1104,5 +1104,18 @@
         $query = "SELECT * FROM inscrits where identifiant='".protect($id)."'";
         return $GLOBALS["bdd"]->query($query);
     }
+////////////////////////////REPLACE FUNCTION/////////////////////::
+
+        function replace_chara($texte){
+            $toreplace = array('\"');
+            $by   = array('"');
+ 		    $toreplace2 = array("\'");
+            $by2   = array("'");
+
+            $texte  = str_replace($toreplace, $by, $texte);
+            $texte  = str_replace($toreplace2, $by2, $texte);
+            return $texte;
+        }
+
 
 ?>
