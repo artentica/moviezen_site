@@ -140,7 +140,7 @@ background-size: cover;">
 
 			<form method="post" action="cine.php#inscr" id="form-register" style="margin-top: 10px;">
             <fieldset>
-                <legend>S\'inscrire pour la projection</legend>
+                <legend id="inscr">S\'inscrire pour la projection</legend>
                 <p>Merci de renseigner tous les champs</p>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" placeholder="Nom" class="form-control"  required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control"  required/></div>
