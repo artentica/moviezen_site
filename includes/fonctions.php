@@ -16,7 +16,7 @@
 
     //FONCTION DE PROTECTION DES CHAINES UTILISATEURS
     function protect($chaine){
-        $protect = $GLOBALS["bdd"]->real_escape_string(stripslashes(html_entity_decode($chaine)));
+        $protect = $GLOBALS["bdd"]->real_escape_string($chaine);
         return $protect;
     }
 
@@ -51,26 +51,24 @@
 
         $nombre_random = md5(uniqid(rand(), true));
         //verif si personne inscrit
-        $verif = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$email."' AND projection='".$seance."'";
-
-
-        $result = $GLOBALS["bdd"]->query($verif);
-
-        $temp = $result->num_rows;
-        $result->close();
+        $verif = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail=? AND projection=?");
+        $verif->bind_param("ss",$email,$seance);
+        $verif->execute();
+        $verif->store_result();
+        $verif->bind_result($temp);
+        $verif->fetch();
+        $verif->close();
 
         if($temp == 0) return 2;
 
         //verif anti spam
-        $verif = "SELECT last_send FROM desinscription WHERE mail='".$email."' AND projection='".$seance."'";
-
-
-        $result = $GLOBALS["bdd"]->query($verif);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
-
-
-        $temp = $row["last_send"];
-        $result->close();
+        $verif = $GLOBALS["bdd"]->prepare("SELECT last_send FROM desinscription WHERE mail=? AND projection=?");
+        $verif->bind_param("ss",$email,$seance);
+        $verif->execute();
+        $verif->store_result();
+        $verif->bind_result($temp);
+        $verif->fetch();
+        $verif->close();
 
         $date = date_create();
         $date=date_timestamp_get($date);
@@ -79,15 +77,14 @@
         if($time < 300 ) return 4;
 
 
-        $verif = "SELECT COUNT(*) FROM desinscription WHERE mail='".$email."' AND projection='".$seance."'";
+        $verif = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM desinscription WHERE mail=? AND projection=?");
 
-        $result = $GLOBALS["bdd"]->query($verif);
-
-        $temp = $result->num_rows;
-        $result->close();
-
-
-
+        $verif->bind_param("ss",$email,$seance);
+        $verif->execute();
+        $verif->store_result();
+        $verif->bind_result($temp);
+        $verif->fetch();
+        $verif->close();
 
         if($temp == 0){
         //on fourre le tout dans la bdd
@@ -106,15 +103,15 @@
         }
 
 
-        $desincode = "SELECT `desinscription_code` FROM `desinscription` WHERE `mail`='".$email."' AND `projection`='".$seance."'";
+        $desincode = $GLOBALS["bdd"]->prepare("SELECT `desinscription_code` FROM `desinscription` WHERE `mail`=? AND `projection`=?");
 
 
-        $result = $GLOBALS["bdd"]->query($desincode);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
-
-        $temp = $row["desinscription_code"];
-        $result->close();
-
+        $desincode->bind_param("ss",$email,$seance);
+        $desincode->execute();
+        $desincode->store_result();
+        $desincode->bind_result($temp);
+        $desincode->fetch();
+        $desincode->close();
         $subject = 'Désinscription de la séance Moviezen pour: "'.$seance.'"';
         $message = '
 
@@ -160,16 +157,17 @@
         $query->execute();
         $query->close();
 
-        $count = "SELECT * FROM projections_inscrits WHERE inscrit_mail='".$mail."' AND projection='".$projection."'";
+        $count = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail=? AND projection=?");
+        $count->bind_param("ss",$mail,$projection);
+        $count->execute();
 
-        $result = $GLOBALS["bdd"]->query($count);
+        $count->store_result();
+        $count->bind_result($temp);
 
-        //  echo $row["COUNT(*)"];
-        $temp = $result->num_rows;
-        $result->close();
-
+        $count->fetch();
+        $count->close();
         if($temp==0){
-            $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO `projections_inscrits`(`inscrit_mail`, `projection`) VALUES (?, ?)");
+            $query2 = $GLOBALS["bdd"]->prepare("INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES (?, ?)");
             $query2->bind_param('ss', $mail, $projection);
             $query2->execute();
             $query2->close();
@@ -636,34 +634,38 @@
 
     //FONCTION DE RECUPERATION DES INSCRITS A UNE PROJECTION, CREE UN DOCUMENT XLS TELECHARGEABLE SUR LE SERVEUR
     function recupInscrit($projection){
-        $projection = protect($projection);
-        $query = "SELECT * from projections_inscrits WHERE projection='".$projection."'";
-        $result = $GLOBALS["bdd"]->query($query);
+        $query = $GLOBALS["bdd"]->prepare("SELECT inscrit_mail from projections_inscrits WHERE projection=?");
+        $query->bind_param("s",$projection);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($mail);
         echo('<table class="table table-striped <!--table-bordered-->"><thead><tr><th>#</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
         $table = "<html><body><table><tr><td><b>Nom</b></td><td><b>Prenom</b></td><td><b>Classe</b></td></tr>";
         $i=1;
-        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        while ($query->fetch())
         {
 
-            $mail = $row["inscrit_mail"];
-            $query = "SELECT * from inscrits WHERE mail='".$mail."'";
-            $result2 = $GLOBALS["bdd"]->query($query);
-            while ($row2 = $result2->fetch_array(MYSQLI_ASSOC))
+            $query2 = $GLOBALS["bdd"]->prepare("SELECT nom , prenom , classe from inscrits WHERE mail = ?");
+            $query2->bind_param("s",$mail);
+            $query2->execute();
+            $query2->store_result();
+            $query2->bind_result($nom,$prenom,$classe);
+            while ($query2->fetch())
             {
-                $nom = $row2["nom"];
-                $prenom = $row2["prenom"];
-                $classe = $row2["classe"];
                 $table = $table."<tr>";
                 $table = $table."<td>".utf8_decode($nom)."</td><td>".utf8_decode($prenom)."</td><td>".utf8_decode($classe)."</td>";
                 $table = $table."</tr>";
                 echo('<tr><td class="inscrit_proj_list">'.$i.'</td><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td></tr>');
                 $i++;
             }
-            $result2->close();
-
+            $query2->close();
         }
+        $query->close();
         $table = $table."</table></body></html>";
-        $file = ("inscrits.xls");
+        $replace = array("'",'"'," ");
+        $projection = str_replace($replace,'_',$projection);
+        $projection = stripslashes($projection);
+        $file = ("../xls/inscrits_".$projection.".xls");
         if(!$myfile = fopen($file, "w+"))
         {
             print("erreur: ");
@@ -672,7 +674,6 @@
         }
         fwrite($myfile,$table,strlen($table));
         fclose($myfile);
-        $result->close();
         echo('</table>');
         return true;
     }
@@ -692,7 +693,7 @@
 
     //FONCTION RECUPERANT UNE PROJECTION EN PARTICULIER
     function recupUniqueProj($nom){
-        $query = "SELECT * from projections WHERE nom='".$nom."'";
+        $query = 'SELECT * from projections WHERE nom="'.$nom.'"';
         return $GLOBALS["bdd"]->query($query);
     }
 
@@ -718,13 +719,6 @@
 
     //FONCTION D'AJOUT D'UNE PROJECTION A LA BDD
     function addProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$afficheback,$langue,$prix,$bande_annonce){
-        $date_release = protect($date_release);
-        $date_projection = protect($date_projection);
-        $description = protect($description);
-        $commentaires = protect($commentaires);
-        $affiche = protect($affiche);
-        $afficheback = protect($afficheback);
-
         $date_release .= ":00";
         $date_projection .= ":00";
         $date_release = strtotime(str_replace('/', '-',$date_release));
@@ -735,28 +729,35 @@
         $query->bind_param('ssssssissds',$nom,$date_release,$date_projection,$description,$commentaires,$affiche,$active,$afficheback,$langue,$prix,$bande_annonce);
         $query->execute();
         $query->close();
+        $replace = array("'",'"'," ",'\'','\"');
+        $nom = str_replace($replace,'_',$nom);
+        touch('../xls/inscrits_'.$nom.'.xls');
+        chmod('../xls/inscrits_'.$nom.'.xls', 0777);
         return true;
     }
 
 
     //FONCTION DE SUPPRESSION D'UNE PROJECTION DE LA BDD
     function supprProj($nom){
-        $nom = protect($nom);
-        $query2 = "SELECT  `affiche` FROM  `projections` WHERE  `nom` ='".$nom."'";
-        $result = $GLOBALS["bdd"]->query($query2);
-
-        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-            $imagetodelete = $row["affiche"];
-        }
+        $query2 = $GLOBALS["bdd"]->prepare("SELECT  `affiche` FROM  `projections` WHERE  `nom` = ?");
+        $query2->bind_param("s",$nom);
+        $query2->execute();
+        $query2->store_result();
+        $query2->bind_result($imagetodelete);
+        $query2->fetch();
         unlink($imagetodelete);
 
-        $query2 = "SELECT  `back_affiche` FROM  `projections` WHERE  `nom` ='".$nom."'";
-        $result = $GLOBALS["bdd"]->query($query2);
+        $query2->close();
 
-        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-             $imagetodelete = $row["back_affiche"];
-        }
+        $query2 = $GLOBALS["bdd"]->prepare("SELECT  `back_affiche` FROM  `projections` WHERE  `nom` = ? ");
+        $query2->bind_param("s",$nom);
+        $query2->execute();
+        $query2->store_result();
+        $query2->bind_result($imagetodelete);
+
+        $query2->fetch();
         unlink($imagetodelete);
+        $query2->close();
 
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections WHERE nom=?");
         $query->bind_param('s',$nom);
@@ -770,29 +771,26 @@
         $query2->bind_param('s',$nom);
         $query2->execute();
         $query2->close();
+        $replace = array("'",'"'," ",'\'','\"');
+        $nom = str_replace($replace,'_',$nom);
+        unlink('../xls/inscrits_'.$nom.'.xls');
         return true;
     }
 
     //FONCTION DE MODIFICATION D'UNE PROJECTION
     function modifProj($nom,$date_release,$date_projection,$description,$commentaires,$affiche,$ancien_nom,$afficheback,$langue,$prix,$bande_annonce){
-        $nom = protect($nom);
-        $date_release = protect($date_release);
-        $date_projection = protect($date_projection);
-        $description = protect($description);
-        $commentaires = protect($commentaires);
-        $ancien_nom = protect($ancien_nom);
-
         $date_release .= ":00";
         $date_projection .= ":00";
         $date_release = strtotime(str_replace('/', '-',$date_release));
         $date_projection = strtotime(str_replace('/', '-',$date_projection));
 
         if($afficheback!=''){//magic at work don't touch, even with your eyes
-            $query3 = "SELECT `back_affiche` FROM  `projections` WHERE  `nom` ='".$ancien_nom."'";
-            $result = $GLOBALS["bdd"]->query($query3);
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                $imagetodelete = $row["back_affiche"];
-            }
+            $query3 = $GLOBALS["bdd"]->prepare("SELECT `back_affiche` FROM  `projections` WHERE  `nom` = ? ");
+            $query3->bind_param("s",$ancien_nom);
+            $query3->execute();
+            $query3->store_result();
+            $query3->bind_result($imagetodelete);
+            $query3->fetch();
             unlink($imagetodelete);
 
             $query = $GLOBALS["bdd"]->prepare("UPDATE `projections` SET `back_affiche`=? WHERE nom=?");
@@ -803,11 +801,12 @@
 
 
         if($affiche!=''){
-            $query2 = "SELECT  `affiche` FROM  `projections` WHERE  `nom` ='".$ancien_nom."'";
-            $result = $GLOBALS["bdd"]->query($query2);
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                $imagetodelete = $row["affiche"];
-            }
+            $query2 = $GLOBALS["bdd"]->prepare("SELECT  `affiche` FROM  `projections` WHERE  `nom` = ? ");
+            $query2->bind_param("s",$ancien_nom);
+            $query2->execute();
+            $query2->store_result();
+            $query2->bind_result($imagetodelete);
+            $query2->fetch();
             unlink($imagetodelete);
 
             $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET nom=?, date_release=?, date_projection=?, description=?, affiche=?, commentaires=?, `langue`=?, `prix`=?, `bande_annonce`=? WHERE nom=?");
@@ -832,6 +831,14 @@
         $query->bind_param('ss',$nom,$ancien_nom);
         $query->execute();
         $query->close();
+        $replace = array("'",'"'," ");
+        $ancien_nom = str_replace($replace,'_',$ancien_nom);
+        $ancien_nom = stripslashes($ancien_nom);
+        $nom = str_replace($replace,'_',$nom);
+        $nom = stripslashes($nom);
+        unlink('../xls/inscrits_'.$ancien_nom.'.xls');
+        touch('../xls/inscrits_'.$nom.'.xls');
+        chmod('../xls/inscrits_'.$nom.'.xls', 0777);
         return true;
     }
 
@@ -888,16 +895,14 @@
 
     //FONCTION DE CHANGEMENT DE MOT DE PASSE POUR L'ADMINISTRATEUR COURANT
     function modifMDP($identifiant, $mdp, $oldMDP){
-        $identifiant = protect($identifiant);
         $mdp = protect($mdp);
-
-        $query = "SELECT * FROM admin WHERE identifiant='".$identifiant."'";
-        $result = $GLOBALS["bdd"]->query($query) or trigger_error($GLOBALS["bdd"]->error.$query);
-        while ($row = $result->fetch_array(MYSQLI_ASSOC))
-        {
-            $hash = $row["mdp"];
-        }
-        $result->free();
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM admin WHERE identifiant=?");
+        $query->bind_param("s",$identifiant);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($hash);
+        $query->fetch();
+        $query->close();
 
         if(password_verify($oldMDP, $hash)){
             $mdp = password_hash($mdp,PASSWORD_DEFAULT);

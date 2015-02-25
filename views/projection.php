@@ -70,7 +70,9 @@ background-size: cover;">
             <?php
             if(!empty($_POST["recup_proj"])){
                 if(recupInscrit($_POST["recup_proj"])){
-                    echo('<a class="button dark_grey" href="inscrits.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier xls</a>');
+                    $replace = array('\"',"\'","'",'"'," ");
+                    $_POST["recup_proj"] = str_replace($replace,'_',$_POST["recup_proj"]);
+                    echo('<a class="button dark_grey" href="../xls/inscrits_'.$_POST["recup_proj"].'.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier xls</a>');
                 }
             
             }
