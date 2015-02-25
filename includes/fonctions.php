@@ -160,7 +160,7 @@
         $query->execute();
         $query->close();
 
-        $count = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$mail."' AND projection='".$projection."'";
+        $count = "SELECT * FROM projections_inscrits WHERE inscrit_mail='".$mail."' AND projection='".$projection."'";
 
         $result = $GLOBALS["bdd"]->query($count);
 
@@ -639,7 +639,7 @@
         $projection = protect($projection);
         $query = "SELECT * from projections_inscrits WHERE projection='".$projection."'";
         $result = $GLOBALS["bdd"]->query($query);
-        echo('<table class="table table-striped table-bordered"><thead><tr><th>Numéro</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
+        echo('<table class="table table-striped <!--table-bordered-->"><thead><tr><th>#</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
         $table = "<html><body><table><tr><td><b>Nom</b></td><td><b>Prenom</b></td><td><b>Classe</b></td></tr>";
         $i=1;
         while ($row = $result->fetch_array(MYSQLI_ASSOC))
@@ -654,16 +654,15 @@
                 $prenom = $row2["prenom"];
                 $classe = $row2["classe"];
                 $table = $table."<tr>";
-                $table = $table."<td>".$nom."</td><td>".$prenom."</td><td>".$classe."</td>";
+                $table = $table."<td>".utf8_decode($nom)."</td><td>".utf8_decode($prenom)."</td><td>".utf8_decode($classe)."</td>";
                 $table = $table."</tr>";
-                echo('<tr><td>'.$i.'</td><td>'.$nom.'</td><td>'.$prenom.'</td><td>'.$classe.'</td></tr>');
+                echo('<tr><td class="inscrit_proj_list">'.$i.'</td><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td></tr>');
                 $i++;
             }
             $result2->close();
 
         }
         $table = $table."</table></body></html>";
-        fopen("inscrits.xls","w+");
         $file = ("inscrits.xls");
         if(!$myfile = fopen($file, "w+"))
         {

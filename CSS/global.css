@@ -198,7 +198,7 @@ input.button:active::before { padding: 1px 0 0; }
 /**
  * Grey
  */
-input.button {
+input.button, a.button {
     -moz-box-shadow: inset 0 0 0 1px #63ad0d;
     -webkit-box-shadow: inset 0 0 0 1px #63ad0d;
     -moz-border-radius: 3px;
@@ -221,7 +221,7 @@ input.button {
     text-decoration: none;
     text-shadow: 0 1px 0 #fafafa; }
 
-input.button:hover:enabled {
+input.button:hover:enabled, a.button:hover:enabled {
     background: #e4e4e4;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#e4e4e4), to(#ededed));
     background: -moz-linear-gradient(#e4e4e4, #ededed);
@@ -230,7 +230,7 @@ input.button:hover:enabled {
     border-bottom: solid 3px #b2b1b1;
     box-shadow: inset 0 0 0 1px #efefef; }
 
-input.button:active:enabled {
+input.button:active:enabled, a.button:active:enabled  {
     background: #dfdfdf;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#dfdfdf), to(#e3e3e3));
     background: -moz-linear-gradient(#dfdfdf, #e3e3e3);
@@ -244,7 +244,7 @@ input.button:active:enabled {
 /**
  * Dark Grey
  */
-input.button.dark_grey:disabled,button.button.dark_grey:disabled {
+input.button.dark_grey:disabled,button.button.dark_grey:disabled,a.button.dark_grey:disabled {
     margin-top: 15px;
     cursor: not-allowed;
     background: #EAEAEA;
@@ -258,7 +258,7 @@ input.button.dark_grey:disabled,button.button.dark_grey:disabled {
     text-shadow: 0 1px 0 #E0E0E0;
 }
 
-input.button.dark_grey,button.button.dark_grey {
+input.button.dark_grey,button.button.dark_grey,a.button.dark_grey {
     margin-top: 15px;
     background: #d1d1d1;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#d1d1d1), to(#afafaf));
@@ -270,7 +270,7 @@ input.button.dark_grey,button.button.dark_grey {
     color: #555;
     text-shadow: 0 1px 0 #d6d6d6; }
 
-input.button.dark_grey:hover:enabled {
+input.button.dark_grey:hover:enabled,a.button.dark_grey:hover:enabled {
     background: #b7b7b7;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#b7b7b7), to(#c2c2c2));
     background: -moz-linear-gradient(#b7b7b7, #c2c2c2);
@@ -279,7 +279,7 @@ input.button.dark_grey:hover:enabled {
     border-bottom: solid 3px #878787;
     box-shadow: inset 0 0 0 1px #d4d4d4; }
 
-input.button.dark_grey:active {
+input.button.dark_grey:active,a.button.dark_grey:active {
     background: #afafaf;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#afafaf), to(#a9a9a9));
     background: -moz-linear-gradient(#afafaf, #a9a9a9);
@@ -367,7 +367,8 @@ table img{
 }
 
 .table{
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 th {
@@ -407,15 +408,24 @@ table {
 	/* Zebra striping */
 
 	th {
-		background: #3B3E45;
-		color: white;
+		/*background: #3B3E45;
+		color: white;*/
 		font-weight: bold;
 	}
 	td, th {
 		padding: 6px;
-		border: 1px solid #ccc;
+		/*border: 1px solid #ccc;*/
 		text-align: center;
 	}
+
+.table > thead > tr > th {
+border-bottom: 2px solid #C5C5C5;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+border-top: 1px solid #C5C5C5;
+}
+
 
 
 
@@ -466,11 +476,20 @@ table {
 		Label the data
 		*/
 		td:nth-of-type(1):before { content: "Image du lot"; }
-		td:nth-of-type(2):before { content: "Sescripion du lot"; }
+		td:nth-of-type(2):before { content: "Descripion du lot"; }
 		td:nth-of-type(3):before { content: "Disponible"; }
 		td:nth-of-type(4):before { content: "lot"; }
 		td:nth-of-type(5):before { content: "Indisponibilité"; }
 		td:nth-of-type(6):before { content: "Caution du lot"; }
+
+        /*
+		Label the data Récup liste
+		*/
+		td.inscrit_proj_list:nth-of-type(1):before { content: "#"; }
+		td.inscrit_proj_list:nth-of-type(2):before { content: "Nom"; }
+		td.inscrit_proj_list:nth-of-type(3):before { content: "Prénom"; }
+		td.inscrit_proj_list:nth-of-type(4):before { content: "Classe"; }
+
 	}
 
 	/* Smartphones (portrait and landscape) ----------- */
@@ -480,7 +499,7 @@ table {
 		body {
 			padding: 0;
 			margin: 0;
-			width: 320px; }
+			 }
 		}
 
 	/* iPads (portrait and landscape) ----------- */
@@ -490,8 +509,12 @@ table {
 		}
 	}
 
-	tr:nth-of-type(even) {
-background: rgba(211, 211, 211, 0.46);
+tr:nth-of-type(even) {
+background: #EFEFEF;
+}
+
+thead tr:nth-of-type(odd){
+    background-color: rgba(255, 255, 255, 0.59);
 }
 
 tr:nth-of-type(odd) {

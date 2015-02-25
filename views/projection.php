@@ -17,7 +17,7 @@ include_once("../includes/function_global.php");
 	<title>Espace Liste de projection</title>
 
 	<!-- Set Viewport Options -->
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 
 	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
@@ -26,6 +26,7 @@ include_once("../includes/function_global.php");
 	 <?php
         include '../includes/include_on_all_page.php';
     ?>
+    <script src="../js/bootstrap.js"></script>
 
 </head>
 <body>
@@ -58,14 +59,17 @@ background-size: cover;">
                 $result->close();?>
                     </select>                   </div>
 
-                 <input type="submit" class="button dark_grey" value="Récupérer les inscrits"/>
+                 <input type="submit" class="button dark_grey" onClick="$(this).button('loading')" data-loading-text="Loading" value="Récupérer les inscrits"/>
+
                 </fieldset>
             </form>
-                    
+
+
+
             <?php
             if(!empty($_POST["recup_proj"])){
                 if(recupInscrit($_POST["recup_proj"])){
-                    echo('<br/><a class="button dark_grey" href="inscrits.xls">Télécharger le fichier xls</a>');
+                    echo('<a class="button dark_grey" href="inscrits.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier xls</a>');
                 }
             
             }
