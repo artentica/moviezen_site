@@ -358,7 +358,9 @@ background-size: cover;">
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="p4$$w08d" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mail">Adresse mail : </label></span><input type="email" name="add_mail" id="add_mail" placeholder="admin@gmail.com" class="form-control" required/></div>
-                                <label class="checkbox"><input type="checkbox" name="add_respons" value="1">Faire de cet administrateur un responsable des emprunts ?</label>
+                                <label class="checkbox"><input type="checkbox" name="add_respons" value="1" style="
+    margin-left: -22px;
+">Faire de cet administrateur un responsable des emprunts ?</label>
                                 <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
                             </fieldset></form>
                         ');

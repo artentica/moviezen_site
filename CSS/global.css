@@ -260,6 +260,7 @@ input.button.dark_grey:disabled,button.button.dark_grey:disabled,a.button.dark_g
 
 input.button.dark_grey,button.button.dark_grey,a.button.dark_grey {
     margin-top: 15px;
+    white-space: inherit;
     background: #d1d1d1;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#d1d1d1), to(#afafaf));
     background: -moz-linear-gradient(#d1d1d1, #afafaf);
