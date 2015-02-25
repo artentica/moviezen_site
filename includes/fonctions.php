@@ -651,13 +651,10 @@
             while ($row2 = $result2->fetch_array(MYSQLI_ASSOC))
             {
                 $nom = $row2["nom"];
-                $nom = utf8_encode($nom);
                 $prenom = $row2["prenom"];
-                $prenom = utf8_encode($prenom);
                 $classe = $row2["classe"];
-                $classe = utf8_encode($classe);
                 $table = $table."<tr>";
-                $table = $table."<td>".$nom."</td><td>".$prenom."</td><td>".$classe."</td>";
+                $table = $table."<td>".utf8_decode($nom)."</td><td>".utf8_decode($prenom)."</td><td>".utf8_decode($classe)."</td>";
                 $table = $table."</tr>";
                 echo('<tr><td>'.$i.'</td><td>'.$nom.'</td><td>'.$prenom.'</td><td>'.$classe.'</td></tr>');
                 $i++;
