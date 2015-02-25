@@ -160,7 +160,7 @@
         $query->execute();
         $query->close();
 
-        $count = "SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail='".$mail."' AND projection='".$projection."'";
+        $count = "SELECT * FROM projections_inscrits WHERE inscrit_mail='".$mail."' AND projection='".$projection."'";
 
         $result = $GLOBALS["bdd"]->query($count);
 
