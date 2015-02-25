@@ -54,6 +54,7 @@ background-size: cover;">
                 {
                     $nom = $row["nom"];
                     $date = $row["date_projection"];
+                    $date = date("d/m/Y", $date)." à ".date("H\hi", $date);
                     echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
                 }
                 $result->close();?>
