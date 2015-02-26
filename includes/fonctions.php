@@ -155,10 +155,6 @@
     //AJOUT D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function ajoutInscrit($nom,$prenom,$mail,$classe,$projection){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
-        $nom = protect($nom);
-        $prenom = protect($prenom);
-        $mail = protect($mail);
-        $classe = protect($classe);
         $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
         $query->execute();
         $query->close();
