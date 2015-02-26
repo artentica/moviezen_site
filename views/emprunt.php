@@ -4,6 +4,11 @@
     include_once("../includes/function_global.php");
     connect();
 
+    foreach( $_POST as $cle=>$value )
+        {
+            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
+
     if(empty($_SESSION["emprunteur"])){
         $_SESSION["emprunteur"]=0;
     }

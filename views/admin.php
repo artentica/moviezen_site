@@ -6,6 +6,14 @@
 
     $wrongIDMDP = 0;
     $return = 0;
+
+    //PROTECTION CONTRE XSS ( A VOIR POUR AMELIORER, CA FAIT BEAUCOUP DE REPETITION DE CODE)
+        foreach( $_POST as $cle=>$value )
+        {
+            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
+
+
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
@@ -35,6 +43,8 @@
 
 
 //  Fonction de suppression et modification en tout genre
+
+
 
 
     //var

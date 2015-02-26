@@ -42,6 +42,14 @@
 
         $_SESSION["inscrit"]=0;
 
+        //PROTECTION CONTRE XSS
+
+        foreach( $_POST as $cle=>$value )
+        {
+            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
+
+
         if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
 
             $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
@@ -205,12 +213,13 @@ background-size: cover;">
                         }
                         elseif($mailsend == 4){
 
-                            $verif = "SELECT last_send FROM desinscription WHERE mail='".$_POST["del_mail"]."' AND projection='".$nom_actif."'";
-
-                            $result = $GLOBALS["bdd"]->query($verif);
-                            $row = $result->fetch_array(MYSQLI_ASSOC);
-                            $temp = $row["last_send"];
-                            $result->close();
+                            $verif = $GLOBALS["bdd"]->prepare("SELECT last_send FROM desinscription WHERE mail=? AND projection=?");
+                            $query2->bind_param("ss",$_POST["del_mail"],$nom_actif);
+                            $query2->execute();
+                            $query2->store_result();
+                            $query2->bind_result($temp);
+                            $query2->fetch();
+                            $query2->close();
 
                             $date = date_create();
                             $date=date_timestamp_get($date);

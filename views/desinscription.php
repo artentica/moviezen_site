@@ -2,6 +2,15 @@
     session_start();
     include_once("../includes/fonctions.php");
     include_once("../includes/function_global.php");
+    foreach( $_POST as $cle=>$value )
+        {
+            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
+
+    foreach( $_GET as $cle=>$value )
+        {
+            $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
 
     connect();
 
