@@ -97,8 +97,15 @@
     }
 
     //Ajout de Projection
+    // RETOURS :
+    // $addProjection =1 ==> L'upload et la requête se sont bien passés
+    // $addProjection =2  ==> Erreur durant les requêtes SQL
+    // $addProjection =3 ==> L'affiche possède une extension non autorisée
+    // $addProjection =4 ==> Le nom de l'affiche contient des retours à la ligne ou des caractères non autorisés
+    // $addProjection =5 ==> Le nom de l'affiche ou de l'affiche de FOND contient .php, php. ou .exe, donc tentative d'upload malveillante
+    // $addProjection =6 ==> L'affiche DE FOND possède une extension non autorisée
+    // $addProjection =7 ==> Le nom de l'affiche DE FOND contient des retours à la ligne ou des caractères non autorisés
     if(!empty($_POST["projection_nom"]) && !empty($_POST["projection_date"]) && !empty($_POST["projection_description"]) && $_SESSION["authentifie"]){
-        $nom="";
         if(empty($_POST["projection_release"])){
             $date_release = "";
         }
@@ -111,32 +118,67 @@
         else{
             $commentaires = $_POST["projection_commentaires"];
         }
-        if(!empty($_FILES["projection_affiche"])){
+        if(!empty($_FILES["projection_affiche"]) && $_FILES["projection_affiche"]["name"] != ""){
             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
-                $nom = md5(uniqid(rand(), true));
-                $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['projection_affiche']['name']) )
+                {
+                    $addProjection =4;
+                }
+                else if(strstr($_FILES['projection_affiche']['name'], ".php") || strstr($_FILES['projection_affiche']['name'], "php.") || strstr($_FILES['projection_affiche']['name'], ".exe") ){
+                    $addProjection =5;
+                }
+                else{
+                    $nom = md5(uniqid(rand(), true));
+                    $nom = "../Images/affiche/".$nom.".".$extension_upload;
+                    $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
+                }
+            }
+            else{
+                $addProjection =3;
             }
         }
 
-        if(!empty($_FILES["back_affiche"])){
+        if(!empty($_FILES["back_affiche"]) && $_FILES["back_affiche"]["name"] != ""){
             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
-                $nomback = md5(uniqid(rand(), true));
-                $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) )
+                {
+                    $addProjection =7;
+                }
+                else if(strstr($_FILES['back_affiche']['name'], ".php") || strstr($_FILES['back_affiche']['name'], "php.") || strstr($_FILES['back_affiche']['name'], ".exe") ){
+                    $addProjection =5;
+                }
+                else{
+                    $nomback = md5(uniqid(rand(), true));
+                    $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
+                    $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                }
+            }
+            else{
+                $addProjection =6;
             }
         }
 
-        if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom,$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"]))  $addProjection =1;
-        else $addProjection = 2;
+        if(isset($nom) && isset($nomback)){
+
+            if(addProj($_POST["projection_nom"],$date_release,$_POST["projection_date"],$_POST["projection_description"],$commentaires,$nom,$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"]))  $addProjection =1;
+            else $addProjection = 2;
+        }
     }
 
 
     //MODIFICATION DE PROJECTION
+    // RETOURS :
+    // $modifProj =1 ==> L'upload et la requête se sont bien passés
+    // $modifProj =2  ==> Erreur durant les requêtes SQL
+    // $modifProj =3 ==> L'affiche possède une extension non autorisée
+    // $modifProj =4 ==> Le nom de l'affiche contient des retours à la ligne ou des caractères non autorisés
+    // $modifProj =5 ==> Le nom de l'affiche ou de l'affiche de FOND contient .php, php. ou .exe, donc tentative d'upload malveillante
+    // $modifProj =6 ==> L'affiche DE FOND possède une extension non autorisée
+    // $modifProj =7 ==> Le nom de l'affiche DE FOND contient des retours à la ligne ou des caractères non autorisés
     if(!empty($_POST["new_projection_nom"]) && !empty($_POST["new_projection_date"]) && !empty($_POST["new_projection_description"]) && !empty($_POST["old_projection_nom"]) && $_SESSION["authentifie"]){
         if(empty($_POST["new_projection_release"])){
             $date_release = "";
@@ -150,29 +192,57 @@
         else{
             $commentaires = $_POST["new_projection_commentaires"];
         }
-        $nom="";
-        $nomback="";
-        if(!empty($_FILES["new_projection_affiche"])){
+        $nom = "";
+        $nomback ="";
+        if(!empty($_FILES["new_projection_affiche"]) && $_FILES["new_projection_affiche"]["name"] != ""){
             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
-                $nom = md5(uniqid(rand(), true));
-                $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['new_projection_affiche']['name']) )
+                {
+                    $modifProj = 4;
+                }
+                else if(strstr($_FILES['new_projection_affiche']['name'], ".php") || strstr($_FILES['new_projection_affiche']['name'], "php.") || strstr($_FILES['new_projection_affiche']['name'], ".exe") ){
+                    $modifProj = 5;
+                }
+                else{
+                    $nom = md5(uniqid(rand(), true));
+                    $nom = "../Images/affiche/".$nom.".".$extension_upload;
+                    $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
+                }
             }
+            else{
+                $modifProj = 3;
+            }
+        }
 
-            if(!empty($_FILES["back_affiche"])){
+            if(!empty($_FILES["back_affiche"]) && $_FILES["back_affiche"]["name"] != ""){
                 $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                 $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
                 if ( in_array($extension_upload,$extensions_valides) ){
-                    $nomback = md5(uniqid(rand(), true));
-                    $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                    $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                    if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) )
+                    {
+                        $modifProj = 7;
+                    }
+                    else if(strstr($_FILES['back_affiche']['name'], ".php") || strstr($_FILES['back_affiche']['name'], "php.") || strstr($_FILES['back_affiche']['name'], ".exe") ){
+                        $modifProj = 5;
+                    }
+                    else{
+                        $nomback = md5(uniqid(rand(), true));
+                        $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
+                        $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                    }
+                }
+                else{
+                    $modifProj = 6;
                 }
             }
-        }
-        if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"],$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"])) $modifProj = 1;
-                        else $modifProj = 2;
+
+            if(empty($modifProj)){
+                if(modifProj($_POST["new_projection_nom"],$date_release,$_POST["new_projection_date"],$_POST["new_projection_description"],$commentaires, $nom, $_POST["old_projection_nom"],$nomback,$_POST["langue"],$_POST["prix"],$_POST["bande_annonce"])) $modifProj = 1;
+                else $modifProj = 2;
+            }
+
     }
 
 
@@ -188,22 +258,41 @@
                         else $supprProj = 2;
                     }
      //AJOUT DE LOTS
+    // RETOURS :
+    // $ajoutLot =1 ==> L'upload et la requête se sont bien passés
+    // $ajoutLot =2  ==> Erreur durant les requêtes SQL
+    // $ajoutLot =3 ==> L'affiche possède une extension non autorisée
+    // $ajoutLot =4 ==> Le nom de l'affiche contient des retours à la ligne ou des caractères non autorisés
+    // $ajoutLot =5 ==> Le nom de l'affiche contient .php, php. ou .exe, donc tentative d'upload malveillante
                     if(!empty($_POST["add_lot_id"]) && !empty($_POST["add_lot_composition"]) && !empty($_POST["add_lot_caution"]) && $_SESSION["authentifie"]){
                         $nom="";
                         if(!empty($_FILES["add_lot_photo"])){
                             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['add_lot_photo']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
+                                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['add_lot_photo']['name']) )
+                                {
+                                    $ajoutLot = 4;
+                                }
+                                else if(strstr($_FILES['add_lot_photo']['name'], ".php") || strstr($_FILES['add_lot_photo']['name'], "php.") || strstr($_FILES['add_lot_photo']['name'], ".exe") ){
+                                    $ajoutLot = 5;
+                                }
+                                else{
+                                    $nom = md5(uniqid(rand(), true));
+                                    $nom = "../Images/lot/".$nom.".".$extension_upload;
+                                    $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
+                                }
+                            }
+                            else{
+                                $ajoutLot = 3;
                             }
                         }
 
 
-
-                        if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])) $ajoutLot = 1;
-                        else $ajoutLot = 2;
+                        if(isset($nom)){
+                            if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])) $ajoutLot = 1;
+                            else $ajoutLot = 2;
+                        }
                     }
 
     //MODIFICATION DE LOTS
@@ -215,19 +304,29 @@
                             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
-                                $nom = md5(uniqid(rand(), true));
-                                $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+                                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['modif_lot_photo']['name']) )
+                                {
+                                    exit("Nom de fichier du lot non valide");
+                                }
+                                else if(strstr($_FILES['modif_lot_photo']['name'], ".php") || strstr($_FILES['modif_lot_photo']['name'], "php.") || strstr($_FILES['modif_lot_photo']['name'], ".exe") ){
+                                    exit("Contient une extension non valide !");
+                                }
+                                else{
+                                    $nom = md5(uniqid(rand(), true));
+                                    $nom = "../Images/lot/".$nom.".".$extension_upload;
+                                    $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+                                }
                             }
                         }
 
 
-
-                        if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
-                            $modifie = true;
-                        }
-                        else{
-                            $modifie = false;
+                        if(isset($nom)){
+                            if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
+                                $modifie = true;
+                            }
+                            else{
+                                $modifie = false;
+                            }
                         }
                     }
 
@@ -526,6 +625,32 @@ background-size: cover;">
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection "'.$_POST["projection_nom"].'" n\'a pas pu être ajoutée dans la base de données !</div>');
                         }
+                        elseif($addProjection == 3){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche contient une extension non autorisée !</div>');
+                        }
+                        elseif($addProjection == 4){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le nom de l\'affiche contient des retours à la ligne ou des caractères interdits !</div>');
+                        }
+                        elseif($addProjection == 5){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Vous avez essayé d\'uploader un fichier contenant une extension exécutable ! Ne recommencez pas !</div>');
+                        }
+                        elseif($addProjection == 6){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche de fond contient une extension non autorisée !</div>');
+                        }
+                        elseif($addProjection == 7){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le nom de l\'affiche contient des retours à la ligne ou des caractères interdits !</div>');
+                        }
+
+
+
+
+
+
 
 
 
@@ -583,7 +708,7 @@ background-size: cover;">
                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Titre du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="new_projection_release" id="new_projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" value="'.date("d/m/Y", $date_release).' '.date("H:i", $date_release).'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_date">Date de projection : </label></span><input  name="new_projection_date" id="new_projection_date" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" required value="'.date("d/m/Y", $date_projection).' '.date("H:i", $date_projection).'"/></div>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required> '.$description.'</textarea></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_description">Description : </label></span><textarea name="new_projection_description" id="new_projection_description" placeholder="Ce film raconte l\'histoire de ..." class="form-control" required>'.$description.'</textarea></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_commentaires">Commentaires : </label></span><textarea name="new_projection_commentaires" id="new_projection_commentaires" placeholder="Ce film est génial et décevant à la fois" class="form-control">'.$commentaires.'</textarea></div>
 
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Langue : </label></span><input type="text" name="langue" placeholder="VO/VOSTFR/VF..." class="form-control" value="'.$langue.'" required/></div>
@@ -610,10 +735,33 @@ background-size: cover;">
                             echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["new_projection_nom"].'" a bien été modifiée !</div>');
                         }
-                        elseif($modifProj == 2){
-                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                    elseif($modifProj == 2){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite lors de la modification de la projection: "'.$_POST["new_projection_nom"].'"</div>');
-                        }
+                    }
+                    elseif($modifProj == 3){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche contient une extension non autorisée !</div>');
+                    }
+                    elseif($modifProj == 4){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le nom de votre affiche contient des retours à la ligne ou des caractères non autorisés !</div>');
+                    }
+                    elseif($modifProj == 5){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Vous avez tenté d\'uploader un fichier exécutable ! Ne recommencez pas !</div>');
+                    }
+                    elseif($modifProj == 6){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche de fond possède une extension non autorisée !</div>');
+                    }
+                    elseif($modifProj == 7){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le nom de votre affiche de fond contient des retours à la ligne ou des caractères non autorisés !</div>');
+                    }
+
+
+
 
 
 
