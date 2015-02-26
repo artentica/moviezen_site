@@ -136,12 +136,7 @@
 
 
 
-        // En-têtes additionnels
 
-        // $headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
-        // $headers = 'From: Riouallon Vincent <riouallonvincent@gmail.com>' . "\r\n";*/
-        // $headers .= 'Cc: anniversaire_archive@example.com' . "\r\n";
-        // $headers .= 'Bcc: anniversaire_verif@example.com' . "\r\n";*/
 
          // Envoi
          return mail($to, $subject, $message, $headers);
@@ -193,12 +188,11 @@
             $query->close();
 
         }
-=======
+
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
         $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
         $query->execute();
         $query->close();
->>>>>>> origin/master
 
         $count = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail=? AND projection=?");
         $count->bind_param("ss",$mail,$projection);
