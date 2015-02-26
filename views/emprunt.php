@@ -199,7 +199,7 @@ background-size: cover;">
                 echo('
                 <legend id="emprunte_lot">Emprunter du matériel</legend>
             <p>Merci de renseigner tout les champs</p>
-            <form method="post" action="emprunt.php#emprunte_lot" id="form-register" style="margin-bottom:35px">
+            <form method="post" action="emprunt.php#emprunte_lot" class="form-register" style="margin-bottom:35px">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="nom">Nom : </label></span><input name="nom" id="nom" type="text" value="');
                 if(isset($_POST["nom"])){echo $_POST["nom"];}
                 echo('" placeholder="Nom" class="form-control" required/></div>
@@ -280,7 +280,7 @@ background-size: cover;">
             <div class="panel panel-default">
 		<div class="panel-body">
             <h3>Vous avez déja emprunté du matériel ? Connectez vous</h3>
-            <form method="post" action="emprunt.php" id="form-register">
+            <form method="post" action="emprunt.php" class="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"
                 ><label for="conn_mail">@ ISEN : </label></span><input type="email" name="conn_mail" id="conn_mail" placeholder="prenom.nom@isen.fr" class="form-control"
                 /></div>
@@ -296,7 +296,7 @@ background-size: cover;">
                 echo('
 
                 <legend id="nouvel_emprunt">Effectuer un nouvel emprunt</legend>
-                <form method="post" action="emprunt.php#nouvel_emprunt" id="form-register">
+                <form method="post" action="emprunt.php#nouvel_emprunt" class="form-register">
                 <input type="hidden" name="mail" id="mail" value="'.$_SESSION["mail"].'" required/>
                 <input type="hidden" name="new" id="new" value="1" required/>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="lots">Lots : </label></span><select name="lots[]" id="lots" multiple="multiple">
@@ -349,7 +349,7 @@ background-size: cover;">
 
                 echo('
                 <legend id="modifie_emprunt">Modifier un emprunt</legend>
-                <form method="post" action="emprunt.php#modifie_emprunt" id="form-register">
+                <form method="post" action="emprunt.php#modifie_emprunt" class="form-register">
                 <input type="hidden" name="modif_mail" id="modif_mail" value="'.$_SESSION["mail"].'" required/>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="modif_lots">Lots : </label></span><select name="modif_lots" id="modif_lots">
                 ');
@@ -370,7 +370,7 @@ background-size: cover;">
                 ');
                 if(!empty($_POST["modif_lots"]) && !empty($_POST["modif_mail"])){
                     $date = explode('/', $_POST["modif_lots"]);
-                    echo('<form method="post" action="emprunt.php#modifie_emprunt" id="form-register" style="margin-bottom:35px">
+                    echo('<form method="post" action="emprunt.php#modifie_emprunt" class="form-register" style="margin-bottom:35px">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="modification_lots">Lots : </label></span><select name="modification_lots[]" id="modification_lots" multiple="multiple">');
 
                 $result = recupLot();
@@ -414,7 +414,7 @@ background-size: cover;">
 
                 echo('
                 <legend id="annulation_emprunt">Annuler un emprunt</legend>
-            <form method="post" action="emprunt.php#annulation_emprunt" id="form-register">
+            <form method="post" action="emprunt.php#annulation_emprunt" class="form-register">
                 <input type="hidden" name="annul_mail" id="annul_mail" value="'.$_SESSION["mail"].'" required/>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="annul_lots">Lots : </label></span><select name="annul_lots" id="annul_lots">
                 ');
@@ -436,7 +436,7 @@ background-size: cover;">
 
 
                 <legend>Se déconnecter</legend>
-            <form method="post" action="emprunt.php" id="form-register">
+            <form method="post" action="emprunt.php" class="form-register">
                 <input type="hidden" name="decon" id="decon" value="1" required/>
                 <input type="submit" class="button dark_grey" value="Se déconnecter"/>
             </form>');

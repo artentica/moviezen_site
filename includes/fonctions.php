@@ -154,14 +154,44 @@
 
     //AJOUT D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function ajoutInscrit($nom,$prenom,$mail,$classe,$projection){
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
-        $nom = protect($nom);
-        $prenom = protect($prenom);
-        $mail = protect($mail);
-        $classe = protect($classe);
-        $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
-        $query->execute();
-        $query->close();
+
+
+
+        $count = $GLOBALS["bdd"]->prepare("SELECT COUNT( * ) FROM  `inscrits` WHERE  `mail` =?");
+        $count->bind_param('s',$mail);
+        $count->execute();
+
+        $count->store_result();
+        $count->bind_result($temp);
+
+        $count->fetch();
+        $count->close();
+        if($temp==1){
+
+            $count = $GLOBALS["bdd"]->prepare("SELECT COUNT( * ) FROM  `inscrits` WHERE  `mail` =? AND `classe`=?");
+            $count->bind_param('ss',$mail,$classe);
+            $count->execute();
+
+            $count->store_result();
+            $count->bind_result($temp);
+
+            $count->fetch();
+            $count->close();
+
+                if($temp==0){
+                    $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits SET  classe=? WHERE mail=?");
+                    $query->bind_param('ss', $classe,$mail);
+                    $query->execute();
+                    $query->close();
+                }
+
+        }else{
+            $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
+            $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
+            $query->execute();
+            $query->close();
+
+        }
 
         $count = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail=? AND projection=?");
         $count->bind_param("ss",$mail,$projection);

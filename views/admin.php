@@ -323,7 +323,7 @@ background-size: cover;">
                     <h1>Gestion des administrateurs</h1>
 
 
-                            <form method="post" action="admin.php#mdpchange" id="form-register">
+                            <form method="post" action="admin.php#mdpchange" class="form-register">
                             <fieldset>
     <legend id="mdpchange">Modifier votre mot de passe</legend>
                                 <input type="hidden" name="modif_id" id="modif_id" value="'.$_SESSION["id"].'"></input>
@@ -352,15 +352,13 @@ background-size: cover;">
                     echo('
 
 
-                            <form method="post" action="admin.php#add_admin" id="form-register">
+                            <form method="post" action="admin.php#add_admin" class="form-register">
                             <fieldset>
     <legend id="add_admin">Ajouter un administrateur</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="p4$$w08d" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mail">Adresse mail : </label></span><input type="email" name="add_mail" id="add_mail" placeholder="admin@gmail.com" class="form-control" required/></div>
-                                <label class="checkbox"><input type="checkbox" name="add_respons" value="1" style="
-    margin-left: -22px;
-">Faire de cet administrateur un responsable des emprunts ?</label>
+                                <label class="checkbox"><input type="checkbox" name="add_respons" value="1" style="">Faire de cet administrateur un responsable des emprunts ?</label>
                                 <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
                             </fieldset></form>
                         ');
@@ -386,7 +384,7 @@ background-size: cover;">
 
                     echo('
 
-                            <form method="post" action="admin.php#change_respons" id="form-register">
+                            <form method="post" action="admin.php#change_respons" class="form-register">
                             <fieldset>
     <legend id="change_respons">Mettre un administrateur responsable des emprunts</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id">Identifiant : </label></span><select name="add_respons_id" id="add_respons_id">');
@@ -423,7 +421,7 @@ background-size: cover;">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
 
                         echo('
-                            <form method="post" action="admin.php#del_admin" id="form-register"><fieldset>
+                            <form method="post" action="admin.php#del_admin" class="form-register"><fieldset>
     <legend id="del_admin">Supprimer un administrateur</legend>
     <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Attention, cette action est irréversible <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="suppr_admin">Identifiant : </label></span><select name="suppr_admin" id="suppr_admin">');
@@ -489,7 +487,7 @@ background-size: cover;">
                     echo('
                     <h1>Gestion des projections</h1>
 
-                        <form method="post" action="admin.php#add_proj" id="form-register" enctype="multipart/form-data"><fieldset>
+                        <form method="post" action="admin.php#add_proj" class="form-register" enctype="multipart/form-data"><fieldset>
     <legend id="add_proj">Ajouter une Projection</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Titre du film : </label></span><input name="projection_nom" id="projection_nom" type="text" placeholder="Nom" class="form-control" required/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="projection_release" id="projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker"/></div>
@@ -525,7 +523,7 @@ background-size: cover;">
                     echo('
 
 
-                            <form method="post" action="admin.php#mod_proj" id="form-register"><fieldset>
+                            <form method="post" action="admin.php#mod_proj" class="form-register"><fieldset>
     <legend id="mod_proj">Modifier une projection</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_proj">Projection : </label></span><select name="modif_proj" id="modif_proj">
               ');
@@ -568,7 +566,7 @@ background-size: cover;">
                             $nom  = replace_chara($nom);
 
                             /*$description = preg_replace("/\r/\n",'<br/>',$description);*/
-                            echo('<form method="post" action="admin.php#mod_proj" id="form-register" enctype="multipart/form-data">
+                            echo('<form method="post" action="admin.php#mod_proj" class="form-register" enctype="multipart/form-data">
                             <input type="hidden" value="'.$nom.'" name="old_projection_nom" id="old_projection_nom"/>
                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_nom">Titre du film : </label></span><input name="new_projection_nom" id="new_projection_nom" type="text" placeholder="Nom" class="form-control" required value="'.$nom.'"/></div>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="projection_release">Date de sortie : </label></span><input  name="new_projection_release" id="new_projection_release" placeholder="jj/mm/aaaa hh:mm" class="form-control datepicker" value="'.date("d/m/Y", $date_release).' '.date("H:i", $date_release).'"/></div>
@@ -610,7 +608,7 @@ background-size: cover;">
                     echo('
 
 
-                        <form method="post" action="admin.php#act_proj" id="form-register">
+                        <form method="post" action="admin.php#act_proj" class="form-register">
                         <fieldset>
     <legend id="act_proj">Rendre une projection active</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Projection : </label></span><select name="activ_proj" id="activ_proj">
@@ -648,7 +646,7 @@ background-size: cover;">
 
 
 
-                            <form method="post" action="admin.php#del_proj" id="form-register"><fieldset>
+                            <form method="post" action="admin.php#del_proj" class="form-register"><fieldset>
     <legend id="del_proj">Supprimer une projection</legend>
     <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Attention, cette action est irréversible<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Projection : </label></span><select name="suppr_proj" id="suppr_proj">');
@@ -719,7 +717,7 @@ echo '</div></div><div class="panel panel-default">
                     echo('
 
                     <h1>Gestion des lots</h1>
-                            <form method="post" action="admin.php#ajoute_lot" id="form-register" enctype="multipart/form-data">
+                            <form method="post" action="admin.php#ajoute_lot" class="form-register" enctype="multipart/form-data">
                             <fieldset>
     <legend id="ajoute_lot">Ajouter un lot</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="add_lot_id" id="add_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required/></div>
@@ -747,7 +745,7 @@ echo '</div></div><div class="panel panel-default">
 
                     echo('
 
-                            <form method="post" action="admin.php#modifie_lot" id="form-register"><fieldset>
+                            <form method="post" action="admin.php#modifie_lot" class="form-register"><fieldset>
     <legend id="modifie_lot">Modifier un lot</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot">Lot(s) : </label></span><select name="modif_lot" id="modif_lot">
                                      ');
@@ -777,7 +775,7 @@ echo '</div></div><div class="panel panel-default">
                             $id = $row["id"];
                             $composition = $row["composition"];
                             $caution = $row["caution"];
-                            echo('<form method="post" action="admin.php#modifie_lot" id="form-register" enctype="multipart/form-data">
+                            echo('<form method="post" action="admin.php#modifie_lot" class="form-register" enctype="multipart/form-data">
 
                             <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required value="'.$id.'"/></div>
@@ -806,7 +804,7 @@ echo '</div></div><div class="panel panel-default">
                     }
                         echo('
 
-                            <form method="post" action="admin.php#supprimer_lot" id="form-register"><fieldset>
+                            <form method="post" action="admin.php#supprimer_lot" class="form-register"><fieldset>
     <legend id="supprimer_lot">Supprimer un lot</legend>
     <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Attention, cette action est irréversible<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Lot(s) : </label></span><select name="suppr_lot" id="suppr_lot">');
@@ -861,6 +859,66 @@ echo '</div></div><div class="panel panel-default">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" n\'a pas pu être supprimé !</div>');
                     }
 
+            echo '</div></div>EN TRAVAUX EN DESSOUS!!!';
+                //GESTION DES INSCRITS
+                echo '<div class="panel panel-default">
+		<div class="panel-body">
+        <h1>Gestion des inscrits</h1>
+
+        <form class="form-register">
+                            <fieldset>
+    <legend id="ajoute_lot">Modifier les données sur les inscrits</legend>
+
+                            </fieldset></form>';
+
+
+
+
+
+
+
+                echo '
+
+        <form class="form-register">
+                            <fieldset>
+    <legend id="ajoute_lot">Gestion des inscrits pour les emprunts</legend>
+
+                            </fieldset></form>';
+
+
+
+
+
+
+
+                echo '
+
+        <form class="form-register">
+                            <fieldset>
+    <legend id="ajoute_lot">Gestion des inscrits pour les projections</legend>
+
+                            </fieldset></form>';
+
+
+
+                echo'</div></div>';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 }
 
@@ -868,7 +926,7 @@ echo '</div></div><div class="panel panel-default">
                 echo('<h1>Espace d\'administration</h1>');
                 if($wrongIDMDP == 1) echo ('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Mauvais Username ou Mot de passe !</div>');
-            echo ('<form method="post" action="admin.php" id="form-register">
+            echo ('<form method="post" action="admin.php" class="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Username" class="form-control" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Password" class="form-control" required/></div>
 

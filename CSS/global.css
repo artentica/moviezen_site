@@ -101,7 +101,7 @@ p, li {
     margin: 0;
 }
 
-/*#form-register input{
+/*.form-register input{
     width: 90%;
 }*/
 
@@ -117,7 +117,7 @@ span.start_span{
 
 
 @media (max-width: 1150px) {
-/*    #form-register input{
+/*    .form-register input{
         width: 85%;
     }*/
 
@@ -294,7 +294,11 @@ input.button.dark_grey:active,a.button.dark_grey:active {
 }
 /**/
 
+.form-register > fieldset > label > input[type="checkbox"]{
 
+    margin-left: -22px;
+
+}
 
 .affiche{
     width:90%;
@@ -344,7 +348,7 @@ border: none;
     padding-right: 0px;
 }
 
-#form-register{
+.form-register{
     margin-top: 55px;
 }
 
@@ -624,4 +628,10 @@ textarea{
 margin: auto;
 padding-top: 25px;
 padding-bottom: 20px;
+}
+
+@media (max-width: 900px){
+    .modal.in .modal-dialog {
+        margin-top: 50px;
+    }
 }
