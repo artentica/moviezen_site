@@ -186,9 +186,6 @@
     //FONCTION MODIFICATION D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function modifInscrit($mail, $projection, $ancien_mail){
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections_inscrits SET  inscrit_mail=?, projection=? WHERE inscrit_mail=?");
-        $mail = protect($mail);
-        $projection = protect($projection);
-        $ancien_mail = protect($ancien_mail);
         $query->bind_param('sss', $mail, $prenom, $ancien_mail);
         $query->execute();
         $query->close();
@@ -199,8 +196,6 @@
     //FONCTION SUPPRESSION D'INSCRITS A UNE PROJECTION  (UTILISATEUR)
     function supprInscrit($mail,$projection){
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections_inscrits WHERE inscrit_mail=? and projection=?");
-        $mail = protect($mail);
-        $projection = protect($projection);
         $query->bind_param('ss', $mail,$projection);
         $query->execute();
         $query->close();
@@ -664,7 +659,7 @@
         }
         $query->close();
         $table = $table."</table></body></html>";
-        $replace = array("'",'"'," ");
+        $replace = array("'",'"'," ","/","\\",";");
         $projection = str_replace($replace,'_',$projection);
         $projection = stripslashes($projection);
         $file = ("../xls/inscrits_".$projection.".xls");
@@ -731,7 +726,7 @@
         $query->bind_param('ssssssissds',$nom,$date_release,$date_projection,$description,$commentaires,$affiche,$active,$afficheback,$langue,$prix,$bande_annonce);
         $query->execute();
         $query->close();
-        $replace = array("'",'"'," ",'\'','\"');
+        $replace = array("'",'"'," ","/","\\",";");
         $nom = str_replace($replace,'_',$nom);
         touch('../xls/inscrits_'.$nom.'.xls');
         chmod('../xls/inscrits_'.$nom.'.xls', 0777);
@@ -773,7 +768,7 @@
         $query2->bind_param('s',$nom);
         $query2->execute();
         $query2->close();
-        $replace = array("'",'"'," ",'\'','\"');
+        $replace = array("'",'"'," ","/","\\",";");
         $nom = str_replace($replace,'_',$nom);
         unlink('../xls/inscrits_'.$nom.'.xls');
         return true;
@@ -833,7 +828,7 @@
         $query->bind_param('ss',$nom,$ancien_nom);
         $query->execute();
         $query->close();
-        $replace = array("'",'"'," ");
+        $replace = array("'",'"'," ","/","\\",";");
         $ancien_nom = str_replace($replace,'_',$ancien_nom);
         $ancien_nom = stripslashes($ancien_nom);
         $nom = str_replace($replace,'_',$nom);
