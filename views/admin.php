@@ -265,8 +265,7 @@
     // $ajoutLot =4 ==> Le nom de l'affiche contient des retours à la ligne ou des caractères non autorisés
     // $ajoutLot =5 ==> Le nom de l'affiche contient .php, php. ou .exe, donc tentative d'upload malveillante
                     if(!empty($_POST["add_lot_id"]) && !empty($_POST["add_lot_composition"]) && !empty($_POST["add_lot_caution"]) && $_SESSION["authentifie"]){
-                        $nom="";
-                        if(!empty($_FILES["add_lot_photo"])){
+                        if(!empty($_FILES["add_lot_photo"]) && $_FILES["add_lot_photo"]["name"] != ""){
                             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['add_lot_photo']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
@@ -298,24 +297,26 @@
     //MODIFICATION DE LOTS
 
                     if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
-                        $nom="";
 
-                        if(!empty($_FILES["modif_lot_photo"])){
+                        if(!empty($_FILES["modif_lot_photo"]) && $_FILES["modif_lot_photo"]["name"] != ""){
                             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
                                 if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['modif_lot_photo']['name']) )
                                 {
-                                    exit("Nom de fichier du lot non valide");
+                                    $modifie = false;
                                 }
                                 else if(strstr($_FILES['modif_lot_photo']['name'], ".php") || strstr($_FILES['modif_lot_photo']['name'], "php.") || strstr($_FILES['modif_lot_photo']['name'], ".exe") ){
-                                    exit("Contient une extension non valide !");
+                                    $modifie = false;
                                 }
                                 else{
                                     $nom = md5(uniqid(rand(), true));
                                     $nom = "../Images/lot/".$nom.".".$extension_upload;
                                     $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
                                 }
+                            }
+                            else{
+                                $modifie = false;
                             }
                         }
 
