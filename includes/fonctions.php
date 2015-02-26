@@ -136,12 +136,7 @@
 
 
 
-        // En-têtes additionnels
 
-        // $headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
-        // $headers = 'From: Riouallon Vincent <riouallonvincent@gmail.com>' . "\r\n";*/
-        // $headers .= 'Cc: anniversaire_archive@example.com' . "\r\n";
-        // $headers .= 'Bcc: anniversaire_verif@example.com' . "\r\n";*/
 
          // Envoi
          return mail($to, $subject, $message, $headers);
@@ -154,6 +149,46 @@
 
     //AJOUT D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function ajoutInscrit($nom,$prenom,$mail,$classe,$projection){
+<<<<<<< HEAD
+
+
+
+        $count = $GLOBALS["bdd"]->prepare("SELECT COUNT( * ) FROM  `inscrits` WHERE  `mail` =?");
+        $count->bind_param('s',$mail);
+        $count->execute();
+
+        $count->store_result();
+        $count->bind_result($temp);
+
+        $count->fetch();
+        $count->close();
+        if($temp==1){
+
+            $count = $GLOBALS["bdd"]->prepare("SELECT COUNT( * ) FROM  `inscrits` WHERE  `mail` =? AND `classe`=?");
+            $count->bind_param('ss',$mail,$classe);
+            $count->execute();
+
+            $count->store_result();
+            $count->bind_result($temp);
+
+            $count->fetch();
+            $count->close();
+
+                if($temp==0){
+                    $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits SET  classe=? WHERE mail=?");
+                    $query->bind_param('ss', $classe,$mail);
+                    $query->execute();
+                    $query->close();
+                }
+
+        }else{
+            $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
+            $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
+            $query->execute();
+            $query->close();
+
+        }
+
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
         $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
         $query->execute();

@@ -14,13 +14,13 @@ li{
     width: 100%
 }
 
-#form-register{
+.form-register{
     width: 80%;
     margin: auto;
 }
 
 @media(max-width:760px){
-    #form-register{
+    .form-register{
         width: 90%;
     }
 }

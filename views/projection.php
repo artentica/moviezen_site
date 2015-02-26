@@ -47,7 +47,7 @@ background-size: cover;">
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
-            <form method="post" action="projection.php" id="form-register">
+            <form method="post" action="projection.php" class="form-register">
                <fieldset>
     <legend>Récupérer les inscrits à une projection :</legend>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="recup_proj">Projection : </label></span><select name="recup_proj" id="recup_proj">
@@ -77,7 +77,7 @@ background-size: cover;">
                 if(recupInscrit($_POST["recup_proj"])){
                     $replace = array('\"',"\'","'",'"'," ");
                     $_POST["recup_proj"] = str_replace($replace,'_',$_POST["recup_proj"]);
-                    echo('<a class="button dark_grey" href="../xls/inscrits_'.$_POST["recup_proj"].'.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier xls</a>');
+                    echo('<a class="button dark_grey" href="../xls/inscrits_'.$_POST["recup_proj"].'.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier "inscrits_'.$_POST["recup_proj"].'.xls"</a>');
                 }
             
             }

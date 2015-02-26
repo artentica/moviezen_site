@@ -146,7 +146,7 @@ background-size: cover;">
 		<div class="panel-body">
 
 
-			<form method="post" action="cine.php#inscr" id="form-register" style="margin-top: 10px;">
+			<form method="post" action="cine.php#inscr" class="form-register" style="margin-top: 10px;">
             <fieldset>
                 <legend id="inscr">S\'inscrire pour la projection</legend>
                 <p>Merci de renseigner tous les champs</p>
@@ -192,7 +192,7 @@ background-size: cover;">
 
 
             echo ('
-            <form method="post" action="cine.php#desinscr"  id="form-register">
+            <form method="post" action="cine.php#desinscr"  class="form-register">
             <fieldset>
                 <legend id="desinscr">Se désinscrire pour la projection</legend>
                  <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="del_email">@ ISEN : </label></span><input type="email" name="del_mail" class="form-control" placeholder="prenom.nom@isen.fr" required/></div>
@@ -245,7 +245,7 @@ background-size: cover;">
 
             else{
                 echo('<h1 id="inscr">Se désinscrire de la projection</h1>
-            <form method="post" action="cine.php" id="form-register">
+            <form method="post" action="cine.php" class="form-register">
 
                 <input type="hidden" name="del_mail" id="del_mail" value="'.$_SESSION["mail"].'"/>
                 <input type="submit" class="button dark_grey" id="save_cine" value="Se désinscrire"/>

@@ -11,7 +11,7 @@
 			<link rel="stylesheet" href="../CSS/new_design/style.css" />
 			<link rel="stylesheet" href="../CSS/new_design/style-desktop.css" />
 		</noscript>
-<!--FIN TEST-->
+<!--FIN TEST--><
         <link rel="stylesheet" type="text/css" href="../CSS/global.css">
         <link rel="stylesheet" type="text/css" href="../CSS/menu.css">
     ';
