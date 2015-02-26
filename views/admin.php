@@ -119,7 +119,7 @@
             $commentaires = $_POST["projection_commentaires"];
         }
         if(!empty($_FILES["projection_affiche"]) && $_FILES["projection_affiche"]["name"] != ""){
-            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extensions_valides = array( 'jpg' , 'jpeg' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
                 if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['projection_affiche']['name']) )
@@ -141,7 +141,7 @@
         }
 
         if(!empty($_FILES["back_affiche"]) && $_FILES["back_affiche"]["name"] != ""){
-            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extensions_valides = array( 'png' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
                 if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) )
@@ -195,7 +195,7 @@
         $nom = "";
         $nomback ="";
         if(!empty($_FILES["new_projection_affiche"]) && $_FILES["new_projection_affiche"]["name"] != ""){
-            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extensions_valides = array( 'jpg' , 'jpeg' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
                 if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['new_projection_affiche']['name']) )
@@ -217,7 +217,7 @@
         }
 
             if(!empty($_FILES["back_affiche"]) && $_FILES["back_affiche"]["name"] != ""){
-                $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+                $extensions_valides = array( 'png' );
                 $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
                 if ( in_array($extension_upload,$extensions_valides) ){
                     if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) )
@@ -628,7 +628,7 @@ background-size: cover;">
                         }
                         elseif($addProjection == 3){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche contient une extension non autorisée !</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche contient une extension non autorisée ! Image au format jpg ou jpeg uniquement !</div>');
                         }
                         elseif($addProjection == 4){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
@@ -640,7 +640,7 @@ background-size: cover;">
                         }
                         elseif($addProjection == 6){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche de fond contient une extension non autorisée !</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche de fond contient une extension non autorisée ! Image au format png uniquement !</div>');
                         }
                         elseif($addProjection == 7){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
@@ -742,7 +742,7 @@ background-size: cover;">
                     }
                     elseif($modifProj == 3){
                         echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche contient une extension non autorisée !</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche contient une extension non autorisée ! Image au format jpg ou jpeg uniquement !</div>');
                     }
                     elseif($modifProj == 4){
                         echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
@@ -754,7 +754,7 @@ background-size: cover;">
                     }
                     elseif($modifProj == 6){
                         echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche de fond possède une extension non autorisée !</div>');
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche de fond possède une extension non autorisée ! Image au format PNG uniquement !</div>');
                     }
                     elseif($modifProj == 7){
                         echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
