@@ -761,7 +761,7 @@
         $query->bind_param('s',$nom);
         $query->execute();
         $query->store_result();
-        $query->bind_result($tab["nom"],$tab["date_release"],$tab["date_projection"],$tab["description"],$tab["commentaires"],$tab["affiche"],$tab["active"],$tab["back_affiche"],$tab["langue"],$tab["prix"],$tab["bande-annonce"]);
+        $query->bind_result($tab["nom"],$tab["date_release"],$tab["date_projection"],$tab["description"],$tab["commentaires"],$tab["affiche"],$tab["active"],$tab["back_affiche"],$tab["langue"],$tab["prix"],$tab["bande_annonce"]);
         $query->fetch();
         $query->close();
         return $tab;
