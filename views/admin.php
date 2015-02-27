@@ -17,20 +17,19 @@
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
-        $temp = protect($_POST["id"]);
-        $mdp = protect($_POST["mdp"]);
-        $query = "SELECT * FROM admin WHERE identifiant='".$temp."'";
-        $result = $GLOBALS["bdd"]->query($query) or trigger_error($GLOBALS["bdd"]->error.$query);
-        while ($row = $result->fetch_array(MYSQLI_ASSOC))
-        {
-            $hash = $row["mdp"];
-            $id = $row["identifiant"];
+        $query = $GLOBALS["bdd"]->prepare("SELECT 'id', 'mdp' FROM admin WHERE identifiant=?");
+        $query->bind_param("s",$_POST["id"]);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($id,$hash);
+        while($query->fetch()){
             $return++;
         }
+
+        $query->close();
         if ($return == 0) $wrongIDMDP = 1;
-        $result->free();
         if(!empty($hash)){
-            if(password_verify($mdp, $hash) && strcmp($id,$temp)==0){
+            if(password_verify($mdp, $hash) && strcmp($id,$_POST["id"])==0){
                 $_SESSION["authentifie"]=true;
                 $_SESSION["id"] = $id;
             }
