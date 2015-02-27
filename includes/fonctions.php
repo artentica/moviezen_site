@@ -149,9 +149,6 @@
 
     //AJOUT D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function ajoutInscrit($nom,$prenom,$mail,$classe,$projection){
-<<<<<<< HEAD
-
-
 
         $count = $GLOBALS["bdd"]->prepare("SELECT COUNT( * ) FROM  `inscrits` WHERE  `mail` =?");
         $count->bind_param('s',$mail);
@@ -188,11 +185,6 @@
             $query->close();
 
         }
-
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
-        $query->bind_param('ssss', $nom,$prenom,$mail, $classe);
-        $query->execute();
-        $query->close();
 
         $count = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail=? AND projection=?");
         $count->bind_param("ss",$mail,$projection);
