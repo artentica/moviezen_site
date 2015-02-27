@@ -122,7 +122,7 @@
             $extensions_valides = array( 'jpg' , 'jpeg' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
-                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['projection_affiche']['name']) )
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['projection_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['projection_affiche']['name']))
                 {
                     $addProjection =4;
                 }
@@ -144,7 +144,7 @@
             $extensions_valides = array( 'png' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
-                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) )
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['back_affiche']['name']))
                 {
                     $addProjection =7;
                 }
@@ -198,7 +198,7 @@
             $extensions_valides = array( 'jpg' , 'jpeg' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
-                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['new_projection_affiche']['name']) )
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['new_projection_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['new_projection_affiche']['name']))
                 {
                     $modifProj = 4;
                 }
@@ -220,7 +220,7 @@
                 $extensions_valides = array( 'png' );
                 $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
                 if ( in_array($extension_upload,$extensions_valides) ){
-                    if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) )
+                    if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['back_affiche']['name']))
                     {
                         $modifProj = 7;
                     }
@@ -269,7 +269,7 @@
                             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['add_lot_photo']['name'], '.')  ,1)  );
                             if ( in_array($extension_upload,$extensions_valides) ){
-                                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['add_lot_photo']['name']) )
+                                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['add_lot_photo']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['add_lot_photo']['name']))
                                 {
                                     $ajoutLot = 4;
                                 }
