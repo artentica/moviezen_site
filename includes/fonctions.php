@@ -595,19 +595,21 @@
 
     //FONCTION SUPPRESSION D'UN EMPRUNT(UTILISATEUR)
     function supprEmprunt($mail,$date){
-        $mail = protect($mail);
         $date = explode('/',$date);
-        $date_emprunt = date("Y-m-d H:m:s", strtotime(protect($date[0])));
-        $date_retour = date("Y-m-d H:m:s", strtotime(protect($date[1])));
-        $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail='".$mail."' AND date_emprunt='".$date_emprunt."'";
-        $result = $GLOBALS["bdd"]->query($query);
+        $date_emprunt = date("Y-m-d H:m:s", strtotime($date[0]));
+        $date_retour = date("Y-m-d H:m:s", strtotime($date[1]));
         $date_emprunt_formatée = date("z", strtotime($date_emprunt));
         $date_retour_formatée = date("z", strtotime($date_retour));
-        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-            $lot = $row["lots"];
+        $query = $GLOBALS["bdd"]->prepare("SELECT lots FROM inscrits_lots WHERE inscrit_mail=? AND date_emprunt=?");
+        $query->bind_param('ss',$mail,$date_emprunt);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($lot);
+        while($query->fetch()){
             $query2 = "UPDATE dispo SET ".$lot."=1 WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
             $query2 = $GLOBALS["bdd"]->query($query2);
         }
+        $query->close();
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=? AND date_emprunt=?");
         $query->bind_param('ss',$mail,$date_emprunt);
         $query->execute();
@@ -618,25 +620,62 @@
 
     //FONCTION DE RECUPERATION DES EMPRUNTS EFFECTUES PAR UN INSCRIT
     function recupEmprunt($mail){
-        $mail = protect($mail);
-        $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail='".$mail."'";
-        return $GLOBALS["bdd"]->query($query);
+        $tab = array();
+        $final = array();
+        $i=0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE inscrit_mail=?");
+        $query->bind_param('s',$mail);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
+        while($query->fetch()){
+            $final[$i]["inscrit_mail"] = $tab["inscrit_mail"];
+            $final[$i]["lots"] = $tab["lots"];
+            $final[$i]["date_emprunt"] = $tab["date_emprunt"];
+            $final[$i]["date_retour"] = $tab["date_retour"];
+            $i++;
+        }
+        $query->close();
+        return $tab;
     }
 
     //FONCTION DE RECUPERATION DES EMPRUNTS NON EFFECTUES ENCORES
     function recupEmpruntAjd($mail){
-        $mail = protect($mail);
+        $tab = array();
+        $final = array();
+        $i=0;
         $date_ajd = date("Y-m-d H:m:s");
-        $query = "SELECT * FROM inscrits_lots WHERE inscrit_mail='".$mail."' and date_emprunt>='".$date_ajd."'  GROUP BY date_emprunt AND date_retour";
-        return $GLOBALS["bdd"]->query($query);
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE inscrit_mail=? and date_emprunt>=?  GROUP BY date_emprunt AND date_retour");
+        $query->bind_param('sss',$mail,$date_ajd);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
+        while($query->fetch()){
+            $final[$i]["inscrit_mail"] = $tab["inscrit_mail"];
+            $final[$i]["lots"] = $tab["lots"];
+            $final[$i]["date_emprunt"] = $tab["date_emprunt"];
+            $final[$i]["date_retour"] = $tab["date_retour"];
+            $i++;
+        }
+        $query->close();
+        return $final;
     }
 
     //FONCTION DE RECUPERATION DES EMPRUNTS EFFECTUES PAR UN INSCRIT à UNE DATE PRECISE
     function recupEmpruntDate($mail,$date){
-        $mail = protect($mail);
-        $date = explode('/', $date);
-        $query = "SELECT lots FROM inscrits_lots WHERE inscrit_mail='".$mail."' AND date_emprunt='".$date[0]."' AND date_retour='".$date[1]."'";
-        return $GLOBALS["bdd"]->query($query);
+        $tab = array();
+        $i=0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT lots FROM inscrits_lots WHERE inscrit_mail=? AND date_emprunt=? AND date_retour=?");
+        $query->bind_param('sss',$mail,$date[0],$date[1]);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($temp);
+        while($query->fetch()){
+            $tab[$i] = $temp;
+            $i++;
+        }
+        $query->close();
+        return $tab;
     }
 
     //FONCTION DE RECUPERATION DES EMPRUNTS ET REGROUPEMENTS SOUS FORME DE LOT
@@ -663,7 +702,7 @@
         $query->execute();
         $query->store_result();
         $query->bind_result($mail);
-        echo('<table class="table table-striped <!--table-bordered-->"><thead><tr><th>#</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
+        echo('<table class="table table-striped <!--table-bordered-->"><thead><tr><th>#</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th><th>Désinscription</th></tr></thead>');
         $table = "<html><body><table><tr><td><b>Nom</b></td><td><b>Prenom</b></td><td><b>Classe</b></td></tr>";
         $i=1;
         while ($query->fetch())
@@ -679,7 +718,7 @@
                 $table = $table."<tr>";
                 $table = $table."<td>".utf8_decode($nom)."</td><td>".utf8_decode($prenom)."</td><td>".utf8_decode($classe)."</td>";
                 $table = $table."</tr>";
-                echo('<tr><td class="inscrit_proj_list">'.$i.'</td><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td></tr>');
+                echo('<tr><td class="inscrit_proj_list">'.$i.'</td><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td><td><form method="POST" action="projection.php#tableau"><input type="hidden" value="'.$mail.'" name="desinscription" id="desinscription"/><input type="submit" value="Désinscrire cette personne"></form></td></tr>');
                 $i++;
             }
             $query2->close();
@@ -717,8 +756,15 @@
 
     //FONCTION RECUPERANT UNE PROJECTION EN PARTICULIER
     function recupUniqueProj($nom){
-        $query = 'SELECT * from projections WHERE nom="'.$nom.'"';
-        return $GLOBALS["bdd"]->query($query);
+        $tab = array();
+        $query = $GLOBALS["bdd"]->prepare('SELECT * from projections WHERE nom=?');
+        $query->bind_param('s',$nom);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["nom"],$tab["date_release"],$tab["date_projection"],$tab["description"],$tab["commentaires"],$tab["affiche"],$tab["active"],$tab["back_affiche"],$tab["langue"],$tab["prix"],$tab["bande-annonce"]);
+        $query->fetch();
+        $query->close();
+        return $tab;
     }
 
     //FONCTION PERMETTANT D'ACTIVER UNE PROJECTION (MET LA PROJECTION AFFICHEE SUR LA PAGE CINE)
@@ -879,24 +925,37 @@
 
     //FONCTION VERIFIANT SI L'UTILISATEUR EST CONNU OU NON
     function recupID($identifiant){
-        $identifiant = protect($identifiant);
-        $query = "SELECT * FROM admin WHERE identifiant=".$identifiant;
-        return $GLOBALS["bdd"]->query($query);
+        $tab = array();
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM admin WHERE identifiant=?");
+        $query->bind_param('s',$identifiant);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["identifiant"],$tab["mdp"],$tab["mail"],$tab["responsable_emprunt"]);
+        $query->fetch();
+        $query->close();
+        return $tab;
     }
 
     //FONCTION VERIFIANT SI L'UTILISATEUR EST CONNU OU NON
     function recupAdmin(){
-        $query = "SELECT identifiant, responsable_emprunt FROM admin";
-        return $GLOBALS["bdd"]->query($query);
+        $tab = array();
+        $final = array();
+        $i = 0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT identifiant, responsable_emprunt FROM admin");
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["identifiant"],$tab["responsable_emprunt"]);
+        while($query->fetch()){
+            $final[$i] = array($tab["identifiant"],$tab["responsable_emprunt"]);
+            $i++;
+        }
+        $query->close();
+        return $final;
     }
 
 
     //FONCTION D'AJOUT D'UN ADMIN DANS LA BASE
     function addAdmin($identifiant,$mdp,$mail,$respons){
-        $identifiant = protect($identifiant);
-        $mdp = protect($mdp);
-        $mail = protect($mail);
-        $respons = protect($respons);
         $mdp = password_hash($mdp,PASSWORD_DEFAULT);
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?,?,?)");
         $query->bind_param('sssi',$identifiant,$mdp,$mail,$respons);
@@ -908,7 +967,6 @@
 
     //FONCTION DE SUPPRESSION D'UN ADMIN DANS LA BASE
     function supprAdmin($identifiant){
-        $identifiant = protect($identifiant);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM admin WHERE identifiant=?");
         $query->bind_param('s',$identifiant);
         $query->execute();
@@ -919,7 +977,6 @@
 
     //FONCTION DE CHANGEMENT DE MOT DE PASSE POUR L'ADMINISTRATEUR COURANT
     function modifMDP($identifiant, $mdp, $oldMDP){
-        $mdp = protect($mdp);
         $query = $GLOBALS["bdd"]->prepare("SELECT * FROM admin WHERE identifiant=?");
         $query->bind_param("s",$identifiant);
         $query->execute();
@@ -941,8 +998,6 @@
 
     //FONCTION DE CHANGEMENT DE RESPONSABILITES POUR UN ADMINISTRATEUR (devenir responsable emprunts pour le moment)
     function changeAdmin($identifiant, $respons){
-        $identifiant = protect($identifiant);
-        $respons = protect($respons);
         $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET responsable_emprunt=? WHERE identifiant=?");
         $query->bind_param('is',$respons,$identifiant);
         $query->execute();
@@ -957,11 +1012,6 @@
 
     //FONCTION D'AJOUT D'UN LOT
     function addLot($identifiant, $composition,$image,$caution){
-        $identifiant = protect($identifiant);
-        $composition = protect($composition);
-        $caution = protect($caution);
-        $disponible = 1;
-        $image = protect($image);
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?,?,?)");
         $query->bind_param('sssi',$identifiant,$composition,$image,$caution);
         $query->execute();
@@ -981,12 +1031,13 @@
 
     //FONCTION DE SUPPRESSION D'UN LOT
     function supprLot($identifiant){
-        $identifiant = protect($identifiant);
-        $query = "SELECT image from lots WHERE id='".$identifiant."'";
-        $result = $GLOBALS["bdd"]->query($query);
-        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-            $imagetodelete = $row["image"];
-        }
+        $query = $GLOBALS["bdd"]->prepare("SELECT image FROM lots WHERE id=?");
+        $query->bind_param('s',$identifiant);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($imagetodelete);
+        $query->fetch();
+        $query->close();
         unlink($imagetodelete);
         $query = $GLOBALS["bdd"]->prepare("DELETE FROM lots WHERE id=?");
         $query->bind_param('s',$identifiant);
@@ -1007,27 +1058,20 @@
 
     //FONCTION DE MODIFICATION D'UN LOT
     function modifLot($identifiant,$composition, $caution, $image,$ancien_identifiant){
-        $identifiant = protect($identifiant);
-        $composition = protect($composition);
-        $ancien_identifiant = protect($ancien_identifiant);
-        $caution = protect($caution);
         if(empty($image)){
-            $query = "SELECT image from lots WHERE id='".$ancien_identifiant."'";
-            $result = $GLOBALS["bdd"]->query($query);
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                $image = $row["image"];
-            }
             $query = $GLOBALS["bdd"]->prepare("UPDATE `lots` SET `id`=?,`composition`=?,`caution`=? WHERE `id`=?");
-        $query->bind_param('ssis',$identifiant,$composition,$caution,$ancien_identifiant);
+            $query->bind_param('ssis',$identifiant,$composition,$caution,$ancien_identifiant);
         }else{
-            $query = "SELECT image from lots WHERE id='".$ancien_identifiant."'";
-            $result = $GLOBALS["bdd"]->query($query);
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                $imagetodelete = $row["image"];
-            }
+            $query = $GLOBALS["bdd"]->prepare("SELECT image from lots WHERE id=?");
+            $query->bind_param('s',$ancien_identifiant);
+            $query->execute();
+            $query->store_result();
+            $query->bind_result($imagetodelete);
+            $query->fetch();
+            $query->close();
             unlink($imagetodelete);
             $query = $GLOBALS["bdd"]->prepare("UPDATE `lots` SET `id`=?,`composition`=?,`image`=?,`caution`=? WHERE `id`=?");
-        $query->bind_param('sssis',$identifiant,$composition,$image,$caution,$ancien_identifiant);
+            $query->bind_param('sssis',$identifiant,$composition,$image,$caution,$ancien_identifiant);
         }
 
         $query->execute();
@@ -1049,7 +1093,6 @@
 
     //FONCTION GERANT LA RENDU DES LOTS
     function renduLot($identifiant,$lots,$date_emprunt,$date_retour){
-        $identifiant = protect($identifiant);
         $lots = protect($lots);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
@@ -1073,16 +1116,19 @@
     function renduLotCalendar($date_start,$date_end){
         $out = array();
         $i=1;
-        $query = "SELECT * FROM inscrits_lots WHERE date_emprunt>='".$date_start."' AND date_retour<'".$date_end."' ORDER BY date_emprunt";
-        $result = $GLOBALS["bdd"]->query($query);
-        while ($row = $result->fetch_array(MYSQLI_ASSOC))
-        {
-            $lot = $row["lots"];
-            $id = $row["inscrit_mail"];
-            $date_emprunt = $row["date_emprunt"];
+        $tab = array();
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE date_emprunt>=? AND date_retour<? ORDER BY date_emprunt");
+        $query->bind_param('ii',$date_start,$date_end);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
+        while($query->fetch()){
+            $lot = $tab["lots"];
+            $id = $tab["inscrit_mail"];
+            $date_emprunt = $tab["date_emprunt"];
             $date_emprunt_formatée = date_create_from_format("Y-m-d H:m:s", $date_emprunt);
             $date_emprunt_formatée = date_format($date_emprunt_formatée,'U');
-            $date_retour = $row["date_retour"];
+            $date_retour = $tab["date_retour"];
             $date_retour_formatée = date_create_from_format("Y-m-d H:m:s", $date_retour);
             $date_retour_formatée = date_format($date_retour_formatée,'U');
             $modulo = $i % 6;
@@ -1119,6 +1165,7 @@
             );
             $i++;
         }
+        $query->close();
         echo json_encode(array('success' => 1, 'result' => $out));
     }
 
@@ -1129,16 +1176,29 @@
     }
 
     function recupUniqueLot($id){
-        $id = protect($id);
-        $query = "SELECT * from lots WHERE id='".$id."'";
-        return $GLOBALS["bdd"]->query($query);
+        $tab = array();
+        $query = $GLOBALS["bdd"]->prepare("SELECT * from lots WHERE id=?");
+        $query->bind_param('s',$id);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["id"],$tab["compo"],$tab["image"],$tab["caution"]);
+        $query->fetch();
+        $query->close();
+        return $tab;
     }
 
 
 
     function dejaInscrit($id){
-        $query = "SELECT * FROM inscrits where identifiant='".protect($id)."'";
-        return $GLOBALS["bdd"]->query($query);
+        $tab = array();
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits where mail=?");
+        $query->bind_param('s',$id);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["nom"],$tab["prenom"],$tab["tel"],$tab["mail"],$tab["classe"]);
+        $query->fetch();
+        $query->close();
+        return $tab;
     }
 
 ?>

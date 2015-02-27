@@ -49,7 +49,7 @@ background-size: cover;">
 		<div class="panel-body">
             <form method="post" action="projection.php" class="form-register">
                <fieldset>
-    <legend>Récupérer les inscrits à une projection :</legend>
+    <legend id="tableau">Récupérer les inscrits à une projection :</legend>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="recup_proj">Projection : </label></span><select name="recup_proj" id="recup_proj">
                 <?php 
 

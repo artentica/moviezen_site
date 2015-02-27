@@ -17,7 +17,8 @@
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
-        $query = $GLOBALS["bdd"]->prepare("SELECT 'id', 'mdp' FROM admin WHERE identifiant=?");
+        $mdp = protect($_POST["mdp"]);
+        $query = $GLOBALS["bdd"]->prepare("SELECT identifiant , mdp FROM admin WHERE identifiant=?");
         $query->bind_param("s",$_POST["id"]);
         $query->execute();
         $query->store_result();
@@ -25,7 +26,6 @@
         while($query->fetch()){
             $return++;
         }
-
         $query->close();
         if ($return == 0) $wrongIDMDP = 1;
         if(!empty($hash)){
@@ -342,12 +342,7 @@
     //Nr d'admin
         $nbradmin = 0;
         $temp = recupAdmin();
-                while ($row = $temp->fetch_array(MYSQLI_ASSOC))
-                {
-                    $nbradmin++;
-                }
-                $temp->close();
-
+        $nbradmin = count($temp);
 
     //Nr de proj
         $nbrproj = 0;
@@ -498,15 +493,13 @@ background-size: cover;">
     <legend id="change_respons">Mettre un administrateur responsable des emprunts</legend>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id">Identifiant : </label></span><select name="add_respons_id" id="add_respons_id">');
                         $result = recupAdmin();
-                        while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                        {
-                            $id = $row["identifiant"];
-                            $resp = $row["responsable_emprunt"];
+                        foreach($result as $ligne){
+                            $id = $ligne[0];
+                            $resp = $ligne[1];
                             echo('<option value="'.$id.'">'.$id);
                             if($resp) echo('   (Responsable)');
                             echo('</option>');
                         }
-                        $result->close();
 
 
                     echo('</select></div>
@@ -535,12 +528,10 @@ background-size: cover;">
     <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Attention, cette action est irréversible <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="suppr_admin">Identifiant : </label></span><select name="suppr_admin" id="suppr_admin">');
                      $result = recupAdmin();
-                        while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                        {
-                            $id = $row["identifiant"];
+                        foreach($result as $ligne){
+                            $id = $ligne[0];
                             echo('<option value="'.$id.'">'.$id.'</option>');
                         }
-                        $result->close();
                     echo('</select></div>
 
 
@@ -684,21 +675,19 @@ background-size: cover;">
 
                     if(!empty($_POST["modif_proj"]) &&  $_SESSION["authentifie"]){
                         $result = recupUniqueProj($_POST["modif_proj"]);
-                        while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                        {
-                            $nom = $row["nom"];
-                            $date_release = $row["date_release"];
-                            $date_projection = $row["date_projection"];
-                            $description = $row["description"];
-                            $prix = $row["prix"];
-                            $langue = $row["langue"];
-                            $bande_annonce = $row["bande_annonce"];
-                            $commentaires = $row["commentaires"];
+                        $nom = $result["nom"];
+                        $date_release = $result["date_release"];
+                        $date_projection = $result["date_projection"];
+                        $description = $result["description"];
+                        $prix = $result["prix"];
+                        $langue = $result["langue"];
+                        $bande_annonce = $result["bande_annonce"];
+                        $commentaires = $result["commentaires"];
 
 
-                            $description  = replace_chara($description);
-                            $commentaires  = replace_chara($commentaires);
-                            $nom  = replace_chara($nom);
+                        $description  = replace_chara($description);
+                        $commentaires  = replace_chara($commentaires);
+                        $nom  = replace_chara($nom);
 
                             /*$description = preg_replace("/\r/\n",'<br/>',$description);*/
                             echo('<form method="post" action="admin.php#mod_proj" class="form-register" enctype="multipart/form-data">
@@ -723,8 +712,7 @@ background-size: cover;">
 
                             </form>
                             ');
-                        }
-                        $result->close();
+
                     }
 
 
@@ -928,12 +916,10 @@ echo '</div></div><div class="panel panel-default">
 
                     if(!empty($_POST["modif_lot"]) &&  $_SESSION["authentifie"]){
                         $result = recupUniqueLot($_POST["modif_lot"]);
-                        while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                        {
-                            $id = $row["id"];
-                            $composition = $row["composition"];
-                            $caution = $row["caution"];
-                            echo('<form method="post" action="admin.php#modifie_lot" class="form-register" enctype="multipart/form-data">
+                        $id = $result["id"];
+                        $composition = $result["compo"];
+                        $caution = $result["caution"];
+                         echo('<form method="post" action="admin.php#modifie_lot" class="form-register" enctype="multipart/form-data">
 
                             <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required value="'.$id.'"/></div>
@@ -946,8 +932,7 @@ echo '</div></div><div class="panel panel-default">
 
                             </form>
                             ');
-                        }
-                        $result->close();
+
                     }
 
                     if(!empty($modifie)){
@@ -1063,23 +1048,7 @@ echo '</div></div><div class="panel panel-default">
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                }
-
+}
             else{
                 echo('<h1>Espace d\'administration</h1>');
                 if($wrongIDMDP == 1) echo ('<div class="alert message alert-danger alert-dismissible fade in" role="alert">

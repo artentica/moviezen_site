@@ -21,7 +21,8 @@
     }
 
     if(!empty($_POST["conn_mail"])){
-        if(!empty(dejaInscrit($_POST["conn_mail"]))){
+        $tab = dejaInscrit($_POST["conn_mail"]);
+        if(!empty($tab["nom"])){
             $_SESSION["emprunteur"]=1;
             $_SESSION["mail"]=protect($_POST["conn_mail"]);
         }
@@ -50,7 +51,8 @@
 
 
     if(!empty($_POST["conn_mail"])){
-        if(!empty(recupEmpruntAjd($_POST["conn_mail"]))){
+        $tab = recupEmpruntAjd($_POST["conn_mail"]);
+        if(!empty($tab[0]["inscrit_mail"])){
             $_SESSION["emprunteur"]=1;
             $_SESSION["mail"]=protect($_POST["conn_mail"]);
         }
@@ -360,10 +362,10 @@ background-size: cover;">
                 ');
 
                 $result = recupEmpruntAjd($_SESSION["mail"]);
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                foreach($result as $ligne)
                 {
-                    $date_emprunt = $row["date_emprunt"];
-                    $date_retour = $row["date_retour"];
+                    $date_emprunt = $ligne["date_emprunt"];
+                    $date_retour = $ligne["date_retour"];
                     setlocale (LC_TIME, 'fr_FR','fra');
                     $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
                     echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
@@ -381,17 +383,12 @@ background-size: cover;">
                 $result = recupLot();
                 $result2 = recupEmpruntDate($_SESSION["mail"],$_POST["modif_lots"]);
                 $anciens_lots = "";
-                while ($row = $result2->fetch_array(MYSQLI_ASSOC))
-                {
-                    $utilise[] = $row["lots"];
-                }
-                $result2->close();
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
                     $id = $row["id"];
                     $composition = $row["composition"];
                     $anciens_lots .= '/'.$id;
-                    if(in_array($id,$utilise)){
+                    if(in_array($id,$result2)){
                         echo('<option value="'.$id.'" selected="selected">'.$id.' composé de '.$composition.'</option>');
                     }
                     else{
@@ -425,11 +422,10 @@ background-size: cover;">
                 ');
 
                 $result = recupEmpruntAjd($_SESSION["mail"]);
-                print_r($result);
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $date_emprunt = $row["date_emprunt"];
-                    $date_retour = $row["date_retour"];
+
+                foreach($result as $ligne){
+                    $date_emprunt = $ligne["date_emprunt"];
+                    $date_retour = $ligne["date_retour"];
                     setlocale (LC_TIME, 'fr_FR','fra');
                     $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
                     echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
