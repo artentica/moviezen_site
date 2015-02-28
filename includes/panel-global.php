@@ -36,9 +36,9 @@ if(!empty($_SESSION["authentifie"])){
     if($page=="projection.php")echo(" class=current_page_item");
     echo'><a href="projection.php" class="nav-btn">Espace liste de projection</a></li>';
 }
-echo '<li';
+/*echo '<li';
  if($page=="admin.php")echo(" class=current_page_item");
-    echo'><a href="admin.php" class="nav-btn">Espace Administrateur</a></li>';
+    echo'><a href="admin.php" class="nav-btn">Espace Administrateur</a></li>';*/
             echo ' </ul>
                                     </nav>';
                             if(!empty($_SESSION["authentifie"])){
