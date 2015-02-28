@@ -13,42 +13,42 @@
         }
 
     connect();
-
+    $temp = 0;
+    $suppr_insc = 10;
+    if(!empty($_GET["codedesin"])){
         $codesin = $_GET["codedesin"];
 
-        $count = "SELECT COUNT(*) FROM desinscription WHERE desinscription_code='".$codesin."'";
+        $count = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM desinscription WHERE desinscription_code=?");
 
+        $query->bind_param("s",$_GET["codedesin"]);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($temp);
+        $query->fetch();
+        $query->close();
 
-        $result = $GLOBALS["bdd"]->query($count);
-
-        $temp = $result->num_rows;
-        $result->close();
+        echo $temp;
 
 
         if($temp != 0){
-            $query ="SELECT * FROM desinscription WHERE desinscription_code='".$codesin."'";
-
-            $result=$GLOBALS["bdd"]->query($query);
-
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $mail = $row["mail"];
-                    $projection = $row["projection"];
-                }
-                $result->close();
-
-            $query = "SELECT * from projections WHERE nom='".$projection."'";
-            $result=$GLOBALS["bdd"]->query($query);
+            $tab = array();
+            $query = $GLOBALS["bdd"]->prepare("SELECT mail, projection FROM desinscription WHERE desinscription_code=?");
+            $query->bind_param("s",$_GET["codedesin"]);
+            $query->execute();
+            $query->store_result();
+            $query->bind_result($tab["mail"],$tab["projection"]);
+            while($query->fetch()){
+                $mail = $tab["mail"];
+                $projection = $tab["projection"];
+            }
+            $query->close();
 
 
-                    while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                    {
-                        $date_release = $row["date_release"];
-                        $date_proj = $row["date_projection"];
-                        $affiche = $row["affiche"];
-                        $affiche_back = $row["back_affiche"];
-                    }
-                    $result->close();
+            $query = $GLOBALS["bdd"]->prepare("SELECT date_release, date_projection, affiche, back_affiche FROM projections WHERE nom=?");
+            $query->bind_param("s",$projection);
+            $query->execute();
+            $query->store_result();
+            $query->bind_result($date_release,$date_proj,$affiche,$affiche_back);
 
             $phrase_date =  date("d/m/Y", $date_proj)." à ".date("H\hi", $date_proj);
 
@@ -61,6 +61,7 @@
             }
 
         }else $suppr_insc = 2;
+    }
 
 ?>
 
@@ -117,6 +118,9 @@ background-size: cover;">
                         elseif($suppr_insc == 0){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Vous ('.$mail.') n\'avez pas été désincrit(e) pour le film "'.$projection.'" du '.$phrase_date.' ! Une erreur est survenue veuillez réessayer ultérieurement ! </div>');
+                        }
+                        elseif($suppr_insc == 10){
+                            echo("<div>Nothing to see here !</div>");
                         }
                         else{
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
