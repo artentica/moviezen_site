@@ -1,6 +1,7 @@
 <?php
 
     require_once('../conf/config.php');
+    require_once "Mail.php";
 
     //FONCTION DE CONNEXION A LA BDD
     function connect(){
@@ -129,10 +130,25 @@
         // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
 
         $headers = 'From: Moviezen Brest <no-reply@moviezen.fr>' . "\r\n";
-        $subject = utf8_encode($subject);
-        $message = utf8_encode($message);
+        $subject = utf8_decode($subject);
+        $message = utf8_decode($message);
 
 
+//
+//        $from_test = "<no-reply@moviezen.fr>";
+//        $to_test = $to;
+//        $subject_test = $subject;
+//        $message_test = $message;
+//
+//        $host = "localhost";
+//        $port = "25";
+//
+//        $headers_test = array("From" => $from_test, 'To'=>$to_test,'Subject'=>$subject_test);
+//        $smtp = Mail::factory('smtp',
+//                             array('host' => $host,
+//                                  'port' => $port,
+//                                  ));
+//        $mail_test = $smtp->send($to_test,$headers_test,$message_test);
 
 
 
