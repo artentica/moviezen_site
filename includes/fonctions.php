@@ -137,22 +137,27 @@
 //        PARTIE ENVOI DE MAIL AVEC PEAR MAIL
 
 
-//        $from_test = "<no-reply@moviezen.fr>";
-//        $to_test = $to;
-//        $subject_test = $subject;
-//        $message_test = $message;
-//
-//        $host = "localhost";
-//        $port = "25";
-//
-//        $headers_test = array("From" => $from_test, 'To'=>$to_test,'Subject'=>$subject_test);
-//        $smtp = Mail::factory('smtp',
-//                             array('host' => $host,
-//                                  'port' => $port,
-//                                  ));
-//        $mail_test = $smtp->send($to_test,$headers_test,$message_test);
+/*        $from_test = "<no-reply@moviezen.fr>";
+        $to_test = $to;
+        $subject_test = $subject;
+        $message_test = '
 
+       <html><body><p>Vous voulez vous désinscrire pour la séance "'.$seance.'" du '.$date.'.</p>
+       Pour vous désinscrire: www.moviezen.fr/views/desinscription.php?codedesin='.$temp.''</body></html>;
 
+        $host = "localhost";
+        $port = "25";
+        $mime = new Mail_mime();
+        $mime->setHTMLBody($message_test);
+        $message_test = $mime->get();
+        $headers_test = array("From" => $from_test, 'To'=>$to_test,'Subject'=>$subject_test);
+        $smtp = Mail::factory('smtp',
+                             array('host' => $host,
+                                  'port' => $port,
+                                  ));
+        $mail_test = $smtp->send($to_test,$headers_test,$message_test);
+
+*/
 
 
 
