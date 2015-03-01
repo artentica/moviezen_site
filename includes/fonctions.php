@@ -134,7 +134,9 @@
         $message = utf8_decode($message);
 
 
-//
+//        PARTIE ENVOI DE MAIL AVEC PEAR MAIL
+
+
 //        $from_test = "<no-reply@moviezen.fr>";
 //        $to_test = $to;
 //        $subject_test = $subject;
