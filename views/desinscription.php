@@ -25,9 +25,6 @@
         $query->fetch();
         $query->close();
 
-        echo $temp;
-
-
         if($temp != 0){
             $tab = array();
             $query = $GLOBALS["bdd"]->prepare("SELECT mail, projection FROM desinscription WHERE desinscription_code=?");
