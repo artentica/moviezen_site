@@ -16,9 +16,7 @@
     $temp = 0;
     $suppr_insc = 10;
     if(!empty($_GET["codedesin"])){
-        $codesin = $_GET["codedesin"];
-
-        $count = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM desinscription WHERE desinscription_code=?");
+        $query = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) as total FROM desinscription WHERE desinscription_code=?");
 
         $query->bind_param("s",$_GET["codedesin"]);
         $query->execute();

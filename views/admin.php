@@ -7,7 +7,7 @@
     $wrongIDMDP = 0;
     $return = 0;
 
-    //PROTECTION CONTRE XSS ( A VOIR POUR AMELIORER, CA FAIT BEAUCOUP DE REPETITION DE CODE)
+    //PROTECTION CONTRE XSS
         foreach( $_POST as $cle=>$value )
         {
             $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
