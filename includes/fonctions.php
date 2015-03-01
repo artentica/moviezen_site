@@ -143,7 +143,7 @@
         $message_test = '
 
        <html><body><p>Vous voulez vous désinscrire pour la séance "'.$seance.'" du '.$date.'.</p>
-       Pour vous désinscrire: www.moviezen.fr/views/desinscription.php?codedesin='.$temp.''</body></html>;
+       <a href="www.moviezen.fr/views/desinscription.php?codedesin='.$temp.'">Cliquez ici pour vous désinscrire</a></body></html>;
 
         $host = "localhost";
         $port = "25";
