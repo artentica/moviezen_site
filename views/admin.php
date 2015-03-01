@@ -411,8 +411,8 @@ background-size: cover;">
     </div>
     <header>
         <?php
-       include '../includes/panel-global.php';
-        include '../includes/menu-mobile.php';?>
+       /*include '../includes/panel-global.php';
+        include '../includes/menu-mobile.php';*/?>
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">

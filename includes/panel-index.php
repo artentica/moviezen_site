@@ -25,8 +25,8 @@ echo'
                                             echo '<li><a href="views/projection.php" class="nav-btn">Espace liste de projection</a></li>';
                                             }
 
-                                        echo'<li><a href="views/admin.php" class="nav-btn">Espace Administrateur</a></li>
-                                        </ul>
+                                       /*<li><a href="views/admin.php" class="nav-btn">Espace Administrateur</a></li>*/
+                                         echo'</ul>
                                     </nav>';
                             if(!empty($_SESSION["authentifie"])){
     echo'<a  title="Deconnexion button" type="button" class="btn" id="decobtn" href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>';
