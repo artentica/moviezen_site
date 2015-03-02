@@ -8,6 +8,11 @@ include_once("../includes/function_global.php");
         {
             $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
         }
+
+    foreach( $_GET as $cle=>$value )
+        {
+            $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
     
     if(!$_SESSION["authentifie"]){
          header('Location: ../index.php'); 

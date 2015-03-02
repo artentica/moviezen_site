@@ -9,6 +9,10 @@ include_once("../includes/function_global.php");
             $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
         }
 
+    foreach( $_GET as $cle=>$value )
+        {
+            $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
 
     if(!empty($_POST["rendu_lot_id"]) && !empty($_POST["rendu_lot_lots"]) && !empty($_POST["rendu_lot_date_emprunt"]) && !empty($_POST["rendu_lot_date_retour"])){
         renduLot($_POST["rendu_lot_id"],$_POST["rendu_lot_lots"],$_POST["rendu_lot_date_emprunt"],$_POST["rendu_lot_date_retour"]);

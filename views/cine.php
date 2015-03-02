@@ -49,6 +49,11 @@
             $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
         }
 
+            foreach( $_GET as $cle=>$value )
+        {
+            $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
+
         $tab = array();
         $result = recupPromo();
         while ($row = $result->fetch_array(MYSQLI_ASSOC))

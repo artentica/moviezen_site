@@ -13,6 +13,10 @@
             $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
         }
 
+    foreach( $_GET as $cle=>$value )
+        {
+            $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
 
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
