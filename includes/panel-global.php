@@ -24,13 +24,13 @@ echo'
                                             <li';
             if($page=="cine.php")echo(" class=current_page_item");
     echo'><a href="cine.php" class="nav-btn">Coté Ciné de l\'ISEN</a></li>';
-                                            /*echo '<li';
+                                            echo '<li';
             if($page=="emprunt.php")echo(" class=current_page_item");
-    echo'><a href="emprunt.php" class="nav-btn">Emprunt de matériel</a></li>';*/
-                                            /*echo '<li';
+    echo'><a href="emprunt.php" class="nav-btn">Emprunt de matériel</a></li>';
+                                            echo '<li';
 
             if($page=="calendrier.php")echo(" class=current_page_item");
-    echo'><a href="calendrier.php" class="nav-btn">Calendrier des emprunts</a></li>';*/
+    echo'><a href="calendrier.php" class="nav-btn">Calendrier des emprunts</a></li>';
 if(!empty($_SESSION["authentifie"])){
     echo '<li';
     if($page=="projection.php")echo(" class=current_page_item");
