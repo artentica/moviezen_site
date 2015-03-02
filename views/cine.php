@@ -71,7 +71,7 @@
                 }
             }
             else{
-                $inscrit = 0;
+                $inscrit = 3;
             }
         }
 
@@ -187,10 +187,6 @@ background-size: cover;">
             </fieldset></form>');
 
             if($inscrit!=0){
-                        if(!$inscrit){
-                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Merci de ne pas vous amuser à changer la valeur du select !</div>');
-                        }
                         if($inscrit == 2){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le mail '.$_POST["mail"].' est déjà incrit pour le film "'.$_POST["select_projection"].'" du '.$date_projection.' !</div>');
@@ -199,7 +195,10 @@ background-size: cover;">
                             echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Mr/Mme '.$_POST["nom"].' '.$_POST["prenom"].' ('.$_POST["mail"].') de la classe '.$_POST["classe"].' avez bien été incrit pour le film "'.$_POST["select_projection"].'" du '.$date_projection.' !</div>');
                         }
-
+                        elseif($inscrit == 3){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Merci de ne pas vous amuser à changer la valeur du select !</div>');
+                        }
                         else{
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur est survenue vous n\'avez pas pu être inscrit !</div>');
