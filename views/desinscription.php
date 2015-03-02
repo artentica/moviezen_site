@@ -45,6 +45,7 @@
             $query->store_result();
             $query->bind_result($date_release,$date_proj,$affiche,$affiche_back);
             $query->fetch();
+            $query->close();
             $phrase_date =  date("d/m/Y", $date_proj)." à ".date("H\hi", $date_proj);
 
             $suppr_insc = 0;
