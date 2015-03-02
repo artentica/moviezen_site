@@ -31,11 +31,8 @@
             $query->bind_param("s",$_GET["codedesin"]);
             $query->execute();
             $query->store_result();
-            $query->bind_result($tab["mail"],$tab["projection"]);
-            while($query->fetch()){
-                $mail = $tab["mail"];
-                $projection = $tab["projection"];
-            }
+            $query->bind_result($mail,$projection);
+            $query->fetch();
             $query->close();
 
 
