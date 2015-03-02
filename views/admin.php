@@ -1057,7 +1057,7 @@ echo '</div></div><div class="panel panel-default">
                 echo('<h1>Espace d\'administration</h1>');
                 if($wrongIDMDP == 1) echo ('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Mauvais Username ou Mot de passe !</div>');
-            echo ('<form method="post" action="views/admin.php" class="form-register">
+            echo ('<form method="post" action="admin.php" class="form-register">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="id">Identifiant : </label></span><input name="id" id="id" type="text" placeholder="Username" class="form-control" required/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mdp">Mot de passe : </label></span><input type="password" name="mdp" id="mdp" placeholder="Password" class="form-control" required/></div>
 
