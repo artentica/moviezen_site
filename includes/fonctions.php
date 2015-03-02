@@ -331,11 +331,6 @@
     // Don't touch, magic is at work here !
     function ajoutEmprunt2($nom,$prenom,$tel,$mail, $classe,$lots,$date_emprunt,$date_retour){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, ?, ?, ?)");
-        $nom = protect($nom);
-        $prenom = protect($prenom);
-        $tel = protect($tel);
-        $mail = protect($mail);
-        $classe = protect($classe);
         $query->bind_param('sssss', $nom,$prenom,$tel,$mail,$classe);
         $query->execute();
         $query->close();
@@ -348,7 +343,7 @@
         $date_futur = date("Y-m-d H:m:s");
         $date_futur = new DateTime($date_futur);
         date_sub($date_ajd, date_interval_create_from_date_string('1 day'));
-        date_add($date_futur, date_interval_create_from_date_string('1 month'));
+        date_add($date_futur, date_interval_create_from_date_string('3 months'));
         $date_ajd = $date_ajd->format('Ymd');
         $date_futur = $date_futur->format('Ymd');
         $date_emprunt_test = new DateTime($date_emprunt);
@@ -358,6 +353,7 @@
         $string_lots = "";
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
+                $liste = protect($liste);
                 $string_lots .= $liste." ";
                 $date_emprunt_formatée = date("z", strtotime($date_emprunt));
                 $date_retour_formatée = date("z", strtotime($date_retour));
@@ -429,6 +425,7 @@
         $reponse = "";
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
+                $liste = protect($liste);
                 $date_emprunt_formatée = date("z", strtotime($date_emprunt));
                 $date_retour_formatée = date("z", strtotime($date_retour));
                 $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
@@ -474,6 +471,7 @@
         $date_retour_test = $date_retour_test->format('Ymd');
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
+                $liste = protect($liste);
                 $date_emprunt_formatée = date("z", strtotime($date_emprunt));
                 $date_retour_formatée = date("z", strtotime($date_retour));
                 $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
@@ -527,7 +525,6 @@
     //FONCTION MODIFICATION D'EMPRUNT (UTILISATEUR)
     // Don't touch, magic is at work here !
     function modifEmprunt($lots,$anciens_lots,$date_emprunt,$date_retour,$mail,$new_date_emprunt,$new_date_retour){
-        $mail = protect($mail);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
         $new_date_emprunt = protect($new_date_emprunt);
@@ -659,7 +656,7 @@
             $i++;
         }
         $query->close();
-        return $tab;
+        return $final;
     }
 
     //FONCTION DE RECUPERATION DES EMPRUNTS NON EFFECTUES ENCORES
