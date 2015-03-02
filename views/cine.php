@@ -49,17 +49,29 @@
             $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
         }
 
+        $tab = array();
+        $result = recupPromo();
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $tab[] = $row["promotion"];
+        }
+        $result->close();
 
         if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
 
-            $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
-            if($temp == 2) $inscrit = 2;
-            elseif($temp == 1){
-                $_SESSION["select_projection"]=$_POST["select_projection"];
-                $_SESSION["inscrit"]=1;
-                $mail = protect($_POST["mail"]);
-                $_SESSION["mail"]=$mail;
-                $inscrit = 1;
+            if(in_array($_POST["select_projection"],$tab){
+                $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
+                if($temp == 2) $inscrit = 2;
+                elseif($temp == 1){
+                    $_SESSION["select_projection"]=$_POST["select_projection"];
+                    $_SESSION["inscrit"]=1;
+                    $mail = protect($_POST["mail"]);
+                    $_SESSION["mail"]=$mail;
+                    $inscrit = 1;
+                }
+            }
+            else{
+                $inscrit = 0;
             }
         }
 
@@ -175,6 +187,10 @@ background-size: cover;">
             </fieldset></form>');
 
             if($inscrit!=0){
+                        if(!$inscrit){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Merci de ne pas vous amuser à changer la valeur du select !</div>');
+                        }
                         if($inscrit == 2){
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le mail '.$_POST["mail"].' est déjà incrit pour le film "'.$_POST["select_projection"].'" du '.$date_projection.' !</div>');
