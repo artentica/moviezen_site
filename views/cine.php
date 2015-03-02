@@ -64,7 +64,7 @@
 
         if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
 
-            if(in_array($_POST["select_projection"],$tab){
+            if(in_array($_POST["select_projection"],$tab)){
                 $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
                 if($temp == 2) $inscrit = 2;
                 elseif($temp == 1){
