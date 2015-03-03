@@ -1,6 +1,7 @@
 <?php
 
     require_once('../conf/config.php');
+    require_once "Mail.php";
 
     //FONCTION DE CONNEXION A LA BDD
     function connect(){
