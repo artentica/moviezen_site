@@ -39,10 +39,15 @@ include_once("../includes/function_global.php");
                 foreach($_POST['desinscrits'] as $value){
                     supprInscrit($value,$_POST['projection']);
                 }
+                $supprimer = 1;
             }
             else{
                 supprInscrit($_POST['desinscrits'],$_POST['projection']);
+                $supprimer = 1;
             }
+        }
+        else{
+            $supprimer = 0;
         }
     }
     
@@ -105,6 +110,15 @@ background-size: cover;">
 
 
             <?php
+
+            if($supprimer){
+                echo'<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Ces personnes ont bien été désincrites de cette projection !</div>';
+            }
+            else{
+                echo'<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection demandée n\a pas été trouvée dans la base de données !</div>';
+            }
             if(!empty($_POST["recup_proj"])){
                 if(recupInscrit($_POST["recup_proj"])){
                     $replace = array('\"',"\'","'",'"'," ");
