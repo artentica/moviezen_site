@@ -110,7 +110,7 @@ background-size: cover;">
 
 
             <?php
-
+    if(isset($supprimer)){
             if($supprimer){
                 echo'<div class="alert message alert-success alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Ces personnes ont bien été désincrites de cette projection !</div>';
@@ -119,6 +119,7 @@ background-size: cover;">
                 echo'<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection demandée n\a pas été trouvée dans la base de données !</div>';
             }
+    }
             if(!empty($_POST["recup_proj"])){
                 if(recupInscrit($_POST["recup_proj"])){
                     $replace = array('\"',"\'","'",'"'," ");
