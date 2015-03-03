@@ -21,6 +21,7 @@
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
+        usleep(200000); // Protection contre brute-force, maximum 5 requetes par seconde
         $mdp = protect($_POST["mdp"]);
         $query = $GLOBALS["bdd"]->prepare("SELECT identifiant , mdp FROM admin WHERE identifiant=?");
         $query->bind_param("s",$_POST["id"]);
