@@ -6,7 +6,15 @@ include_once("../includes/function_global.php");
 
     foreach( $_POST as $cle=>$value )
         {
-            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            if(is_array($_POST[$cle])) {
+                foreach($_POST[$cle] as $cle2 =>$value2){
+                    $_POST[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
         }
 
     foreach( $_GET as $cle=>$value )
@@ -17,7 +25,26 @@ include_once("../includes/function_global.php");
     if(!$_SESSION["authentifie"]){
          header('Location: ../index.php'); 
     }
+    $tab = array();
+    $result = recupProj();
+    while ($row = $result->fetch_array(MYSQLI_ASSOC))
+    {
+        $tab[] = $row["nom"];
+    }
+    $result->close();
 
+    if(isset($_POST['desinscrits']) && isset($_POST['projection'])){
+        if(in_array($_POST['projection'],$tab)){
+            if (is_array($_POST['desinscrits'])) {
+                foreach($_POST['desinscrits'] as $value){
+                    supprInscrit($value,$_POST['projection']);
+                }
+            }
+            else{
+                supprInscrit($_POST['desinscrits'],$_POST['projection']);
+            }
+        }
+    }
     
 ?>
 <!doctype html>

@@ -55,10 +55,10 @@
         }
 
         $tab = array();
-        $result = recupPromo();
+        $result = recupProj();
         while ($row = $result->fetch_array(MYSQLI_ASSOC))
         {
-            $tab[] = $row["promotion"];
+            $tab[] = $row["nom"];
         }
         $result->close();
 

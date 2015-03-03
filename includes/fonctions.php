@@ -1,7 +1,6 @@
 <?php
 
     require_once('../conf/config.php');
-    require_once "Mail.php";
 
     //FONCTION DE CONNEXION A LA BDD
     function connect(){
@@ -722,8 +721,9 @@
         $query->execute();
         $query->store_result();
         $query->bind_result($mail);
-        echo('<table class="table table-striped <!--table-bordered-->"><thead><tr><th>#</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th><th>Désinscription</th></tr></thead>');
+        echo('<table class="table table-striped <!--table-bordered-->"><thead><tr><th>#</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
         $table = "<html><body><table><tr><td><b>Nom</b></td><td><b>Prenom</b></td><td><b>Classe</b></td></tr>";
+        $desinscrits = '<legend id="tableau2">Désinscrire des personnes :</legend><form method="POST" action="projection.php#tableau2" class="form-register"><table class="table table-striped <!--table-bordered-->"><thead><tr><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th><th>Désinscription</th></tr></thead>';
         $i=1;
         while ($query->fetch())
         {
@@ -738,13 +738,15 @@
                 $table = $table."<tr>";
                 $table = $table."<td>".utf8_decode($nom)."</td><td>".utf8_decode($prenom)."</td><td>".utf8_decode($classe)."</td>";
                 $table = $table."</tr>";
-                echo('<tr><td class="inscrit_proj_list">'.$i.'</td><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td><td><form method="POST" action="projection.php#tableau"><input type="hidden" value="'.$mail.'" name="desinscription" id="desinscription"/><input type="submit" value="Désinscrire cette personne"></form></td></tr>');
+                echo('<tr><td class="inscrit_proj_list">'.$i.'</td><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td></tr>');
+                $desinscrits .= '<tr><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td><td><input id="desinscrits" name="desinscrits[]" value="'.$mail.'" type="checkbox"></td></tr>';
                 $i++;
             }
             $query2->close();
         }
         $query->close();
         $table = $table."</table></body></html>";
+        $desinscrits .= "</table><input type='hidden' value='".$projection."' name='projection' id='projection'/><input type='submit' value='Désinscrire ces personnes'></form>";
         $replace = array("'",'"'," ","/","\\",";");
         $projection = str_replace($replace,'_',$projection);
         $projection = stripslashes($projection);
@@ -758,6 +760,7 @@
         fwrite($myfile,$table,strlen($table));
         fclose($myfile);
         echo('</table>');
+        echo $desinscrits;
         return true;
     }
 
