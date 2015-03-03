@@ -747,7 +747,7 @@
         }
         $query->close();
         $table = $table."</table></body></html>";
-        $desinscrits .= "</table><input type='hidden' value='".$projection."' name='projection' id='projection'/><input type='submit' value='Désinscrire ces personnes'></form>";
+        $desinscrits .= "</table><input type='hidden' value='".$projection."' name='projection' id='projection'/><input type='submit' class=\"button dark_grey\" value='Désinscrire ces personnes'></form>";
         $replace = array("'",'"'," ","/","\\",";");
         $projection = str_replace($replace,'_',$projection);
         $projection = stripslashes($projection);
