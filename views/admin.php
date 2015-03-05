@@ -867,7 +867,19 @@ echo '</div></div><div class="panel panel-default">
 
                     echo('
 
-                    <h1>Gestion des lots</h1>
+                    <h1>Gestion des lots</h1>');
+
+                $result = recupLot();
+                $chaine = "Les identifiants de lot ";
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $chaine .= $row["id"];
+                    $chaine .= ", ";
+                }
+                $result->close();
+                $chaine = substr($chaine, 0, -2);
+                echo $chaine." sont déja pris, veuillez indiquer un identifiant différent de ceux-ci.";
+                echo('
                             <form method="post" action="admin.php#ajoute_lot" class="form-register" enctype="multipart/form-data">
                             <fieldset>
     <legend id="ajoute_lot">Ajouter un lot</legend>
