@@ -301,7 +301,7 @@
     //MODIFICATION DE LOTS
 
                     if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
-
+                        $nom = "";
                         if(!empty($_FILES["modif_lot_photo"]) && $_FILES["modif_lot_photo"]["name"] != ""){
                             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
@@ -325,7 +325,7 @@
                         }
 
 
-                        if(isset($nom)){
+                        if(empty($modifie)){
                             if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
                                 $modifie = true;
                             }
