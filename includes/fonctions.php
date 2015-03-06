@@ -1034,7 +1034,7 @@
 
     //FONCTIONS GESTION DES LOTS
 
-
+    //Reset tout les emprunts et toutes les disponibilités, à utiliser avec beaucoup de précaution pour le moment
     function resetDispo(){
         $query = "SELECT * from lots ORDER BY id";
         $result = $GLOBALS["bdd"]->query($query);
@@ -1042,6 +1042,8 @@
         {
             $query = $GLOBALS["bdd"]->query("UPDATE dispo SET ".$row["id"]."=1 WHERE 1");
         }
+        $query = $GLOBALS["bdd"]->query("DELETE FROM inscrits_lots WHERE 1");
+        $result = $GLOBALS["bdd"]->query($query);
     }
 
 
