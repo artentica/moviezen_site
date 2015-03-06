@@ -1043,6 +1043,7 @@ echo '</div></div><div class="panel panel-default">
                 echo('<div>
                     <form method="post" action="admin.php#reset_lot" class="form-register"><fieldset>
                     <legend id="reset_lot">Remettre la disponibilité des lots à 1 pour tout le monde</legend>
+                    <p>ATTENTION, CETTE ACTION VA ENTRAINER LE RESET DE TOUT LES EMPRUNTS EFFECTUES POUR LE MATERIEL MOVIEZEN !! N\EFFECTUEZ CETTE ACTION QUE SI VOUS SAVEZ RÉELLEMENT CE QUE VOUS FAITES, SINON PARTEZ LOIN, TRES LOINS DE CET ORDINATEUR !!!!!!!!!!!!!!!!!!!!!!!! (Vous ne pourez pas dire que l\'on ne vous as pas prévenus, hein ! HIGH DANGER LEVEL WARNING LEVEL 100, N\utilisez pas ça sauf en cas de forçe vraiment majeure : par exemple (et seul exemple), tout les emprunts vous ont été rendus, et certaines périodes sont toujours indisponibles. Alors, et seulement à ce moment la, pressez ce fatidique bouton !</p>
                     <input type="hidden" name="reset_lots" id="reset_lots" value="1"/>
                     <input type="submit" class="button dark_grey" value="Resetter les disponibilités de tout les lots !"/>
                 </fieldset></form></div>');
