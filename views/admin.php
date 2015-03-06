@@ -358,6 +358,10 @@
                     else $supprLot = 2;
                 }
 
+        if(!empty($_POST["reset_lots"]) && $_SESSION["authentifie"]){
+            resetDispo();
+        }
+
 //Nb of admin or 'lot' or projection
 
     //Nr d'admin
@@ -1035,6 +1039,15 @@ echo '</div></div><div class="panel panel-default">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" n\'a pas pu être supprimé !</div>');
                     }
 
+                // RESET A 1 DES LOTS POUR TOUTE L'ANNEE
+                echo('<div>
+                    <form method="post" action="admin.php#reset_lot" class="form-register"><fieldset>
+                    <legend id="reset_lot">Remettre la disponibilité des lots à 1 pour tout le monde</legend>
+                    <input type="hidden" name="reset_lots" id="reset_lots" value="1"/>
+                    <input type="submit" class="button dark_grey" value="Resetter les disponibilités de tout les lots !"/>
+                </fieldset></form></div>');
+
+
             echo '</div></div>EN TRAVAUX EN DESSOUS!!!';
                 //GESTION DES INSCRITS
                 echo '<div class="panel panel-default">
@@ -1046,6 +1059,8 @@ echo '</div></div><div class="panel panel-default">
     <legend id="ajoute_lot">Modifier les données sur les inscrits</legend>
 
                             </fieldset></form>';
+
+
 
 
 

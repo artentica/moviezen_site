@@ -462,7 +462,7 @@
         $date_futur = date("Y-m-d H:m:s");
         $date_futur = new DateTime($date_futur);
         date_sub($date_ajd, date_interval_create_from_date_string('1 day'));
-        date_add($date_futur, date_interval_create_from_date_string('1 month'));
+        date_add($date_futur, date_interval_create_from_date_string('3 months'));
         $date_ajd = $date_ajd->format('Ymd');
         $date_futur = $date_futur->format('Ymd');
         $date_emprunt_test = new DateTime($date_emprunt);
@@ -1033,6 +1033,17 @@
 //################################################################################################################################################################
 
     //FONCTIONS GESTION DES LOTS
+
+
+    function resetDispo(){
+        $query = "SELECT * from lots ORDER BY id";
+        $result = $GLOBALS["bdd"]->query($query);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $query = $GLOBALS["bdd"]->query("UPDATE dispo SET ".$row["id"]."=1 WHERE 1");
+        }
+    }
+
 
     //FONCTION D'AJOUT D'UN LOT
     function addLot($identifiant, $composition,$image,$caution){
