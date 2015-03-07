@@ -362,6 +362,12 @@
             resetDispo();
         }
 
+
+        //GESTION DE LA RENDU DES LOTS
+        if(!empty($_POST["rendu_lot_id"]) && !empty($_POST["rendu_lot_lots"]) && !empty($_POST["rendu_lot_date_emprunt"]) && !empty($_POST["rendu_lot_date_retour"])){
+            renduLot($_POST["rendu_lot_id"],$_POST["rendu_lot_lots"],$_POST["rendu_lot_date_emprunt"],$_POST["rendu_lot_date_retour"]);
+        }
+
 //Nb of admin or 'lot' or projection
 
     //Nr d'admin
@@ -1043,7 +1049,7 @@ echo '</div></div><div class="panel panel-default">
                 echo('<div>
                     <form method="post" action="admin.php#reset_lot" class="form-register"><fieldset>
                     <legend id="reset_lot">Remettre la disponibilité des lots à 1 pour tout le monde</legend>
-                    <p>ATTENTION, CETTE ACTION VA ENTRAINER LE RESET DE TOUT LES EMPRUNTS EFFECTUES POUR LE MATERIEL MOVIEZEN !! N\'EFFECTUEZ CETTE ACTION QUE SI VOUS SAVEZ RÉELLEMENT CE QUE VOUS FAITES, SINON PARTEZ LOIN, TRES LOIN DE CET ORDINATEUR !!!!!!!!!!!!!!!!!!!!!!!! (Vous ne pourez pas dire que l\'on ne vous as pas prévenus, hein ! HIGH DANGER LEVEL WARNING LEVEL 100, N\utilisez pas ça sauf en cas de forçe vraiment majeure : par exemple (et seul exemple), tout les emprunts vous ont été rendus, et certaines périodes sont toujours indisponibles. Alors, et seulement à ce moment la, pressez ce fatidique bouton !</p>
+                    <p>ATTENTION, CETTE ACTION VA ENTRAINER LE RESET DE TOUT LES EMPRUNTS EFFECTUES POUR LE MATERIEL MOVIEZEN !! N\'EFFECTUEZ CETTE ACTION QUE SI VOUS SAVEZ RÉELLEMENT CE QUE VOUS FAITES !</p>
                     <input type="hidden" name="reset_lots" id="reset_lots" value="1"/>
                     <input type="submit" class="button dark_grey" value="Resetter les disponibilités de tout les lots !"/>
                 </fieldset></form></div>');
@@ -1077,7 +1083,29 @@ echo '</div></div><div class="panel panel-default">
 
                             </fieldset></form>';
 
+echo('
+                    <legend id="table_emprunt">Gestion de la rendu des lots</legend>
+                    <table class="table table-striped table-bordered"><thead><th>Empretant</th><th>Lots empruntés</th><th>Date d\'emprunt</th><th>Date de retour</th><th>Marquer l\'emprunt comme rendu</th></thead>');
+                    $result = recupEmpruntLot();
+                    while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                    {
+                        $identifiant = $row["inscrit_mail"];
+                        $lots = $row["concat_lots"];
+                        $date_emprunt = $row["date_emprunt"];
+                        $date_retour = $row["date_retour"];
+                        setlocale (LC_TIME, 'fr_FR','fra');
+                        $date_emprunt_formatée = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                        $date_retour_formatée = utf8_encode(strftime("%d %b %Y",strtotime($date_retour)));
+                        echo('<tr><td>'.$identifiant.'</td><td>'.$lots.'</td><td>'.$date_emprunt_formatée.'</td><td>'.$date_retour_formatée.'</td><td><form method="post" action="admin.php#table_emprunt" class="form-register">
+                            <input type="hidden" name="rendu_lot_id" id="rendu_lot_id" value="'.$identifiant.'" required/>
+                            <input type="hidden" name="rendu_lot_lots" id="rendu_lot_lots" value="'.$lots.'" required/>
+                            <input type="hidden" name="rendu_lot_date_emprunt" id="rendu_lot_date_emprunt" value="'.$date_emprunt.'" required/>
+                            <input type="hidden" name="rendu_lot_date_retour" id="rendu_lot_date_retour" value="'.$date_retour.'" required/>
+                            <input type="submit" class="button dark_grey" value="Cet emprunt a bien été rendu"/>
 
+                        </form></td></tr>');
+                    }
+                    $result->close();
 
 
 

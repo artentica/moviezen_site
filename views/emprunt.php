@@ -388,7 +388,7 @@ background-size: cover;">
                     $date_emprunt = $ligne["date_emprunt"];
                     $date_retour = $ligne["date_retour"];
                     setlocale (LC_TIME, 'fr_FR','fra');
-                    $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                    $new_date_emprunt = utf8_encode(strftime("%d %B %Y",strtotime($date_emprunt)));
                     echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
                 }
                 echo('</select></div>
@@ -446,7 +446,7 @@ background-size: cover;">
                     $date_emprunt = $ligne["date_emprunt"];
                     $date_retour = $ligne["date_retour"];
                     setlocale (LC_TIME, 'fr_FR','fra');
-                    $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                    $new_date_emprunt = utf8_encode(strftime("%d %B %Y",strtotime($date_emprunt)));
                     echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
                 }
                 echo('</select></div>
