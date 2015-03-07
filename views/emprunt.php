@@ -391,7 +391,6 @@ background-size: cover;">
                     $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
                     echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
                 }
-                $result->close();
                 echo('</select></div>
                     <input type="submit" class="button dark_grey" value="Modifier cet emprunt"/>
                 </form>
@@ -402,7 +401,7 @@ background-size: cover;">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="modification_lots">Lots : </label></span><select name="modification_lots[]" id="modification_lots" multiple="multiple">');
 
                 $result = recupLot();
-                $result2 = recupEmpruntDate($_SESSION["mail"],$_POST["modif_lots"]);
+                $result2 = recupEmpruntDate($_SESSION["mail"],$date);
                 $anciens_lots = "";
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -417,7 +416,6 @@ background-size: cover;">
                     }
                 }
                 $result->close();
-
 
 
 
@@ -451,7 +449,6 @@ background-size: cover;">
                     $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
                     echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
                 }
-                $result->close();
                 echo('</select></div>
                 <input type="submit" class="button dark_grey" value="Annuler cet emprunt"/>
             </form>

@@ -665,8 +665,8 @@
         $final = array();
         $i=0;
         $date_ajd = date("Y-m-d H:m:s");
-        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE inscrit_mail=? and date_emprunt>=?  GROUP BY date_emprunt AND date_retour");
-        $query->bind_param('sss',$mail,$date_ajd);
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE inscrit_mail=? and date_emprunt>=?  GROUP BY date_emprunt");
+        $query->bind_param('ss',$mail,$date_ajd);
         $query->execute();
         $query->store_result();
         $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
