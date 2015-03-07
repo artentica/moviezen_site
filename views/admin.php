@@ -368,6 +368,34 @@
             renduLot($_POST["rendu_lot_id"],$_POST["rendu_lot_lots"],$_POST["rendu_lot_date_emprunt"],$_POST["rendu_lot_date_retour"]);
         }
 
+
+        //GESTION DES INSCRITS
+        $tab = array();
+        $result = recupProj();
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $tab[] = $row["nom"];
+        }
+        $result->close();
+
+        if(isset($_POST['desinscrits']) && isset($_POST['projection'])){
+            if(in_array($_POST['projection'],$tab)){
+                if (is_array($_POST['desinscrits'])) {
+                    foreach($_POST['desinscrits'] as $value){
+                        supprInscrit($value,$_POST['projection']);
+                    }
+                    $supprimer = 1;
+                }
+                else{
+                    supprInscrit($_POST['desinscrits'],$_POST['projection']);
+                    $supprimer = 1;
+                }
+            }
+            else{
+                $supprimer = 0;
+            }
+        }
+
 //Nb of admin or 'lot' or projection
 
     //Nr d'admin
@@ -1077,11 +1105,9 @@ echo '</div></div><div class="panel panel-default">
 
                 echo '
 
-        <form class="form-register">
+        <form method="post" action="admin.php#table_emprunt" class="form-register">
                             <fieldset>
-    <legend id="ajoute_lot">Gestion des inscrits pour les emprunts</legend>
-
-                            </fieldset></form>';
+';
 
 echo('
                     <legend id="table_emprunt">Gestion de la rendu des lots</legend>
@@ -1103,23 +1129,55 @@ echo('
                             <input type="hidden" name="rendu_lot_date_retour" id="rendu_lot_date_retour" value="'.$date_retour.'" required/>
                             <input type="submit" class="button dark_grey" value="Cet emprunt a bien été rendu"/>
 
-                        </form></td></tr>');
+                        </td></tr>');
                     }
                     $result->close();
 
 
+                echo'</table></fieldset></form>
+
+                <form method="post" action="admin.php#recup_inscrits" class="form-register">
+               <fieldset>
+    <legend id="recup_inscrits">Récupérer les inscrits à une projection :</legend>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="recup_proj">Projection : </label></span><select name="recup_proj" id="recup_proj">';
 
 
+                $result = recupProjDesc();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $nom = $row["nom"];
+                    $date = $row["date_projection"];
+                    $date = date("d/m/Y", $date)." à ".date("H\hi", $date);
+                    echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                }
+                $result->close();
+                    echo'</select></div>
 
-                echo '
+                 <input type="submit" class="button dark_grey" onClick="$(this).button(\'loading\')" data-loading-text="Loading" value="Récupérer les inscrits"/>
 
-        <form class="form-register">
-                            <fieldset>
-    <legend id="ajoute_lot">Gestion des inscrits pour les projections</legend>
+                </fieldset>
+            </form>
 
-                            </fieldset></form>';
+';
 
+    if(isset($supprimer)){
+            if($supprimer){
+                echo'<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Ces personnes ont bien été désincrites de cette projection !</div>';
+            }
+            else{
+                echo'<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection demandée n\a pas été trouvée dans la base de données !</div>';
+            }
+    }
+            if(!empty($_POST["recup_proj"])){
+                if(recupInscrit($_POST["recup_proj"])){
+                    $replace = array('\"',"\'","'",'"'," ");
+                    $_POST["recup_proj"] = str_replace($replace,'_',$_POST["recup_proj"]);
+                    echo('<a class="button dark_grey" href="../xls/inscrits_'.$_POST["recup_proj"].'.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier "inscrits_'.$_POST["recup_proj"].'.xls"</a>');
+                }
 
+            }
 
                 echo'</div></div>';
 

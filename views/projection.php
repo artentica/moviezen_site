@@ -33,31 +33,6 @@ include_once("../includes/function_global.php");
     if(!$_SESSION["authentifie"]){
          header('Location: ../index.php'); 
     }
-    $tab = array();
-    $result = recupProj();
-    while ($row = $result->fetch_array(MYSQLI_ASSOC))
-    {
-        $tab[] = $row["nom"];
-    }
-    $result->close();
-
-    if(isset($_POST['desinscrits']) && isset($_POST['projection'])){
-        if(in_array($_POST['projection'],$tab)){
-            if (is_array($_POST['desinscrits'])) {
-                foreach($_POST['desinscrits'] as $value){
-                    supprInscrit($value,$_POST['projection']);
-                }
-                $supprimer = 1;
-            }
-            else{
-                supprInscrit($_POST['desinscrits'],$_POST['projection']);
-                $supprimer = 1;
-            }
-        }
-        else{
-            $supprimer = 0;
-        }
-    }
     
 ?>
 <!doctype html>
@@ -92,55 +67,7 @@ background-size: cover;">
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
-            <form method="post" action="projection.php" class="form-register">
-               <fieldset>
-    <legend id="tableau">Récupérer les inscrits à une projection :</legend>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="recup_proj">Projection : </label></span><select name="recup_proj" id="recup_proj">
-                <?php 
 
-                
-                $result = recupProjDesc();
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $nom = $row["nom"];
-                    $date = $row["date_projection"];
-                    $date = date("d/m/Y", $date)." à ".date("H\hi", $date);
-                    echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
-                }
-                $result->close();?>
-                    </select>                   </div>
-
-                 <input type="submit" class="button dark_grey" onClick="$(this).button('loading')" data-loading-text="Loading" value="Récupérer les inscrits"/>
-
-                </fieldset>
-            </form>
-
-
-
-            <?php
-    if(isset($supprimer)){
-            if($supprimer){
-                echo'<div class="alert message alert-success alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Ces personnes ont bien été désincrites de cette projection !</div>';
-            }
-            else{
-                echo'<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection demandée n\a pas été trouvée dans la base de données !</div>';
-            }
-    }
-            if(!empty($_POST["recup_proj"])){
-                if(recupInscrit($_POST["recup_proj"])){
-                    $replace = array('\"',"\'","'",'"'," ");
-                    $_POST["recup_proj"] = str_replace($replace,'_',$_POST["recup_proj"]);
-                    echo('<a class="button dark_grey" href="../xls/inscrits_'.$_POST["recup_proj"].'.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier "inscrits_'.$_POST["recup_proj"].'.xls"</a>');
-                }
-            
-            }
-                
-
-
-
-            ?>
         </div>
 	</div>
     
