@@ -1155,7 +1155,7 @@
         $i=1;
         $tab = array();
         $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE date_emprunt>=? AND date_retour<? ORDER BY date_emprunt");
-        $query->bind_param('ii',$date_start,$date_end);
+        $query->bind_param('ss',$date_start,$date_end);
         $query->execute();
         $query->store_result();
         $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
