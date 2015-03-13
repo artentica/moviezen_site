@@ -25,17 +25,17 @@
 		    $prix = $row["prix"];
 		    $bande_annonce = $row["bande_annonce"];
         }
-
+        $description  = replace_chara($description);
+        $commentaires  = replace_chara($commentaires);
+        $nom_actif  = replace_chara($nom_actif);
         $result->close();
 
-
+    }
         //VAR
 
         $inscrit = 0;
 
-        $description  = replace_chara($description);
-        $commentaires  = replace_chara($commentaires);
-        $nom_actif  = replace_chara($nom_actif);
+
 
 
 
@@ -150,8 +150,10 @@ background-size: cover;">
 
         <?php
        include '../includes/panel-global.php';
-                echo '<div class="wrapper style1" style="background-image: url(\''.$affiche_back.'\');
+                if(isset($affiche_back)){
+                    echo '<div class="wrapper style1" style="background-image: url(\''.$affiche_back.'\');
                                        background-size: cover;">';
+                }
       ?>
 
 
@@ -159,20 +161,19 @@ background-size: cover;">
 
             <?php
 
-                echo('<h1>'.$nom_actif.' ('.$langue.')</h1>
+                if(isset($description)){
+                   echo('<h1>'.$nom_actif.' ('.$langue.')</h1>
                 <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest<br><br>Prix : '.$prix.'&euro;</h3>
                 <img src="'.$affiche.'" alt="affiche" class="affiche" style=""/>
                 <p class="description">'.$description.'</p>
                 <p class="description">'.$commentaires.'</p>
                 ');
-            }
 
 		echo ('<!-- 16:9 aspect ratio --><div class="my_embed">
 <div class="embed-responsive embed-responsive-16by9">
   <iframe class="embed-responsive-item" src="'.$bande_annonce.'" frameborder="0" allowfullscreen></iframe>
 </div></div>
 ');
-
             /*if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){*/
 
                 echo('<div class="panel panel-default">
@@ -199,7 +200,7 @@ background-size: cover;">
 
                     </select>
                 </div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="moviezen.brest@isen-bretagne.fr" class="form-control" required/></div>
 
                 <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><input type="text"  name="select_projection" class="form-control" value="'.$nom_actif.'" readonly/>
 
@@ -269,7 +270,10 @@ background-size: cover;">
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail a déjà été envoyé il y a '.$min.' min et '.$sec.' s, veuillez attendre 5min entre chaque essai. <br> Vérifiez vos spams.</div>');
                         }
-
+                    }
+                else{
+                    echo('Aucune projection n\'a été activée dans le Ciné de l\'Isen !');
+                }
             echo('
             </div>
 
