@@ -234,7 +234,7 @@ background-size: cover;">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom"  value="');
                 if(isset($_POST["prenom"])){echo $_POST["prenom"];}
                 echo('" class="form-control" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="prenom.nom@isen.fr" value="');
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="prenom.nom@isen-bretagne.fr" value="');
                 if(isset($_POST["mail"])){echo $_POST["mail"];}
                 echo('" class="form-control" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0612345678" class="form-control" value="');
