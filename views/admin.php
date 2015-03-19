@@ -175,7 +175,7 @@
                 else{
                     $nomback = md5(uniqid(rand(), true));
                     $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                    $nomback = compress($_FILES['back_affiche']['tmp_name'],$nomback,50);
+                    $nomback = compress($_FILES['back_affiche']['tmp_name'],$nomback,80);
                     //$resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
                 }
             }
@@ -239,21 +239,21 @@
             }
         }
 
-            if(!empty($_FILES["back_affiche"]) && $_FILES["back_affiche"]["name"] != ""){
+            if(!empty($_FILES["new_back_affiche"]) && $_FILES["new_back_affiche"]["name"] != ""){
                 $extensions_valides = array( 'png' );
-                $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
+                $extension_upload = strtolower(  substr(  strrchr($_FILES['new_back_affiche']['name'], '.')  ,1)  );
                 if ( in_array($extension_upload,$extensions_valides) ){
-                    if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['back_affiche']['name']))
+                    if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['new_back_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['new_back_affiche']['name']))
                     {
                         $modifProj = 7;
                     }
-                    else if(strstr($_FILES['back_affiche']['name'], ".php") || strstr($_FILES['back_affiche']['name'], "php.") || strstr($_FILES['back_affiche']['name'], ".exe") ){
+                    else if(strstr($_FILES['new_back_affiche']['name'], ".php") || strstr($_FILES['new_back_affiche']['name'], "php.") || strstr($_FILES['new_back_affiche']['name'], ".exe") ){
                         $modifProj = 5;
                     }
                     else{
                         $nomback = md5(uniqid(rand(), true));
                         $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                        $nomback = compress($_FILES['back_affiche']['tmp_name'],$nomback,50);
+                        $nomback = compress($_FILES['new_back_affiche']['tmp_name'],$nomback,80);
                         //$resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
                     }
                 }
@@ -303,7 +303,7 @@
                                 else{
                                     $nom = md5(uniqid(rand(), true));
                                     $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                    $nom = compress($_FILES['add_lot_photo']['tmp_name'],$nom,50);
+                                    $nom = compress($_FILES['add_lot_photo']['tmp_name'],$nom,70);
                                     //$resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
                                 }
                             }
@@ -771,7 +771,7 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Bande Annonce : </label></span><input type="text" name="bande_annonce" placeholder="https://www.youtube.com/embed/..." class="form-control" value="'.$bande_annonce.'" required/></div>
 
                             <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span>--><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="affiche form-control"/></div>
-                            <div class="input-group max center"><input type="file" name="back_affiche" class="back_affiche form-control"/></div>
+                            <div class="input-group max center"><input type="file" name="new_back_affiche" id="new_back_affiche" class="back_affiche form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Sauvegarder les changements"');
                             if($nbrproj == 0)echo " disabled ";
                             echo('/>
@@ -1259,8 +1259,8 @@ echo('
 */
     }
 
-    $(function () {
-        $('#fileupload').fileupload({
+   /* $(function () {
+        $('#projection_affiche').fileupload({
             dataType: 'json',
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
@@ -1268,7 +1268,47 @@ echo('
                 });
             }
         });
-    });
+        $('#back_affiche').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#new_projection_affiche').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#new_back_affiche').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#add_lot_photo').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#modif_lot_photo').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+    });*/
 </script>
 
 

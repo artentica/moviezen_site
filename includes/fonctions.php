@@ -1247,29 +1247,15 @@
 			$image = imagecreatefromjpeg($source);
             imagejpeg($image, $destination, $quality);
         }
-        //Sinon si l'image est une PNG, on utilise la fonction compress_png qui utilise pngquant pour faire une bonne compression
+        //Sinon si l'image est une PNG, on utilise la fonction pngquant qui permet une bonne compression
 		else if ($info['mime'] == 'image/png'){
-			$image_compressee = compress_png($source);
-            file_put_contents($destination,$image_compressee);
+            //$image = imagecreatefrompng($source);
+            //imagepng($image, $destination, 0);
+            $min_quality = 60;
+            $compressed_png_content = shell_exec("pngquant --quality=$min_quality-$quality - < ".escapeshellarg($source));
+            file_put_contents($destination,$compressed_png_content);
         }
 		return $destination;
 	}
 
-    //Fonction pour compresser les PNG, car imagepng() n'assure pas une très bonne conversion. Nécessite pngquant d'installé sur le serveur
-    function compress_png($path_to_png_file, $max_quality = 90)
-    {
-        if (!file_exists($path_to_png_file)) {
-            throw new Exception("Ce fichier n'existe pas : $path_to_png_file");
-        }
-
-        $min_quality = 60;
-
-        $compressed_png_content = shell_exec("pngquant --quality=$min_quality-$max_quality ".escapeshellarg($path_to_png_file));
-
-        if (!$compressed_png_content) {
-            throw new Exception("La conversion a échouée ! PNGQuant est-il installé ?");
-        }
-
-        return $compressed_png_content;
-    }
 ?>
