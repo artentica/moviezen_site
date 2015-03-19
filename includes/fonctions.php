@@ -1264,7 +1264,7 @@
 
         $min_quality = 60;
 
-        $compressed_png_content = shell_exec("pngquant --quality=$min_quality-$max_quality - < ".escapeshellarg($path_to_png_file));
+        $compressed_png_content = shell_exec("pngquant --quality=$min_quality-$max_quality ".escapeshellarg($path_to_png_file));
 
         if (!$compressed_png_content) {
             throw new Exception("La conversion a échouée ! PNGQuant est-il installé ?");
