@@ -448,6 +448,9 @@
         <script src="../js/jquery.datetimepicker.js"></script>
         <script src="../js/bootstrap.js"></script>
         <script src="../js/inputfile.js"></script>
+        <script src="js/jquery.ui.widget.js"></script>
+        <script src="js/jquery.iframe-transport.js"></script>
+        <script src="js/jquery.fileupload.js"></script>
 
     <script>
         $(function(){
@@ -1255,6 +1258,17 @@ echo('
         console.log(to_suppr);
 */
     }
+
+    $(function () {
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+    });
 </script>
 
 
