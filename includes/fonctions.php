@@ -1249,8 +1249,8 @@
         }
         //Sinon si l'image est une PNG, on utilise la fonction compress_png qui utilise pngquant pour faire une bonne compression
 		else if ($info['mime'] == 'image/png'){
-			image_compressee = compress_png($source);
-            file_put_contents($destination,image_compressee);
+			$image_compressee = compress_png($source);
+            file_put_contents($destination,$image_compressee);
         }
 		return $destination;
 	}
