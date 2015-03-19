@@ -152,7 +152,8 @@
                 else{
                     $nom = md5(uniqid(rand(), true));
                     $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                    $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
+                    $nom = compress($_FILES['projection_affiche']['tmp_name'],$nom,50);
+                    //$resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
                 }
             }
             else{
@@ -174,7 +175,8 @@
                 else{
                     $nomback = md5(uniqid(rand(), true));
                     $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                    $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                    $nomback = compress($_FILES['back_affiche']['tmp_name'],$nomback,50);
+                    //$resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
                 }
             }
             else{
@@ -228,7 +230,8 @@
                 else{
                     $nom = md5(uniqid(rand(), true));
                     $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                    $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
+                    $nom = compress($_FILES['new_projection_affiche']['tmp_name'],$nom,50);
+                    //$resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
                 }
             }
             else{
@@ -250,7 +253,8 @@
                     else{
                         $nomback = md5(uniqid(rand(), true));
                         $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                        $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                        $nomback = compress($_FILES['back_affiche']['tmp_name'],$nomback,50);
+                        //$resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
                     }
                 }
                 else{
@@ -299,7 +303,8 @@
                                 else{
                                     $nom = md5(uniqid(rand(), true));
                                     $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                    $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
+                                    $nom = compress($_FILES['add_lot_photo']['tmp_name'],$nom,50);
+                                    //$resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
                                 }
                             }
                             else{
@@ -332,7 +337,8 @@
                                 else{
                                     $nom = md5(uniqid(rand(), true));
                                     $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                    $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+                                    $nom = compress($_FILES['modif_lot_photo']['tmp_name'],$nom,70);
+                                    //$resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
                                 }
                             }
                             else{
