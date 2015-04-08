@@ -2,6 +2,10 @@
     session_start();
     include_once("../includes/fonctions.php");
     include_once("../includes/function_global.php");
+    ini_set('upload_max_filesize', '10M');
+    ini_set('post_max_size', '10M');
+    ini_set('max_input_time', 300);
+    ini_set('max_execution_time', 300);
     connect();
 
     $wrongIDMDP = 0;

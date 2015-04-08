@@ -2,7 +2,10 @@
 
     require_once('../conf/config.php');
     require_once "Mail.php";
-
+    ini_set('upload_max_filesize', '10M');
+    ini_set('post_max_size', '10M');
+    ini_set('max_input_time', 300);
+    ini_set('max_execution_time', 300);
     //FONCTION DE CONNEXION A LA BDD
     function connect(){
 		$GLOBALS["bdd"] = new mysqli(HOST, USER, PASSWORD, DATABASE);
