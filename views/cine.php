@@ -191,6 +191,8 @@ background-size: cover;">
                     }
 
 
+
+
             echo ('
             <form method="post" action="cine.php#desinscr"  class="form-register">
             <fieldset>
@@ -230,6 +232,7 @@ background-size: cover;">
 
 
 
+
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail a déjà été envoyé il y a '.$min.' min et '.$sec.' s, veuillez attendre 5min entre chaque essai. <br> Vérifiez vos spams.</div>');
                         }
@@ -240,7 +243,14 @@ background-size: cover;">
             </div>
 
             ');
+echo ('
+<div style="margin:auto;width:80%;height:200px;background-color:red"></div>
 
+
+
+
+
+');
            /* }
 
             else{
