@@ -6,13 +6,33 @@ include_once("../includes/function_global.php");
 
     foreach( $_POST as $cle=>$value )
         {
-            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            if(is_array($_POST[$cle])) {
+                foreach($_POST[$cle] as $cle2 =>$value2){
+                    $_POST[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
+        }
+
+    foreach( $_GET as $cle=>$value )
+        {
+            if(is_array($_GET[$cle])) {
+                foreach($_GET[$cle] as $cle2 =>$value2){
+                    $_GET[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
         }
     
     if(!$_SESSION["authentifie"]){
          header('Location: ../index.php'); 
     }
-
     
 ?>
 <!doctype html>
@@ -47,45 +67,7 @@ background-size: cover;">
     </header>
     <div class="panel panel-default">
 		<div class="panel-body">
-            <form method="post" action="projection.php" class="form-register">
-               <fieldset>
-    <legend id="tableau">Récupérer les inscrits à une projection :</legend>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="recup_proj">Projection : </label></span><select name="recup_proj" id="recup_proj">
-                <?php 
 
-                
-                $result = recupProjDesc();
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $nom = $row["nom"];
-                    $date = $row["date_projection"];
-                    $date = date("d/m/Y", $date)." à ".date("H\hi", $date);
-                    echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
-                }
-                $result->close();?>
-                    </select>                   </div>
-
-                 <input type="submit" class="button dark_grey" onClick="$(this).button('loading')" data-loading-text="Loading" value="Récupérer les inscrits"/>
-
-                </fieldset>
-            </form>
-
-
-
-            <?php
-            if(!empty($_POST["recup_proj"])){
-                if(recupInscrit($_POST["recup_proj"])){
-                    $replace = array('\"',"\'","'",'"'," ");
-                    $_POST["recup_proj"] = str_replace($replace,'_',$_POST["recup_proj"]);
-                    echo('<a class="button dark_grey" href="../xls/inscrits_'.$_POST["recup_proj"].'.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier "inscrits_'.$_POST["recup_proj"].'.xls"</a>');
-                }
-            
-            }
-                
-
-
-
-            ?>
         </div>
 	</div>
     

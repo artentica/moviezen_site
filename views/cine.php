@@ -25,17 +25,17 @@
 		    $prix = $row["prix"];
 		    $bande_annonce = $row["bande_annonce"];
         }
-
+        $description  = replace_chara($description);
+        $commentaires  = replace_chara($commentaires);
+        $nom_actif  = replace_chara($nom_actif);
         $result->close();
 
-
+    }
         //VAR
 
         $inscrit = 0;
 
-        $description  = replace_chara($description);
-        $commentaires  = replace_chara($commentaires);
-        $nom_actif  = replace_chara($nom_actif);
+
 
 
 
@@ -46,20 +46,53 @@
 
         foreach( $_POST as $cle=>$value )
         {
-            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            if(is_array($_POST[$cle])) {
+                foreach($_POST[$cle] as $cle2 =>$value2){
+                    $_POST[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
         }
 
+        foreach( $_GET as $cle=>$value )
+        {
+            if(is_array($_GET[$cle])) {
+                foreach($_GET[$cle] as $cle2 =>$value2){
+                    $_GET[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
+        }
+
+        $tab = array();
+        $result = recupProj();
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $tab[] = $row["nom"];
+        }
+        $result->close();
 
         if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["classe"]) && !empty($_POST["mail"])){
 
-            $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
-            if($temp == 2) $inscrit = 2;
-            elseif($temp == 1){
-                $_SESSION["select_projection"]=$_POST["select_projection"];
-                $_SESSION["inscrit"]=1;
-                $mail = protect($_POST["mail"]);
-                $_SESSION["mail"]=$mail;
-                $inscrit = 1;
+            if(in_array($_POST["select_projection"],$tab)){
+                $temp = ajoutInscrit($_POST["nom"],$_POST["prenom"],$_POST["mail"],$_POST["classe"],$_POST["select_projection"]);
+                if($temp == 2) $inscrit = 2;
+                elseif($temp == 1){
+                    $_SESSION["select_projection"]=$_POST["select_projection"];
+                    $_SESSION["inscrit"]=1;
+                    $mail = protect($_POST["mail"]);
+                    $_SESSION["mail"]=$mail;
+                    $inscrit = 1;
+                }
+            }
+            else{
+                $inscrit = 3;
             }
         }
 
@@ -117,8 +150,10 @@ background-size: cover;">
 
         <?php
        include '../includes/panel-global.php';
-                echo '<div class="wrapper style1" style="background-image: url(\''.$affiche_back.'\');
+                if(isset($affiche_back)){
+                    echo '<div class="wrapper style1" style="background-image: url(\''.$affiche_back.'\');
                                        background-size: cover;">';
+                }
       ?>
 
 
@@ -126,20 +161,19 @@ background-size: cover;">
 
             <?php
 
-                echo('<h1>'.$nom_actif.' ('.$langue.')</h1>
+                if(isset($description)){
+                   echo('<h1>'.$nom_actif.' ('.$langue.')</h1>
                 <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest<br><br>Prix : '.$prix.'&euro;</h3>
                 <img src="'.$affiche.'" alt="affiche" class="affiche" style=""/>
                 <p class="description">'.$description.'</p>
                 <p class="description">'.$commentaires.'</p>
                 ');
-            }
 
 		echo ('<!-- 16:9 aspect ratio --><div class="my_embed">
 <div class="embed-responsive embed-responsive-16by9">
   <iframe class="embed-responsive-item" src="'.$bande_annonce.'" frameborder="0" allowfullscreen></iframe>
 </div></div>
 ');
-
             /*if(!$_SESSION["inscrit"] && empty($_SESSION["mail"])){*/
 
                 echo('<div class="panel panel-default">
@@ -166,7 +200,7 @@ background-size: cover;">
 
                     </select>
                 </div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="Essai.tarte@orange.fr" class="form-control" required/></div>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="moviezen.brest@isen-bretagne.fr" class="form-control" required/></div>
 
                 <div class="input-group max"><span class="input-group-addon form-label start_span projection"><label for="select_projection">Projection : </label></span><input type="text"  name="select_projection" class="form-control" value="'.$nom_actif.'" readonly/>
 
@@ -183,7 +217,10 @@ background-size: cover;">
                             echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Mr/Mme '.$_POST["nom"].' '.$_POST["prenom"].' ('.$_POST["mail"].') de la classe '.$_POST["classe"].' avez bien été incrit pour le film "'.$_POST["select_projection"].'" du '.$date_projection.' !</div>');
                         }
-
+                        elseif($inscrit == 3){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Merci de ne pas vous amuser à changer la valeur du select !</div>');
+                        }
                         else{
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur est survenue vous n\'avez pas pu être inscrit !</div>');
@@ -236,7 +273,10 @@ background-size: cover;">
                             echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Un mail a déjà été envoyé il y a '.$min.' min et '.$sec.' s, veuillez attendre 5min entre chaque essai. <br> Vérifiez vos spams.</div>');
                         }
-
+                    }
+                else{
+                    echo('Aucune projection n\'a été activée dans le Ciné de l\'Isen !');
+                }
             echo('
             </div>
 

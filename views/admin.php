@@ -2,21 +2,46 @@
     session_start();
     include_once("../includes/fonctions.php");
     include_once("../includes/function_global.php");
+    ini_set('upload_max_filesize', '10M');
+    ini_set('post_max_size', '10M');
+    ini_set('max_input_time', 300);
+    ini_set('max_execution_time', 300);
     connect();
 
     $wrongIDMDP = 0;
     $return = 0;
 
-    //PROTECTION CONTRE XSS ( A VOIR POUR AMELIORER, CA FAIT BEAUCOUP DE REPETITION DE CODE)
+    //PROTECTION CONTRE XSS
         foreach( $_POST as $cle=>$value )
         {
-            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            if(is_array($_POST[$cle])) {
+                foreach($_POST[$cle] as $cle2 =>$value2){
+                    $_POST[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
         }
 
+    foreach( $_GET as $cle=>$value )
+        {
+            if(is_array($_GET[$cle])) {
+                foreach($_GET[$cle] as $cle2 =>$value2){
+                    $_GET[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
+        }
 
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
+        usleep(200000); // Protection contre brute-force, maximum 5 requetes par seconde
         $mdp = protect($_POST["mdp"]);
         $query = $GLOBALS["bdd"]->prepare("SELECT identifiant , mdp FROM admin WHERE identifiant=?");
         $query->bind_param("s",$_POST["id"]);
@@ -131,7 +156,8 @@
                 else{
                     $nom = md5(uniqid(rand(), true));
                     $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                    $resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
+                    $nom = compress($_FILES['projection_affiche']['tmp_name'],$nom,50);
+                    //$resultat = move_uploaded_file($_FILES['projection_affiche']['tmp_name'],$nom);
                 }
             }
             else{
@@ -153,7 +179,8 @@
                 else{
                     $nomback = md5(uniqid(rand(), true));
                     $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                    $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                    $nomback = compress($_FILES['back_affiche']['tmp_name'],$nomback,80);
+                    //$resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
                 }
             }
             else{
@@ -207,7 +234,8 @@
                 else{
                     $nom = md5(uniqid(rand(), true));
                     $nom = "../Images/affiche/".$nom.".".$extension_upload;
-                    $resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
+                    $nom = compress($_FILES['new_projection_affiche']['tmp_name'],$nom,50);
+                    //$resultat = move_uploaded_file($_FILES['new_projection_affiche']['tmp_name'],$nom);
                 }
             }
             else{
@@ -215,21 +243,22 @@
             }
         }
 
-            if(!empty($_FILES["back_affiche"]) && $_FILES["back_affiche"]["name"] != ""){
+            if(!empty($_FILES["new_back_affiche"]) && $_FILES["new_back_affiche"]["name"] != ""){
                 $extensions_valides = array( 'png' );
-                $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
+                $extension_upload = strtolower(  substr(  strrchr($_FILES['new_back_affiche']['name'], '.')  ,1)  );
                 if ( in_array($extension_upload,$extensions_valides) ){
-                    if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['back_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['back_affiche']['name']))
+                    if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['new_back_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['new_back_affiche']['name']))
                     {
                         $modifProj = 7;
                     }
-                    else if(strstr($_FILES['back_affiche']['name'], ".php") || strstr($_FILES['back_affiche']['name'], "php.") || strstr($_FILES['back_affiche']['name'], ".exe") ){
+                    else if(strstr($_FILES['new_back_affiche']['name'], ".php") || strstr($_FILES['new_back_affiche']['name'], "php.") || strstr($_FILES['new_back_affiche']['name'], ".exe") ){
                         $modifProj = 5;
                     }
                     else{
                         $nomback = md5(uniqid(rand(), true));
                         $nomback = "../Images/affiche/".$nomback.".".$extension_upload;
-                        $resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
+                        $nomback = compress($_FILES['new_back_affiche']['tmp_name'],$nomback,80);
+                        //$resultat = move_uploaded_file($_FILES['back_affiche']['tmp_name'],$nomback);
                     }
                 }
                 else{
@@ -278,7 +307,8 @@
                                 else{
                                     $nom = md5(uniqid(rand(), true));
                                     $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                    $resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
+                                    $nom = compress($_FILES['add_lot_photo']['tmp_name'],$nom,70);
+                                    //$resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
                                 }
                             }
                             else{
@@ -296,7 +326,7 @@
     //MODIFICATION DE LOTS
 
                     if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
-
+                        $nom = "";
                         if(!empty($_FILES["modif_lot_photo"]) && $_FILES["modif_lot_photo"]["name"] != ""){
                             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
                             $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
@@ -311,7 +341,8 @@
                                 else{
                                     $nom = md5(uniqid(rand(), true));
                                     $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                    $resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+                                    $nom = compress($_FILES['modif_lot_photo']['tmp_name'],$nom,70);
+                                    //$resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
                                 }
                             }
                             else{
@@ -320,7 +351,7 @@
                         }
 
 
-                        if(isset($nom)){
+                        if(empty($modifie)){
                             if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
                                 $modifie = true;
                             }
@@ -336,6 +367,44 @@
                     if(supprLot($_POST["suppr_lot"])) $supprLot = 1;
                     else $supprLot = 2;
                 }
+
+        if(!empty($_POST["reset_lots"]) && $_SESSION["authentifie"]){
+            resetDispo();
+        }
+
+
+        //GESTION DE LA RENDU DES LOTS
+        if(!empty($_POST["rendu_lot_id"]) && !empty($_POST["rendu_lot_lots"]) && !empty($_POST["rendu_lot_date_emprunt"]) && !empty($_POST["rendu_lot_date_retour"])){
+            renduLot($_POST["rendu_lot_id"],$_POST["rendu_lot_lots"],$_POST["rendu_lot_date_emprunt"],$_POST["rendu_lot_date_retour"]);
+        }
+
+
+        //GESTION DES INSCRITS
+        $tab = array();
+        $result = recupProj();
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $tab[] = $row["nom"];
+        }
+        $result->close();
+
+        if(isset($_POST['desinscrits']) && isset($_POST['projection'])){
+            if(in_array($_POST['projection'],$tab)){
+                if (is_array($_POST['desinscrits'])) {
+                    foreach($_POST['desinscrits'] as $value){
+                        supprInscrit($value,$_POST['projection']);
+                    }
+                    $supprimer = 1;
+                }
+                else{
+                    supprInscrit($_POST['desinscrits'],$_POST['projection']);
+                    $supprimer = 1;
+                }
+            }
+            else{
+                $supprimer = 0;
+            }
+        }
 
 //Nb of admin or 'lot' or projection
 
@@ -383,6 +452,9 @@
         <script src="../js/jquery.datetimepicker.js"></script>
         <script src="../js/bootstrap.js"></script>
         <script src="../js/inputfile.js"></script>
+        <script src="js/jquery.ui.widget.js"></script>
+        <script src="js/jquery.iframe-transport.js"></script>
+        <script src="js/jquery.fileupload.js"></script>
 
     <script>
         $(function(){
@@ -703,7 +775,7 @@ background-size: cover;">
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Bande Annonce : </label></span><input type="text" name="bande_annonce" placeholder="https://www.youtube.com/embed/..." class="form-control" value="'.$bande_annonce.'" required/></div>
 
                             <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="new_projection_affiche">Affiche de la projection: </label></span>--><input type="file" name="new_projection_affiche" id="new_projection_affiche" class="affiche form-control"/></div>
-                            <div class="input-group max center"><input type="file" name="back_affiche" class="back_affiche form-control"/></div>
+                            <div class="input-group max center"><input type="file" name="new_back_affiche" id="new_back_affiche" class="back_affiche form-control"/></div>
                             <input type="submit" class="button dark_grey" value="Sauvegarder les changements"');
                             if($nbrproj == 0)echo " disabled ";
                             echo('/>
@@ -862,7 +934,19 @@ echo '</div></div><div class="panel panel-default">
 
                     echo('
 
-                    <h1>Gestion des lots</h1>
+                    <h1>Gestion des lots</h1>');
+
+                $result = recupLot();
+                $chaine = "Les identifiants de lot ";
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $chaine .= $row["id"];
+                    $chaine .= ", ";
+                }
+                $result->close();
+                $chaine = substr($chaine, 0, -2);
+                echo $chaine." sont déja pris, veuillez indiquer un identifiant différent de ceux-ci.";
+                echo('
                             <form method="post" action="admin.php#ajoute_lot" class="form-register" enctype="multipart/form-data">
                             <fieldset>
     <legend id="ajoute_lot">Ajouter un lot</legend>
@@ -1002,6 +1086,16 @@ echo '</div></div><div class="panel panel-default">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" n\'a pas pu être supprimé !</div>');
                     }
 
+                // RESET A 1 DES LOTS POUR TOUTE L'ANNEE
+                echo('<div>
+                    <form method="post" action="admin.php#reset_lot" class="form-register"><fieldset>
+                    <legend id="reset_lot">Remettre la disponibilité des lots à 1 pour tout le monde</legend>
+                    <p>ATTENTION, CETTE ACTION VA ENTRAINER LE RESET DE TOUT LES EMPRUNTS EFFECTUES POUR LE MATERIEL MOVIEZEN !! N\'EFFECTUEZ CETTE ACTION QUE SI VOUS SAVEZ RÉELLEMENT CE QUE VOUS FAITES !</p>
+                    <input type="hidden" name="reset_lots" id="reset_lots" value="1"/>
+                    <input type="submit" class="button dark_grey" value="Resetter les disponibilités de tout les lots !"/>
+                </fieldset></form></div>');
+
+
             echo '</div></div>EN TRAVAUX EN DESSOUS!!!';
                 //GESTION DES INSCRITS
                 echo '<div class="panel panel-default">
@@ -1020,29 +1114,83 @@ echo '</div></div><div class="panel panel-default">
 
 
 
-                echo '
-
-        <form class="form-register">
-                            <fieldset>
-    <legend id="ajoute_lot">Gestion des inscrits pour les emprunts</legend>
-
-                            </fieldset></form>';
-
-
-
-
-
 
 
                 echo '
 
-        <form class="form-register">
+        <form method="post" action="admin.php#table_emprunt" class="form-register">
                             <fieldset>
-    <legend id="ajoute_lot">Gestion des inscrits pour les projections</legend>
+';
 
-                            </fieldset></form>';
+echo('
+                    <legend id="table_emprunt">Gestion de la rendu des lots</legend>
+                    <table class="table table-striped table-bordered"><thead><th>Empretant</th><th>Lots empruntés</th><th>Date d\'emprunt</th><th>Date de retour</th><th>Marquer l\'emprunt comme rendu</th></thead>');
+                    $result = recupEmpruntLot();
+                    while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                    {
+                        $identifiant = $row["inscrit_mail"];
+                        $lots = $row["concat_lots"];
+                        $date_emprunt = $row["date_emprunt"];
+                        $date_retour = $row["date_retour"];
+                        setlocale (LC_TIME, 'fr_FR','fra');
+                        $date_emprunt_formatée = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                        $date_retour_formatée = utf8_encode(strftime("%d %b %Y",strtotime($date_retour)));
+                        echo('<tr><td>'.$identifiant.'</td><td>'.$lots.'</td><td>'.$date_emprunt_formatée.'</td><td>'.$date_retour_formatée.'</td><td><form method="post" action="admin.php#table_emprunt" class="form-register">
+                            <input type="hidden" name="rendu_lot_id" id="rendu_lot_id" value="'.$identifiant.'" required/>
+                            <input type="hidden" name="rendu_lot_lots" id="rendu_lot_lots" value="'.$lots.'" required/>
+                            <input type="hidden" name="rendu_lot_date_emprunt" id="rendu_lot_date_emprunt" value="'.$date_emprunt.'" required/>
+                            <input type="hidden" name="rendu_lot_date_retour" id="rendu_lot_date_retour" value="'.$date_retour.'" required/>
+                            <input type="submit" class="button dark_grey" value="Cet emprunt a bien été rendu"/>
+
+                        </td></tr>');
+                    }
+                    $result->close();
 
 
+                echo'</table></fieldset></form>
+
+                <form method="post" action="admin.php#recup_inscrits" class="form-register">
+               <fieldset>
+    <legend id="recup_inscrits">Récupérer les inscrits à une projection :</legend>
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="recup_proj">Projection : </label></span><select name="recup_proj" id="recup_proj">';
+
+
+                $result = recupProjDesc();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $nom = $row["nom"];
+                    $date = $row["date_projection"];
+                    $date = date("d/m/Y", $date)." à ".date("H\hi", $date);
+                    echo('<option value="'.$nom.'">'.$nom.' projeté le '.$date.'</option>');
+                }
+                $result->close();
+                    echo'</select></div>
+
+                 <input type="submit" class="button dark_grey" onClick="$(this).button(\'loading\')" data-loading-text="Loading" value="Récupérer les inscrits"/>
+
+                </fieldset>
+            </form>
+
+';
+
+    if(isset($supprimer)){
+            if($supprimer){
+                echo'<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Ces personnes ont bien été désincrites de cette projection !</div>';
+            }
+            else{
+                echo'<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection demandée n\a pas été trouvée dans la base de données !</div>';
+            }
+    }
+            if(!empty($_POST["recup_proj"])){
+                if(recupInscrit($_POST["recup_proj"])){
+                    $replace = array('\"',"\'","'",'"'," ");
+                    $_POST["recup_proj"] = str_replace($replace,'_',$_POST["recup_proj"]);
+                    echo('<a class="button dark_grey" href="../xls/inscrits_'.$_POST["recup_proj"].'.xls"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>  Télécharger le fichier "inscrits_'.$_POST["recup_proj"].'.xls"</a>');
+                }
+
+            }
 
                 echo'</div></div>';
 
@@ -1114,6 +1262,57 @@ echo '</div></div><div class="panel panel-default">
         console.log(to_suppr);
 */
     }
+
+   /* $(function () {
+        $('#projection_affiche').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#back_affiche').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#new_projection_affiche').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#new_back_affiche').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#add_lot_photo').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+        $('#modif_lot_photo').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+    });*/
 </script>
 
 

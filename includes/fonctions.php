@@ -1,7 +1,11 @@
 <?php
 
     require_once('../conf/config.php');
-
+    require_once "Mail.php";
+    ini_set('upload_max_filesize', '10M');
+    ini_set('post_max_size', '10M');
+    ini_set('max_input_time', 300);
+    ini_set('max_execution_time', 300);
     //FONCTION DE CONNEXION A LA BDD
     function connect(){
 		$GLOBALS["bdd"] = new mysqli(HOST, USER, PASSWORD, DATABASE);
@@ -129,12 +133,34 @@
         // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
 
         $headers = 'From: Moviezen Brest <no-reply@moviezen.fr>' . "\r\n";
-        $subject = utf8_encode($subject);
-        $message = utf8_encode($message);
+        $subject = utf8_decode($subject);
+        $message = utf8_decode($message);
 
 
+//        PARTIE ENVOI DE MAIL AVEC PEAR MAIL
 
 
+/*        $from_test = "<no-reply@moviezen.fr>";
+        $to_test = $to;
+        $subject_test = $subject;
+        $message_test = '
+
+       <html><body><p>Vous voulez vous désinscrire pour la séance "'.$seance.'" du '.$date.'.</p>
+       <a href="www.moviezen.fr/views/desinscription.php?codedesin='.$temp.'">Cliquez ici pour vous désinscrire</a></body></html>;
+
+        $host = "localhost";
+        $port = "25";
+        $mime = new Mail_mime();
+        $mime->setHTMLBody($message_test);
+        $message_test = $mime->get();
+        $headers_test = array("From" => $from_test, 'To'=>$to_test,'Subject'=>$subject_test);
+        $smtp = Mail::factory('smtp',
+                             array('host' => $host,
+                                  'port' => $port,
+                                  ));
+        $mail_test = $smtp->send($to_test,$headers_test,$message_test);
+
+*/
 
 
 
@@ -308,11 +334,6 @@
     // Don't touch, magic is at work here !
     function ajoutEmprunt2($nom,$prenom,$tel,$mail, $classe,$lots,$date_emprunt,$date_retour){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, ?, ?, ?)");
-        $nom = protect($nom);
-        $prenom = protect($prenom);
-        $tel = protect($tel);
-        $mail = protect($mail);
-        $classe = protect($classe);
         $query->bind_param('sssss', $nom,$prenom,$tel,$mail,$classe);
         $query->execute();
         $query->close();
@@ -325,7 +346,7 @@
         $date_futur = date("Y-m-d H:m:s");
         $date_futur = new DateTime($date_futur);
         date_sub($date_ajd, date_interval_create_from_date_string('1 day'));
-        date_add($date_futur, date_interval_create_from_date_string('1 month'));
+        date_add($date_futur, date_interval_create_from_date_string('3 months'));
         $date_ajd = $date_ajd->format('Ymd');
         $date_futur = $date_futur->format('Ymd');
         $date_emprunt_test = new DateTime($date_emprunt);
@@ -335,6 +356,7 @@
         $string_lots = "";
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
+                $liste = protect($liste);
                 $string_lots .= $liste." ";
                 $date_emprunt_formatée = date("z", strtotime($date_emprunt));
                 $date_retour_formatée = date("z", strtotime($date_retour));
@@ -406,6 +428,7 @@
         $reponse = "";
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
+                $liste = protect($liste);
                 $date_emprunt_formatée = date("z", strtotime($date_emprunt));
                 $date_retour_formatée = date("z", strtotime($date_retour));
                 $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
@@ -442,7 +465,7 @@
         $date_futur = date("Y-m-d H:m:s");
         $date_futur = new DateTime($date_futur);
         date_sub($date_ajd, date_interval_create_from_date_string('1 day'));
-        date_add($date_futur, date_interval_create_from_date_string('1 month'));
+        date_add($date_futur, date_interval_create_from_date_string('3 months'));
         $date_ajd = $date_ajd->format('Ymd');
         $date_futur = $date_futur->format('Ymd');
         $date_emprunt_test = new DateTime($date_emprunt);
@@ -451,6 +474,7 @@
         $date_retour_test = $date_retour_test->format('Ymd');
         if( $date_ajd < $date_emprunt_test && $date_emprunt_test < $date_retour_test && $date_futur > $date_emprunt_test ){
             foreach($lots as $liste){
+                $liste = protect($liste);
                 $date_emprunt_formatée = date("z", strtotime($date_emprunt));
                 $date_retour_formatée = date("z", strtotime($date_retour));
                 $verif = "SELECT ".$liste." from dispo WHERE jour>=".($date_emprunt_formatée+1)." AND jour<".($date_retour_formatée+1);
@@ -504,7 +528,6 @@
     //FONCTION MODIFICATION D'EMPRUNT (UTILISATEUR)
     // Don't touch, magic is at work here !
     function modifEmprunt($lots,$anciens_lots,$date_emprunt,$date_retour,$mail,$new_date_emprunt,$new_date_retour){
-        $mail = protect($mail);
         $date_emprunt = protect($date_emprunt);
         $date_retour = protect($date_retour);
         $new_date_emprunt = protect($new_date_emprunt);
@@ -636,7 +659,7 @@
             $i++;
         }
         $query->close();
-        return $tab;
+        return $final;
     }
 
     //FONCTION DE RECUPERATION DES EMPRUNTS NON EFFECTUES ENCORES
@@ -645,8 +668,8 @@
         $final = array();
         $i=0;
         $date_ajd = date("Y-m-d H:m:s");
-        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE inscrit_mail=? and date_emprunt>=?  GROUP BY date_emprunt AND date_retour");
-        $query->bind_param('sss',$mail,$date_ajd);
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE inscrit_mail=? and date_emprunt>=?  GROUP BY date_emprunt");
+        $query->bind_param('ss',$mail,$date_ajd);
         $query->execute();
         $query->store_result();
         $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
@@ -702,8 +725,9 @@
         $query->execute();
         $query->store_result();
         $query->bind_result($mail);
-        echo('<table class="table table-striped <!--table-bordered-->"><thead><tr><th>#</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th><th>Désinscription</th></tr></thead>');
+        echo('<table class="table table-striped <!--table-bordered-->"><thead><tr><th>#</th><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th></tr></thead>');
         $table = "<html><body><table><tr><td><b>Nom</b></td><td><b>Prenom</b></td><td><b>Classe</b></td></tr>";
+        $desinscrits = '<legend id="tableau2">Désinscrire des personnes :</legend><form method="POST" action="projection.php#tableau2" class="form-register"><table class="table table-striped <!--table-bordered-->"><thead><tr><th class="col-md-6">Nom</th><th class="col-md-6">Prenom</th><th class="col-md-4">Classe</th><th>Désinscription</th></tr></thead>';
         $i=1;
         while ($query->fetch())
         {
@@ -718,13 +742,15 @@
                 $table = $table."<tr>";
                 $table = $table."<td>".utf8_decode($nom)."</td><td>".utf8_decode($prenom)."</td><td>".utf8_decode($classe)."</td>";
                 $table = $table."</tr>";
-                echo('<tr><td class="inscrit_proj_list">'.$i.'</td><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td><td><form method="POST" action="projection.php#tableau"><input type="hidden" value="'.$mail.'" name="desinscription" id="desinscription"/><input type="submit" value="Désinscrire cette personne"></form></td></tr>');
+                echo('<tr><td class="inscrit_proj_list">'.$i.'</td><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td></tr>');
+                $desinscrits .= '<tr><td class="inscrit_proj_list">'.$nom.'</td><td class="inscrit_proj_list">'.$prenom.'</td><td class="inscrit_proj_list">'.$classe.'</td><td><input id="desinscrits" name="desinscrits[]" value="'.$mail.'" type="checkbox"></td></tr>';
                 $i++;
             }
             $query2->close();
         }
         $query->close();
         $table = $table."</table></body></html>";
+        $desinscrits .= "</table><input type='hidden' value='".$projection."' name='projection' id='projection'/><input type='submit' class=\"button dark_grey\" value='Désinscrire ces personnes'></form>";
         $replace = array("'",'"'," ","/","\\",";");
         $projection = str_replace($replace,'_',$projection);
         $projection = stripslashes($projection);
@@ -738,6 +764,7 @@
         fwrite($myfile,$table,strlen($table));
         fclose($myfile);
         echo('</table>');
+        echo $desinscrits;
         return true;
     }
 
@@ -1010,6 +1037,19 @@
 
     //FONCTIONS GESTION DES LOTS
 
+    //Reset tout les emprunts et toutes les disponibilités, à utiliser avec beaucoup de précaution pour le moment
+    function resetDispo(){
+        $query = "SELECT * from lots ORDER BY id";
+        $result = $GLOBALS["bdd"]->query($query);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $query = $GLOBALS["bdd"]->query("UPDATE dispo SET ".$row["id"]."=1 WHERE 1");
+        }
+        $query = $GLOBALS["bdd"]->query("DELETE FROM inscrits_lots WHERE 1");
+        $result = $GLOBALS["bdd"]->query($query);
+    }
+
+
     //FONCTION D'AJOUT D'UN LOT
     function addLot($identifiant, $composition,$image,$caution){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO lots VALUES(?,?,?,?)");
@@ -1118,7 +1158,7 @@
         $i=1;
         $tab = array();
         $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE date_emprunt>=? AND date_retour<? ORDER BY date_emprunt");
-        $query->bind_param('ii',$date_start,$date_end);
+        $query->bind_param('ss',$date_start,$date_end);
         $query->execute();
         $query->store_result();
         $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
@@ -1200,5 +1240,25 @@
         $query->close();
         return $tab;
     }
+
+    function compress($source, $destination, $quality) {
+
+		$info = getimagesize($source);
+
+        //Si l'image est une JPG, on utilise imagejpg() qui assure une bonne compression
+		if ($info['mime'] == 'image/jpeg' || $info['mime'] == 'image/jpg'){
+			$image = imagecreatefromjpeg($source);
+            imagejpeg($image, $destination, $quality);
+        }
+        //Sinon si l'image est une PNG, on utilise la fonction pngquant qui permet une bonne compression
+		else if ($info['mime'] == 'image/png'){
+            //$image = imagecreatefrompng($source);
+            //imagepng($image, $destination, 0);
+            $min_quality = 60;
+            $compressed_png_content = shell_exec("pngquant --quality=$min_quality-$quality - < ".escapeshellarg($source));
+            file_put_contents($destination,$compressed_png_content);
+        }
+		return $destination;
+	}
 
 ?>

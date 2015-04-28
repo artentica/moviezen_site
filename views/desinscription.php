@@ -4,21 +4,35 @@
     include_once("../includes/function_global.php");
     foreach( $_POST as $cle=>$value )
         {
-            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            if(is_array($_POST[$cle])) {
+                foreach($_POST[$cle] as $cle2 =>$value2){
+                    $_POST[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
         }
 
     foreach( $_GET as $cle=>$value )
         {
-            $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            if(is_array($_GET[$cle])) {
+                foreach($_GET[$cle] as $cle2 =>$value2){
+                    $_GET[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
         }
 
     connect();
     $temp = 0;
     $suppr_insc = 10;
     if(!empty($_GET["codedesin"])){
-        $codesin = $_GET["codedesin"];
-
-        $count = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM desinscription WHERE desinscription_code=?");
+        $query = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) as total FROM desinscription WHERE desinscription_code=?");
 
         $query->bind_param("s",$_GET["codedesin"]);
         $query->execute();
@@ -27,20 +41,14 @@
         $query->fetch();
         $query->close();
 
-        echo $temp;
-
-
         if($temp != 0){
             $tab = array();
             $query = $GLOBALS["bdd"]->prepare("SELECT mail, projection FROM desinscription WHERE desinscription_code=?");
             $query->bind_param("s",$_GET["codedesin"]);
             $query->execute();
             $query->store_result();
-            $query->bind_result($tab["mail"],$tab["projection"]);
-            while($query->fetch()){
-                $mail = $tab["mail"];
-                $projection = $tab["projection"];
-            }
+            $query->bind_result($mail,$projection);
+            $query->fetch();
             $query->close();
 
 
@@ -49,7 +57,8 @@
             $query->execute();
             $query->store_result();
             $query->bind_result($date_release,$date_proj,$affiche,$affiche_back);
-
+            $query->fetch();
+            $query->close();
             $phrase_date =  date("d/m/Y", $date_proj)." à ".date("H\hi", $date_proj);
 
             $suppr_insc = 0;

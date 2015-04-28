@@ -6,7 +6,28 @@
 
     foreach( $_POST as $cle=>$value )
         {
-            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            if(is_array($_POST[$cle])) {
+                foreach($_POST[$cle] as $cle2 =>$value2){
+                    $_POST[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
+        }
+
+    foreach( $_GET as $cle=>$value )
+        {
+            if(is_array($_GET[$cle])) {
+                foreach($_GET[$cle] as $cle2 =>$value2){
+                    $_GET[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+            else{
+                $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+            }
+
         }
 
     if(empty($_SESSION["emprunteur"])){
@@ -213,7 +234,7 @@ background-size: cover;">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="prenom">Prénom : </label></span><input type="text" name="prenom" id="prenom" placeholder="Prénom"  value="');
                 if(isset($_POST["prenom"])){echo $_POST["prenom"];}
                 echo('" class="form-control" required/></div>
-                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="prenom.nom@isen.fr" value="');
+                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="mail">@ ISEN : </label></span><input type="email" name="mail" id="mail" placeholder="prenom.nom@isen-bretagne.fr" value="');
                 if(isset($_POST["mail"])){echo $_POST["mail"];}
                 echo('" class="form-control" required pattern="[a-z0-9._%+-]+@(isen(?:-bretagne)\.fr)$"/></div>
                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="tel">Tel. : </label></span><input type="tel" name="tel" id="tel" placeholder="0612345678" class="form-control" value="');
@@ -367,10 +388,9 @@ background-size: cover;">
                     $date_emprunt = $ligne["date_emprunt"];
                     $date_retour = $ligne["date_retour"];
                     setlocale (LC_TIME, 'fr_FR','fra');
-                    $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                    $new_date_emprunt = utf8_encode(strftime("%d %B %Y",strtotime($date_emprunt)));
                     echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
                 }
-                $result->close();
                 echo('</select></div>
                     <input type="submit" class="button dark_grey" value="Modifier cet emprunt"/>
                 </form>
@@ -381,7 +401,7 @@ background-size: cover;">
                 <div class="input-group max center"><span class="input-group-addon form-label start_span projection"><label for="modification_lots">Lots : </label></span><select name="modification_lots[]" id="modification_lots" multiple="multiple">');
 
                 $result = recupLot();
-                $result2 = recupEmpruntDate($_SESSION["mail"],$_POST["modif_lots"]);
+                $result2 = recupEmpruntDate($_SESSION["mail"],$date);
                 $anciens_lots = "";
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
@@ -396,7 +416,6 @@ background-size: cover;">
                     }
                 }
                 $result->close();
-
 
 
 
@@ -427,10 +446,9 @@ background-size: cover;">
                     $date_emprunt = $ligne["date_emprunt"];
                     $date_retour = $ligne["date_retour"];
                     setlocale (LC_TIME, 'fr_FR','fra');
-                    $new_date_emprunt = utf8_encode(strftime("%d %b %Y",strtotime($date_emprunt)));
+                    $new_date_emprunt = utf8_encode(strftime("%d %B %Y",strtotime($date_emprunt)));
                     echo('<option value="'.$date_emprunt.'/'.$date_retour.'">Emprunt du '.$new_date_emprunt.'</option>');
                 }
-                $result->close();
                 echo('</select></div>
                 <input type="submit" class="button dark_grey" value="Annuler cet emprunt"/>
             </form>
