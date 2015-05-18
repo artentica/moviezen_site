@@ -80,6 +80,7 @@
     $addProjection = 0;
     $modifProj = 0;
     $activeProj = 0;
+    $finAnneeProj = 0;
     $supprProj = 0;
     $ajoutLot = 0;
     $supprLot = 0;
@@ -278,6 +279,12 @@
                     if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
                         if(activateProj($_POST["activ_proj"])) $activeProj = 1;
                         else $activeProj = 2;
+                    }
+
+    //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN
+                    if(!empty($_POST["fin_anne_proj"]) && $_SESSION["authentifie"]){
+                        if(finAnneeProj($_POST["fin_anne_proj"])) $finAnneeProj = 1;
+                        else $finAnneeProj = 2;
                     }
 
     //SUPPRESSION DE PROJECTION
@@ -858,6 +865,39 @@ background-size: cover;">
                         }
 
 
+                    echo('
+
+
+                        <form method="post" action="admin.php#fin_annee_proj" class="form-register">
+                        <fieldset>
+    <legend id="fin_annee_proj">Déterminer la projection de fin d\'année</legend>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Projection : </label></span><select name="fin_anne_proj" id="fin_anne_proj">
+                                ');
+                            $result = recupProjDesc();
+                            while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                            {
+                                $nom = $row["nom"];
+                                $date = $row["date_projection"];
+                                echo('<option value="'.$nom.'">'.$nom.' projeté le '.date("d/m/Y", $date).' à '.date("H\hi", $date).'</option>');
+                            }
+                            $result->close();
+                    echo('</select></div>
+                            <input type="submit" class="button dark_grey" value="Faire de cette projection la projection de fin de cette année"');
+                            if($nbrproj == 0)echo " disabled ";
+                            echo('/>
+
+                        </fieldset></form>');
+
+                    //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN
+
+                        if($finAnneeProj == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["fin_anne_proj"].'" a bien été activée comme étant projection de fin d\'année dans le Ciné de l\'ISEN</div>');
+                        }
+                        elseif($finAnneeProj == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["fin_anne_proj"].'" n\'a pu être activée comme projection de fin d\'année</div>');
+                        }
 
 
                     echo('

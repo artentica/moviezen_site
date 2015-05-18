@@ -5,10 +5,6 @@
 
     connect();
 
-
-
-
-
     $nom_actif = "";
     $result = recupProjActive();
     if($result->num_rows){
@@ -24,6 +20,7 @@
 		    $langue= $row["langue"];
 		    $prix = $row["prix"];
 		    $bande_annonce = $row["bande_annonce"];
+            $fin_annee = $row["fin_annee"];
         }
         $description  = replace_chara($description);
         $commentaires  = replace_chara($commentaires);
@@ -160,6 +157,27 @@ background-size: cover;">
 		<div class="panel-body">
 
             <?php
+        //Section a venir pour les courts-métrages pour la soirée de fin d'année annuelle
+        //PENSER A AJOUTER UNE ACTIVATION DANS LE MENU ADMINISTRATION AFIN DE NE PAS RENCONTRER D'ERREURS
+        if(isset($fin_annee)){
+            if($fin_annee){
+                echo('<div id="courts">
+                ');
+                $result = recupCourts();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $titre_court = $row["titre"];
+                    $description_court = $row["description"];
+                    $video_court = $row["video"];
+                    $affiche_court = $row["affiche"];
+                    echo('<input type="checkbox" id="'.$titre_court.'" name="'.$titre_court.'" value="1" class="display_none"><span style=\'background-image:url("'.$affiche_court.'");\'><label for="'.$titre_court.'"><h2>'.$titre_court.'</h2><span class="desc_video"><p>'.$description_court.'</p><iframe width="80%" height="60%" src="'.$video_court.'" frameborder="0" allowfullscreen></iframe></span></label></span>');
+                }
+                $result->close();
+                echo('</div>');
+            }
+        }
+
+        //Fin de la section des courts-métrages
 
                 if(isset($description)){
                    echo('<h1>'.$nom_actif.' ('.$langue.')</h1>
