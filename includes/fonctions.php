@@ -803,6 +803,14 @@
         return true;
     }
 
+    //FONCTION PERMETTANT D'ACTIVER UNE PROJECTION COMME PROJECTION DE FIN D'ANNEE (PROVOQUE LE CHARGEMENT DES COURTS-METRAGES ASSOCIES QUAND LA PROJECTION EST ACTIVEE)
+    function resetFinAnneeProj(){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET fin_annee='0' WHERE fin_annee='1'");
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
     //FONCTION RECUPERANT LA PROJECTION ACTIVE ACTUELLE
     function recupProjActive(){
         $query ="SELECT * FROM projections WHERE active='1'";

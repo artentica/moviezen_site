@@ -81,6 +81,7 @@
     $modifProj = 0;
     $activeProj = 0;
     $finAnneeProj = 0;
+    $resetfinAnneeProj = 0;
     $supprProj = 0;
     $ajoutLot = 0;
     $supprLot = 0;
@@ -281,10 +282,17 @@
                         else $activeProj = 2;
                     }
 
-    //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN
+    //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN)
                     if(!empty($_POST["fin_anne_proj"]) && $_SESSION["authentifie"]){
                         if(finAnneeProj($_POST["fin_anne_proj"])) $finAnneeProj = 1;
                         else $finAnneeProj = 2;
+                    }
+
+    //RESET DE PROJECTION DE FIN D'ANNEE (Fait en sorte qu'aucun film ne soit considéré comme étant film de fin d'année)
+                    if(!empty($_POST["reset_fin_anne_proj"]) && $_SESSION["authentifie"]){
+
+                        if(resetFinAnneeProj()) $resetfinAnneeProj = 1;
+                        else $resetfinAnneeProj = 2;
                     }
 
     //SUPPRESSION DE PROJECTION
@@ -899,6 +907,27 @@ background-size: cover;">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["fin_anne_proj"].'" n\'a pu être activée comme projection de fin d\'année</div>');
                         }
 
+
+                    echo('
+
+
+                        <form method="post" action="admin.php#res_fin_annee_proj" class="form-register">
+                        <fieldset>
+    <legend id="res_fin_annee_proj">Effectuer un reset de la projection de fin d\'année</legend>
+                            <input type="hidden" value="1" id="reset_fin_anne_proj" name="reset_fin_anne_proj"></input>
+                            <input type="submit" class="button dark_grey" value="Resetter tout les films comme n\'étant pas des films de fin d\'année"/>
+                        </fieldset></form>');
+
+                    //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN
+
+                        if($resetfinAnneeProj == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Toutes les projections ont bien été resettées comme n\'étant pas des projections de fin d\'année</div>');
+                        }
+                        elseif($resetfinAnneeProj == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Les projections n\'ont pas pu être resettées !</div>');
+                        }
 
                     echo('
 
