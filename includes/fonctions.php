@@ -840,12 +840,43 @@
         return $GLOBALS["bdd"]->query($query);
     }
 
+    function recupCourtsProj($nom_projection){
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM `courts` WHERE projection_liee=?");
+        $query->bind_param('s',$projection_liee);
+        $query->execute();
+        return $query;
+    }
+
     function activateCourts($nom){
         $query = "UPDATE projections SET fin_annee='0' WHERE fin_annee='1'";
         $result = $GLOBALS["bdd"]->query($query);
         $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET fin_annee='1' WHERE nom='".$nom."'");
         $query->execute();
         $query->close();
+    }
+
+    function addCourt($titre,$description,$projection_liee,$video,$affiche,$annee){
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO `courts`(`titre`, `description`, `projection_liee`, `video`, `affiche`, `annee`) VALUES (?,?,?,?,?,?)");
+        $query->bind_param('ssssss',$titre,$description,$projection_liee,$video,$affiche,$annee);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    function supprCourt($titre){
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM `courts` WHERE titre=?");
+        $query->bind_param('s',$titre);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    function supprCourtProj($nomProjection){
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM `courts` WHERE projection_liee=?");
+        $query->bind_param('s',$nomProjection);
+        $query->execute();
+        $query->close();
+        return true;
     }
 
 
