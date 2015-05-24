@@ -78,8 +78,12 @@
     $changeResp = 0;
     $supprAdmin = 0;
     $addProjection = 0;
+    $addCourt = 0;
+    $supprCourtProjection = 0;
     $modifProj = 0;
     $activeProj = 0;
+    $finAnneeProj = 0;
+    $resetfinAnneeProj = 0;
     $supprProj = 0;
     $ajoutLot = 0;
     $supprLot = 0;
@@ -280,11 +284,97 @@
                         else $activeProj = 2;
                     }
 
+    //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN)
+                    if(!empty($_POST["fin_anne_proj"]) && $_SESSION["authentifie"]){
+                        if(finAnneeProj($_POST["fin_anne_proj"])) $finAnneeProj = 1;
+                        else $finAnneeProj = 2;
+                    }
+
+    //RESET DE PROJECTION DE FIN D'ANNEE (Fait en sorte qu'aucun film ne soit considéré comme étant film de fin d'année)
+                    if(!empty($_POST["reset_fin_anne_proj"]) && $_SESSION["authentifie"]){
+
+                        if(resetFinAnneeProj()) $resetfinAnneeProj = 1;
+                        else $resetfinAnneeProj = 2;
+                    }
+
     //SUPPRESSION DE PROJECTION
                     if(!empty($_POST["suppr_proj"]) &&  $_SESSION["authentifie"]){
                         if(supprProj($_POST["suppr_proj"])) $supprProj = 1;
                         else $supprProj = 2;
                     }
+
+
+
+
+    //AJOUT DE COURTS POUR LA PROJECTION DE FIN D'ANNEE
+    // RETOURS :
+    // $addCourt =1 ==> L'upload et la requête se sont bien passés
+    // $addCourt =2  ==> Erreur durant les requêtes SQL
+    // $addCourt =3 ==> L'affiche possède une extension non autorisée
+    // $addCourt =4 ==> Le nom de l'affiche contient des retours à la ligne ou des caractères non autorisés
+    // $addCourt =5 ==> Le nom de l'affiche ou de l'affiche de FOND contient .php, php. ou .exe, donc tentative d'upload malveillante
+    if(!empty($_POST["court_titre"]) && !empty($_POST["court_description"]) && !empty($_POST["court_projection"]) && $_SESSION["authentifie"]){
+        if(empty($_POST["court_video"])){
+            $video = "";
+        }
+        else{
+            $video = $_POST["court_video"];
+        }
+        if(empty($_POST["court_annee"])){
+            $annee = "";
+        }
+        else{
+            $annee = $_POST["court_annee"];
+        }
+        if(!empty($_FILES["court_affiche"]) && $_FILES["court_affiche"]["name"] != ""){
+            $extensions_valides = array( 'jpg' , 'jpeg' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['court_affiche']['name'], '.')  ,1)  );
+            if ( in_array($extension_upload,$extensions_valides) ){
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['court_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['court_affiche']['name']))
+                {
+                    $addCourt =4;
+                }
+                else if(strstr($_FILES['court_affiche']['name'], ".php") || strstr($_FILES['court_affiche']['name'], "php.") || strstr($_FILES['court_affiche']['name'], ".exe") ){
+                    $addCourt =5;
+                }
+                else{
+                    $nom = md5(uniqid(rand(), true));
+                    $nom = "../Images/affiche/".$nom.".".$extension_upload;
+                    $nom = compress($_FILES['court_affiche']['tmp_name'],$nom,50);
+                    //$resultat = move_uploaded_file($_FILES['court_affiche']['tmp_name'],$nom);
+                }
+            }
+            else{
+                $addCourt =3;
+            }
+        }
+        if(isset($nom)){
+
+            if(addCourt($_POST["court_titre"],$_POST["court_description"],$_POST["court_projection"],$video,$nom,$annee))  $addCourt =1;
+            else $addCourt = 2;
+        }
+    }
+
+
+
+    //SUPPRESSION D'UN COURT PARTICULIER LIE A UNE PROJECTION PARTICULIERE
+    if(!empty($_POST["del_court_nom"])){
+        supprCourt($_POST["del_court_nom"]);
+    }
+
+    //SUPPRESSION DE TOUT LES COURTS LIES A UNE PROTECTION
+    if(!empty($_POST["del_court_projection"])){
+        if(supprCourtProj($_POST["del_court_projection"])){
+            $supprCourtProjection = 1;
+        }
+        else{
+            $supprCourtProjection = 2;
+        }
+    }
+
+
+
+
      //AJOUT DE LOTS
     // RETOURS :
     // $ajoutLot =1 ==> L'upload et la requête se sont bien passés
@@ -858,7 +948,61 @@ background-size: cover;">
                         }
 
 
+                    echo('
 
+
+                        <form method="post" action="admin.php#fin_annee_proj" class="form-register">
+                        <fieldset>
+    <legend id="fin_annee_proj">Déterminer la projection de fin d\'année</legend>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Projection : </label></span><select name="fin_anne_proj" id="fin_anne_proj">
+                                ');
+                            $result = recupProjDesc();
+                            while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                            {
+                                $nom = $row["nom"];
+                                $date = $row["date_projection"];
+                                echo('<option value="'.$nom.'">'.$nom.' projeté le '.date("d/m/Y", $date).' à '.date("H\hi", $date).'</option>');
+                            }
+                            $result->close();
+                    echo('</select></div>
+                            <input type="submit" class="button dark_grey" value="Faire de cette projection la projection de fin de cette année"');
+                            if($nbrproj == 0)echo " disabled ";
+                            echo('/>
+
+                        </fieldset></form>');
+
+                    //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN
+
+                        if($finAnneeProj == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["fin_anne_proj"].'" a bien été activée comme étant projection de fin d\'année dans le Ciné de l\'ISEN</div>');
+                        }
+                        elseif($finAnneeProj == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>La projection: "'.$_POST["fin_anne_proj"].'" n\'a pu être activée comme projection de fin d\'année</div>');
+                        }
+
+
+                    echo('
+
+
+                        <form method="post" action="admin.php#res_fin_annee_proj" class="form-register">
+                        <fieldset>
+    <legend id="res_fin_annee_proj">Effectuer un reset de la projection de fin d\'année</legend>
+                            <input type="hidden" value="1" id="reset_fin_anne_proj" name="reset_fin_anne_proj"></input>
+                            <input type="submit" class="button dark_grey" value="Resetter tout les films comme n\'étant pas des films de fin d\'année"/>
+                        </fieldset></form>');
+
+                    //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN
+
+                        if($resetfinAnneeProj == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Toutes les projections ont bien été resettées comme n\'étant pas des projections de fin d\'année</div>');
+                        }
+                        elseif($resetfinAnneeProj == 2){
+                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Les projections n\'ont pas pu être resettées !</div>');
+                        }
 
                     echo('
 
@@ -923,9 +1067,91 @@ background-size: cover;">
 
 echo '</div></div><div class="panel panel-default">
 		<div class="panel-body">';
+                    //GESTION DES COURTS METRAGES
 
+        echo('<h1>Gestion des courts-métrages</h1>
 
+        <form method="post" action="admin.php#add_court" class="form-register" enctype="multipart/form-data">
+                        <fieldset>
+    <legend id="add_court">Ajouter un court-métrage liée à une projection de fin d\'année</legend>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="court_titre">Titre du court-métrage : </label></span><input name="court_titre" id="court_titre" type="text" placeholder="Titre" class="form-control" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="court_description">Titre du court-métrage : </label></span><input name="court_description" id="court_description" type="text" placeholder="Synopsys" class="form-control" required/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="court_video">Lien URL vers le court-métrage : </label></span><input name="court_video" id="court_video" type="text" placeholder="URL embed de la video" class="form-control"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="court_annee">Année de sortie du court-métrage : </label></span><input name="court_annee" id="court_annee" type="number" min="2005" max="3500" placeholder="2015" class="form-control"/></div>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="court_projection">Lier ce court-métrage à la Projection : </label></span><select name="court_projection" id="court_projection">');
+                    $result = recupProjDesc();
+                    while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                    {
+                        $nom = $row["nom"];
+                        $date = $row["date_projection"];
+                        echo('<option value="'.$nom.'">'.$nom.' projeté le '.date("d/m/Y", $date).' à '.date("H\hi", $date).'</option>');
+                    }
+                    $result->close();
+                    echo('</select></div>
+                    <div class="input-group max center"><!--<span class="input-group-addon form-label"><label for="court_affiche">Affiche du court-métrage : </label></span>--><input type="file" name="court_affiche" id="court_affiche" class="affiche form-control"/></div>
+                            <input type="submit" class="button dark_grey" value="Ajouter ce court-métrage à la base de donnée"/>
+                        </fieldset></form>');
 
+                //FEEDBACK DE L'AJOUT DE COURT-METRAGE
+                     if($addCourt == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le court métrage  "'.$_POST["court_titre"].'" a bien été ajouté à la base de données !</div>');
+                        }
+                    elseif($addCourt == 2){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite lors de l\'ajout du court métrage "'.$_POST["court_titre"].' à la base de données !"</div>');
+                    }
+                    elseif($addCourt == 3){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Votre affiche contient une extension non autorisée ! Image au format jpg ou jpeg uniquement !</div>');
+                    }
+                    elseif($addCourt == 4){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le nom de votre affiche contient des retours à la ligne ou des caractères non autorisés !</div>');
+                    }
+                    elseif($addCourt == 5){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Vous avez tenté d\'uploader un fichier exécutable ! Ne recommencez pas !</div>');
+                    }
+
+                //SUPPRESSION D'UN COURT METRAGE LIE A UN FILM
+
+                // EN CONSTRUCTION POUR LE MOMENT
+
+                //SUPPRESSION DES COURTS METRAGES LIES A UN FILM
+
+                echo('<form method="post" action="admin.php#delete_courts" class="form-register">
+                        <fieldset>
+    <legend id="delete_courts">Effacer tous les court-métrages en lien avec une projection</legend>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="del_court_projection">Projection : </label></span><select name="del_court_projection" id="del_court_projection">
+                                ');
+                            $result = recupProjDesc();
+                            while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                            {
+                                $nom = $row["nom"];
+                                $date = $row["date_projection"];
+                                echo('<option value="'.$nom.'">'.$nom.' projeté le '.date("d/m/Y", $date).' à '.date("H\hi", $date).'</option>');
+                            }
+                            $result->close();
+                    echo('</select></div>
+                            <input type="submit" class="button dark_grey" value="Effacer tous les court-métrages en lien avec cette projection"');
+                            if($nbrproj == 0)echo " disabled ";
+                            echo('/>
+
+                        </fieldset></form>');
+
+                if($supprCourtProjection == 1){
+                            echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Les court-métrages en rapport avec la projection: "'.$_POST["del_court_projection"].'" ont bien été modifiés !</div>');
+                        }
+                    elseif($supprCourtProjection == 2){
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite lors de la suppression de la projection: "'.$_POST["del_court_projection"].'"</div>');
+                    }
+
+                echo('
+                </div></div><div class="panel panel-default">
+		<div class="panel-body">');
                     //GESTION DES LOTS
 
 

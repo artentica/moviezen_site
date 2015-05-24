@@ -37,21 +37,6 @@
         return $texte;
     }
 
-
-
-    //FONCTION DE RECUPERATION DES PROMOS DISPONIBLES
-    function recupPromo(){
-        $query = "SELECT * from promotion ORDER BY id";
-        return $GLOBALS["bdd"]->query($query);
-    }
-
-
-    //FONCTION DE PROTECTION DES UPLOADS A FINIR
-    function uploadProtege(){
-
-    }
-
-
 //################################################################################################################################################################
 
     //SEND MAILS
@@ -806,12 +791,93 @@
         return true;
     }
 
+    //FONCTION PERMETTANT D'ACTIVER UNE PROJECTION COMME PROJECTION DE FIN D'ANNEE (PROVOQUE LE CHARGEMENT DES COURTS-METRAGES ASSOCIES QUAND LA PROJECTION EST ACTIVEE)
+    function finAnneeProj($nom){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET fin_annee='0' WHERE fin_annee='1'");
+        $query->execute();
+        $query->close();
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET fin_annee='1' WHERE nom=?");
+        $query->bind_param('s',$nom);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    //FONCTION PERMETTANT D'ACTIVER UNE PROJECTION COMME PROJECTION DE FIN D'ANNEE (PROVOQUE LE CHARGEMENT DES COURTS-METRAGES ASSOCIES QUAND LA PROJECTION EST ACTIVEE)
+    function resetFinAnneeProj(){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET fin_annee='0' WHERE fin_annee='1'");
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
     //FONCTION RECUPERANT LA PROJECTION ACTIVE ACTUELLE
     function recupProjActive(){
         $query ="SELECT * FROM projections WHERE active='1'";
         return $GLOBALS["bdd"]->query($query);
     }
 
+    //FONCTION DE RECUPERATION DES PROMOS DISPONIBLES
+    function recupPromo(){
+        $query = "SELECT * from promotion ORDER BY id";
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+
+    //FONCTION DE RECUPERATION DES COURTS METRAGES POUR LA SOIREE DE FIN D'ANNEE
+    function recupCourts(){
+        $nom = "";
+        $query = "SELECT nom from projections WHERE fin_annee = '1'";
+        $result = $GLOBALS["bdd"]->query($query);
+        if($result->num_rows){
+            while ($row = $result->fetch_array(MYSQLI_ASSOC))
+            {
+                $nom = $row["nom"];
+            }
+        $result->close();
+        }
+        $query = "SELECT * from courts WHERE projection_liee='".$nom."'";
+        return $GLOBALS["bdd"]->query($query);
+    }
+
+    function recupCourtsProj($nom_projection){
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM `courts` WHERE projection_liee=?");
+        $query->bind_param('s',$projection_liee);
+        $query->execute();
+        return $query;
+    }
+
+    function activateCourts($nom){
+        $query = "UPDATE projections SET fin_annee='0' WHERE fin_annee='1'";
+        $result = $GLOBALS["bdd"]->query($query);
+        $query = $GLOBALS["bdd"]->prepare("UPDATE projections SET fin_annee='1' WHERE nom='".$nom."'");
+        $query->execute();
+        $query->close();
+    }
+
+    function addCourt($titre,$description,$projection_liee,$video,$affiche,$annee){
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO `courts`(`titre`, `description`, `projection_liee`, `video`, `affiche`, `annee`) VALUES (?,?,?,?,?,?)");
+        $query->bind_param('ssssss',$titre,$description,$projection_liee,$video,$affiche,$annee);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    function supprCourt($titre){
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM `courts` WHERE titre=?");
+        $query->bind_param('s',$titre);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    function supprCourtProj($nomProjection){
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM `courts` WHERE projection_liee=?");
+        $query->bind_param('s',$nomProjection);
+        $query->execute();
+        $query->close();
+        return true;
+    }
 
 
     //FONCTION D'AJOUT D'UNE PROJECTION A LA BDD
