@@ -65,6 +65,11 @@ li{
     max-width: 100%;
 }
 
+label{
+    display: block;
+    min-width: 100%;
+}
+
 span label{
     max-width: 100%;
     min-width: 100%;

@@ -168,7 +168,7 @@ background-size: cover;">
                     $description_court = $row["description"];
                     $video_court = $row["video"];
                     $affiche_court = $row["affiche"];
-                    echo('<div class="panel-body"><div class="courts"><input type="checkbox" id="'.$titre_court.'" name="'.$titre_court.'" value="1" class="display_none"><span style=\'background-image:url("'.$affiche_court.'");\'><label for="'.$titre_court.'"><h2>'.$titre_court.'</h2><span class="desc_video"><p>'.$description_court.'</p><iframe width="80%" height="60%" src="'.$video_court.'" frameborder="0" allowfullscreen></iframe></span></label></span></div></div>');
+                    echo('<label for="'.$titre_court.'"><div class="panel-body"><div class="courts"><input type="checkbox" id="'.$titre_court.'" name="'.$titre_court.'" value="1" class="display_none"><span style=\'background-image:url("'.$affiche_court.'");\'><h2>'.$titre_court.'</h2><span class="desc_video"><p>'.$description_court.'</p><iframe width="80%" height="60%" src="'.$video_court.'" frameborder="0" allowfullscreen></iframe></span></span></div></div></label>');
                 }
                 $result->close();
             }
