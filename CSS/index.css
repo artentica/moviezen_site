@@ -41,7 +41,7 @@ li{
 }
 
 
-#courts{
+.courts{
     display : flex;
     background-color: darkgray;
     flex-wrap: wrap;
