@@ -164,7 +164,7 @@ background-size: cover;">
                <h2>Test</h2>
 
          </div>
-         <div class="tolotest">
+         <div class="desc_video collapse">
                   <p>fsdfsdfvsfvsdvds</p>
             </div>
       </div>
@@ -179,13 +179,19 @@ background-size: cover;">
 <script>
     $( ".courts" ).click(function() {
         if($(this).attr("data-collapse")=="1"){
-              $(this).children("h2").transition({ y: '100px' });
+              $(this).children("h2").transition({ y: '100px' },750 );
               $(this).attr("data-collapse","0");
+            $( this ).animate({
+    height: "200px",
+  }, 750);
         }else{
-             $(this).children("h2").transition({ y: '15px' });
+             $(this).children("h2").transition({ y: '15px'},750 );
              $(this).attr("data-collapse","1");
+            $( this ).animate({
+    height: "100px",
+  }, 750);
         }
-        $(".tolotest").collapse('toggle');
+        $( this ).parent().children(".desc_video").collapse('toggle');
 
 });
 </script>
