@@ -135,6 +135,8 @@
         include '../includes/include_on_all_page.php';
     ?>
     <script src="../js/bootstrap.js"></script>
+        <script src="../js/transit.js"></script>
+
 
 </head>
 <body>
@@ -156,9 +158,43 @@ background-size: cover;">
 
 
 
+      <div class="panel-body">
+         <div class="courts" data-collapse="0" style="background-image:url(&quot;../Images/Brotherhood.jpg&quot;);">
+
+               <h2>Test</h2>
+
+         </div>
+         <div class="tolotest">
+                  <p>fsdfsdfvsfvsdvds</p>
+            </div>
+      </div>
+      <div class="panel-body">
+         <div class="courts" data-collapse="0" style="background-image:url(&quot;../Images/url.jpg&quot;);">
+               <h2>Baoualag ar brezel</h2>
+               <span class="desc_video">
+                  <p>dsqdqsdqsdqcqscqcqscqcsq</p>
+            </span>
+         </div>
+      </div>
+<script>
+    $( ".courts" ).click(function() {
+        if($(this).attr("data-collapse")=="1"){
+              $(this).children("h2").transition({ y: '100px' });
+              $(this).attr("data-collapse","0");
+        }else{
+             $(this).children("h2").transition({ y: '15px' });
+             $(this).attr("data-collapse","1");
+        }
+        $(".tolotest").collapse('toggle');
+
+});
+</script>
+
             <?php
         //Section a venir pour les courts-métrages pour la soirée de fin d'année annuelle
         //PENSER A AJOUTER UNE ACTIVATION DANS LE MENU ADMINISTRATION AFIN DE NE PAS RENCONTRER D'ERREURS
+
+
         if(isset($fin_annee)){
             if($fin_annee){
                 $result = recupCourts();
@@ -298,14 +334,6 @@ background-size: cover;">
             </div>
 
             ');
-echo ('
-<div style="margin:auto;width:80%;height:200px;background-color:red"></div>
-
-
-
-
-
-');
            /* }
 
             else{
