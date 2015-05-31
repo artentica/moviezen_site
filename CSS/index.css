@@ -41,15 +41,21 @@ li{
 }
 
 .courts h2{
-    vertical-align: middle;
+    color: #2C363D;
   transform: translateY(100px);
 }
 
+.courts:hover{
+     background-color: #545454;
+    transition: background 0.5s;
+}
 .courts{
     cursor: pointer;
     height: 200px;
     display : flex;
-    background-color: darkgray;
+      background-color: rgba(171, 171, 171, 0.93);
+  background-image: -moz-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.35)), url('images/bg02.png');
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.35)), url('images/bg02.png');
 /*
     flex-wrap: wrap;
 */
@@ -69,7 +75,7 @@ li{
 }
 
 .desc_video .img_film{
-    float: left;
+    float: right;
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -78,10 +84,20 @@ li{
 }
 .desc_video p{
     width: 66%;
-    float: right;
+      margin-top: 20px;
+  margin-bottom: 15px;
+    float: left;
 }
 .desc_video{
-  background-color: #9ACD32;
+    border-right-color: #DDD;
+  border-right-style: groove;
+  border-right-width: 1px;
+  border-bottom-color: #DDD;
+  border-bottom-style: groove;
+  border-bottom-width: 1px;
+  border-left-color: #DDD;
+  border-left-style: groove;
+  border-left-width: 1px;
   min-width: 86%;
   margin: auto;
   max-width: 88%;
