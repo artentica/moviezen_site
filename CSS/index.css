@@ -40,11 +40,22 @@ li{
     padding: auto;
 }
 
+.courts h2{
+    vertical-align: middle;
+  transform: translateY(100px);
+}
 
 .courts{
+    cursor: pointer;
+    height: 200px;
     display : flex;
     background-color: darkgray;
+/*
     flex-wrap: wrap;
+*/
+      background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
     justify-content: center;
     border-radius: 15px;
     margin-top: -25px;
@@ -52,7 +63,7 @@ li{
     max-width: 92%;
     margin-left : auto;
     margin-right: auto;
-    min-height: 200px;
+    min-height: 100px;
 }
 
 .display_none{
@@ -60,7 +71,9 @@ li{
 }
 
 .desc_video{
+/*
     display: none;
+*/
     min-width: 100%;
     max-width: 100%;
 }

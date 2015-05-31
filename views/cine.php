@@ -135,6 +135,8 @@
         include '../includes/include_on_all_page.php';
     ?>
     <script src="../js/bootstrap.js"></script>
+        <script src="../js/transit.js"></script>
+
 
 </head>
 <body>
@@ -156,8 +158,47 @@ background-size: cover;">
 
 
 
+      <div class="panel-body">
+         <div class="courts" data-collapse="0" style="background-image:url(&quot;../Images/Brotherhood.jpg&quot;);">
+
+               <h2>Test</h2>
+
+         </div>
+         <div class="desc_video collapse">
+                  <p>fsdfsdfvsfvsdvds</p>
+            </div>
+      </div>
+      <div class="panel-body">
+         <div class="courts" data-collapse="0" style="background-image:url(&quot;../Images/url.jpg&quot;);">
+               <h2>Baoualag ar brezel</h2>
+               <span class="desc_video">
+                  <p>dsqdqsdqsdqcqscqcqscqcsq</p>
+            </span>
+         </div>
+      </div>
+<script>
+    $( ".courts" ).click(function() {
+        if($(this).attr("data-collapse")=="1"){
+              $(this).children("h2").transition({ y: '100px' },750 );
+              $(this).attr("data-collapse","0");
+            $( this ).animate({
+    height: "200px",
+  }, 750);
+        }else{
+             $(this).children("h2").transition({ y: '15px'},750 );
+             $(this).attr("data-collapse","1");
+            $( this ).animate({
+    height: "100px",
+  }, 750);
+        }
+        $( this ).parent().children(".desc_video").collapse('toggle');
+
+});
+</script>
+
             <?php
-        //Section a venir pour les courts-métrages pour la soirée de fin d'année annuelle
+        //Section COURT-METRAGES
+
         if(isset($fin_annee)){
             if($fin_annee){
                 $result = recupCourts();
@@ -298,14 +339,6 @@ background-size: cover;">
             </div>
 
             ');
-echo ('
-<div style="margin:auto;width:80%;height:200px;background-color:red"></div>
-
-
-
-
-
-');
            /* }
 
             else{
