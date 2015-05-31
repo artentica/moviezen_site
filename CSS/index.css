@@ -68,6 +68,18 @@ li{
     display: none;
 }
 
+.desc_video .img_film{
+    float: left;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 33%;
+  height: 100%;
+}
+.desc_video p{
+    width: 66%;
+    float: right;
+}
 .desc_video{
   background-color: #9ACD32;
   min-width: 86%;
@@ -108,3 +120,14 @@ input[type="checkbox"]:checked + div{
     transition: all 1.6s ease-out;
     z-index: 100;
 }
+
+.clearfix:after {
+     content: ".";
+     display: block;
+     clear: both;
+     visibility: hidden;
+     line-height: 0;
+     height: 0;
+}
+.clearfix {display: block;}
+html[xmlns] .clearfix {display: block;}

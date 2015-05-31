@@ -159,15 +159,13 @@ background-size: cover;">
 
 
       <div class="panel-body">
-         <div class="courts">
-            <div  style="background-image:url(&quot;../Images/Brotherhood.jpg&quot;);<!--     background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;width:100%;-->height:200px;position:absolute;"></div>
+         <div class="courts clearfix">
 
                <h2>Test</h2>
 
          </div>
          <div class="desc_video collapse">
+                 <div class="img_film" style="background-image: url('../Images/Brotherhood.jpg');"></div>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
       </div>
