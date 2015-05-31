@@ -160,6 +160,7 @@ background-size: cover;">
         if(isset($fin_annee)){
             if($fin_annee){
                 $result = recupCourts();
+                echo('<h2>Court-métrages qualifiés pour cette fin d\'année :</h2>');
                 while ($row = $result->fetch_array(MYSQLI_ASSOC))
                 {
                     $titre_court = $row["titre"];
