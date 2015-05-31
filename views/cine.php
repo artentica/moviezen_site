@@ -159,13 +159,16 @@ background-size: cover;">
 
 
       <div class="panel-body">
-         <div class="courts" data-collapse="0" style="background-image:url(&quot;../Images/Brotherhood.jpg&quot;);">
+         <div class="courts">
+            <div  style="background-image:url(&quot;../Images/Brotherhood.jpg&quot;);<!--     background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;width:100%;-->height:200px;position:absolute;"></div>
 
                <h2>Test</h2>
 
          </div>
          <div class="desc_video collapse">
-                  <p>fsdfsdfvsfvsdvds</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
       </div>
       <div class="panel-body">
@@ -183,13 +186,13 @@ background-size: cover;">
               $(this).attr("data-collapse","0");
             $( this ).animate({
     height: "200px",
-  }, 750);
+  }, 500);
         }else{
-             $(this).children("h2").transition({ y: '15px'},750 );
+             $(this).children("h2").transition({ y: '50px'},750 );
              $(this).attr("data-collapse","1");
             $( this ).animate({
     height: "100px",
-  }, 750);
+  }, 500);
         }
         $( this ).parent().children(".desc_video").collapse('toggle');
 
