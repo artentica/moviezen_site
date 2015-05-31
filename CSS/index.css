@@ -55,7 +55,7 @@ li{
 */
 
     justify-content: center;
-    border-radius: 15px;
+    border-radius: 5px;
     margin-top: -25px;
     min-width : 90%;
     max-width: 92%;
@@ -73,6 +73,8 @@ li{
   min-width: 86%;
   margin: auto;
   max-width: 88%;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 label{

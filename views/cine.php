@@ -182,17 +182,17 @@ background-size: cover;">
 <script>
     $( ".courts" ).click(function() {
         if($(this).attr("data-collapse")=="1"){
-              $(this).children("h2").transition({ y: '100px' },750 );
+              $(this).children("h2").transition({ y: '95px' },250 );
               $(this).attr("data-collapse","0");
             $( this ).animate({
     height: "200px",
-  }, 500);
+  }, 200);
         }else{
-             $(this).children("h2").transition({ y: '50px'},750 );
+             $(this).children("h2").transition({ y: '40px'},250 );
              $(this).attr("data-collapse","1");
             $( this ).animate({
     height: "100px",
-  }, 500);
+  }, 200);
         }
         $( this ).parent().children(".desc_video").collapse('toggle');
 
