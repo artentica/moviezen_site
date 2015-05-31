@@ -159,11 +159,7 @@ background-size: cover;">
 
 
       <div class="panel-body">
-         <div class="courts">
 
-            <div  style="background-image:url('../Images/Brotherhood.jpg');     background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;width:100%;height:200px;position:absolute;"></div>
          <div class="courts clearfix">
 
 
