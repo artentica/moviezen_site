@@ -174,14 +174,42 @@ background-size: cover;">
             </div>
       </div>
       <div class="panel-body">
-         <div class="courts" data-collapse="0" style="background-image:url(&quot;../Images/url.jpg&quot;);">
+         <div class="courts" data-collapse="0" style="background-image:url('../Images/url.jpg');">
                <h2>Baoualag ar brezel</h2>
                <span class="desc_video">
                   <p>dsqdqsdqsdqcqscqcqscqcsq</p>
             </span>
          </div>
       </div>
-<script>
+            <?php
+        //Section COURT-METRAGES
+
+        if(isset($fin_annee)){
+            if($fin_annee){
+                $result = recupCourts();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $titre_court = $row["titre"];
+                    $description_court = $row["description"];
+                    $affiche_court = $row["affiche"];
+                    echo("<div class=\"panel-body\">
+                            <div class=\"courts clearfix\">
+                                <h2>".$titre_court."</h2>
+                            </div>
+                            <div class=\"desc_video collapse clearfix\">
+                                <p>".$description_court."</p>
+                                <div class=\"img_film  clearfix\" style=\"background-image: url('".$affiche_court."');\"></div>
+                                <div style=\"clear:both;\"></div>
+                            </div>
+                        </div>");
+                }
+                $result->close();
+            }
+        }
+
+?>
+
+    <script>
     $( ".courts" ).click(function() {
         if($(this).attr("data-collapse")=="1"){
               $(this).children("h2").transition({ y: '95px' },250 );
@@ -201,23 +229,7 @@ background-size: cover;">
 });
 </script>
 
-            <?php
-        //Section COURT-METRAGES
-
-        if(isset($fin_annee)){
-            if($fin_annee){
-                $result = recupCourts();
-                while ($row = $result->fetch_array(MYSQLI_ASSOC))
-                {
-                    $titre_court = $row["titre"];
-                    $description_court = $row["description"];
-                    $video_court = $row["video"];
-                    $affiche_court = $row["affiche"];
-                    echo('<label for="'.$titre_court.'"><div class="panel-body"><input type="checkbox" id="'.$titre_court.'" name="'.$titre_court.'" value="1" class="display_none"><div class="courts" style=\'background-image:url("'.$affiche_court.'");\'><span><h2>'.$titre_court.'</h2><span class="desc_video"><p>'.$description_court.'</p><iframe width="80%" height="60%" src="'.$video_court.'" frameborder="0" allowfullscreen></iframe></span></span></div></div></label>');
-                }
-                $result->close();
-            }
-        }
+    <?php
         //Fin de la section des courts-métrages
         echo('<div class="panel-body">');
 
