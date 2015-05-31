@@ -158,7 +158,6 @@ background-size: cover;">
 
             <?php
         //Section a venir pour les courts-métrages pour la soirée de fin d'année annuelle
-        //PENSER A AJOUTER UNE ACTIVATION DANS LE MENU ADMINISTRATION AFIN DE NE PAS RENCONTRER D'ERREURS
         if(isset($fin_annee)){
             if($fin_annee){
                 $result = recupCourts();
@@ -173,8 +172,9 @@ background-size: cover;">
                 $result->close();
             }
         }
-        echo('<div class="panel-body">');
         //Fin de la section des courts-métrages
+        echo('<div class="panel-body">');
+
 
                 if(isset($description)){
                    echo('<h1>'.$nom_actif.' ('.$langue.')</h1>
