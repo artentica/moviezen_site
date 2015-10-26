@@ -1,6 +1,7 @@
 <?php
 
     require_once('../conf/config.php');
+    //Attention ! penser à remettre Mail.php en fonction après upload
     //require_once "Mail.php";
     ini_set('upload_max_filesize', '10M');
     ini_set('post_max_size', '10M');

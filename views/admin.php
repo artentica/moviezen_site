@@ -2,6 +2,7 @@
     session_start();
     include_once("../includes/fonctions.php");
     include_once("../includes/function_global.php");
+    //On limite la taille d'upload des fichiers et le temps d'execution de PHP derrière
     ini_set('upload_max_filesize', '10M');
     ini_set('post_max_size', '10M');
     ini_set('max_input_time', 300);
@@ -11,32 +12,33 @@
     $wrongIDMDP = 0;
     $return = 0;
 
-    //PROTECTION CONTRE XSS
-        foreach( $_POST as $cle=>$value )
-        {
-            if(is_array($_POST[$cle])) {
-                foreach($_POST[$cle] as $cle2 =>$value2){
-                    $_POST[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
-                }
-            }
-            else{
-                $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
-            }
+    //Protection contre faille XSS et attaques HTML-JS
+    //Pour tableau POST (et GET au cas où)
+    //On parcourt la totalité du tableau POST et GET et pour chaque variable, on enlève les éléments "génants"
 
+    foreach( $_POST as $cle=>$value )
+    {
+        if(is_array($_POST[$cle])) {
+            foreach($_POST[$cle] as $cle2 =>$value2){
+                $_POST[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+            }
         }
+        else{
+            $_POST[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
+    }
 
     foreach( $_GET as $cle=>$value )
-        {
-            if(is_array($_GET[$cle])) {
-                foreach($_GET[$cle] as $cle2 =>$value2){
-                    $_GET[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
-                }
+    {
+        if(is_array($_GET[$cle])) {
+            foreach($_GET[$cle] as $cle2 =>$value2){
+                $_GET[$cle2] = strip_tags(htmlentities($value2, ENT_QUOTES, 'UTF-8'));
             }
-            else{
-                $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
-            }
-
         }
+        else{
+            $_GET[$cle] = strip_tags(htmlentities($value, ENT_QUOTES, 'UTF-8'));
+        }
+      }
 
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
@@ -48,11 +50,14 @@
         $query->execute();
         $query->store_result();
         $query->bind_result($id,$hash);
-        while($query->fetch()){
+        //Attention ! changement effectué ici, mais encore non vérifié !
+        //A vérifier avant le déploiement
+        /*while($query->fetch()){
             $return++;
-        }
+        }*/
+        $query->fetch();
         $query->close();
-        if ($return == 0) $wrongIDMDP = 1;
+        //if ($return == 0) $wrongIDMDP = 1;
         if(!empty($hash)){
             if(password_verify($mdp, $hash) && strcmp($id,$_POST["id"])==0){
                 $_SESSION["authentifie"]=true;
@@ -63,15 +68,15 @@
                 $wrongIDMDP = 1;
             }
         }
+        else{
+            $wrongIDMDP = 1;
+        }
     }
 
 
-//  Fonction de suppression et modification en tout genre
+    //  Fonction de suppression et modification en tout genre
 
-
-
-
-    //var
+    //  variables utiles dans la page
 
     $modifMDP = 0;
     $addAdmini = 0;
@@ -117,7 +122,8 @@
 
     //Supprimer Admin
     if(!empty($_POST["suppr_admin"]) && $_SESSION["authentifie"]){
-         if(strcmp($_POST["suppr_admin"],$_SESSION["id"])!=0){
+        //if(strcmp($_POST["suppr_admin"], $_SESSION["id"]) != 0){
+         if($_POST["suppr_admin"] !== $_SESSION["id"]){
                 if(supprAdmin($_POST["suppr_admin"])) $supprAdmin = 1;
                 else $supprAdmin = 2;
           }
@@ -146,7 +152,7 @@
         else{
             $commentaires = $_POST["projection_commentaires"];
         }
-        if(!empty($_FILES["projection_affiche"]) && $_FILES["projection_affiche"]["name"] != ""){
+        if(!empty($_FILES["projection_affiche"]) && !empty($_FILES["projection_affiche"]["name"])){
             $extensions_valides = array( 'jpg' , 'jpeg' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['projection_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
@@ -169,7 +175,7 @@
             }
         }
 
-        if(!empty($_FILES["back_affiche"]) && $_FILES["back_affiche"]["name"] != ""){
+        if(!empty($_FILES["back_affiche"]) && !empty($_FILES["back_affiche"]["name"])){
             $extensions_valides = array( 'png' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['back_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
@@ -224,7 +230,7 @@
         }
         $nom = "";
         $nomback ="";
-        if(!empty($_FILES["new_projection_affiche"]) && $_FILES["new_projection_affiche"]["name"] != ""){
+        if(!empty($_FILES["new_projection_affiche"]) && !empty($_FILES["new_projection_affiche"]["name"])){
             $extensions_valides = array( 'jpg' , 'jpeg' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['new_projection_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
@@ -247,7 +253,7 @@
             }
         }
 
-            if(!empty($_FILES["new_back_affiche"]) && $_FILES["new_back_affiche"]["name"] != ""){
+            if(!empty($_FILES["new_back_affiche"]) && !empty($_FILES["new_back_affiche"]["name"])){
                 $extensions_valides = array( 'png' );
                 $extension_upload = strtolower(  substr(  strrchr($_FILES['new_back_affiche']['name'], '.')  ,1)  );
                 if ( in_array($extension_upload,$extensions_valides) ){
@@ -279,29 +285,28 @@
 
 
     //ACTIVATION DE PROJECTION
-                    if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
-                        if(activateProj($_POST["activ_proj"])) $activeProj = 1;
-                        else $activeProj = 2;
-                    }
+    if(!empty($_POST["activ_proj"]) && $_SESSION["authentifie"]){
+        if(activateProj($_POST["activ_proj"])) $activeProj = 1;
+        else $activeProj = 2;
+    }
 
     //ACTIVATION DE PROJECTION DE FIN D'ANNEE (provoque le chargement des courts-métrages dans le Ciné de l'ISEN)
-                    if(!empty($_POST["fin_anne_proj"]) && $_SESSION["authentifie"]){
-                        if(finAnneeProj($_POST["fin_anne_proj"])) $finAnneeProj = 1;
-                        else $finAnneeProj = 2;
-                    }
+    if(!empty($_POST["fin_anne_proj"]) && $_SESSION["authentifie"]){
+        if(finAnneeProj($_POST["fin_anne_proj"])) $finAnneeProj = 1;
+        else $finAnneeProj = 2;
+    }
 
     //RESET DE PROJECTION DE FIN D'ANNEE (Fait en sorte qu'aucun film ne soit considéré comme étant film de fin d'année)
-                    if(!empty($_POST["reset_fin_anne_proj"]) && $_SESSION["authentifie"]){
-
-                        if(resetFinAnneeProj()) $resetfinAnneeProj = 1;
-                        else $resetfinAnneeProj = 2;
-                    }
+    if(!empty($_POST["reset_fin_anne_proj"]) && $_SESSION["authentifie"]){
+        if(resetFinAnneeProj()) $resetfinAnneeProj = 1;
+        else $resetfinAnneeProj = 2;
+    }
 
     //SUPPRESSION DE PROJECTION
-                    if(!empty($_POST["suppr_proj"]) &&  $_SESSION["authentifie"]){
-                        if(supprProj($_POST["suppr_proj"])) $supprProj = 1;
-                        else $supprProj = 2;
-                    }
+    if(!empty($_POST["suppr_proj"]) &&  $_SESSION["authentifie"]){
+        if(supprProj($_POST["suppr_proj"])) $supprProj = 1;
+        else $supprProj = 2;
+    }
 
 
 
@@ -326,7 +331,7 @@
         else{
             $annee = $_POST["court_annee"];
         }
-        if(!empty($_FILES["court_affiche"]) && $_FILES["court_affiche"]["name"] != ""){
+        if(!empty($_FILES["court_affiche"]) && !empty($_FILES["court_affiche"]["name"])){
             $extensions_valides = array( 'jpg' , 'jpeg' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['court_affiche']['name'], '.')  ,1)  );
             if ( in_array($extension_upload,$extensions_valides) ){
@@ -382,85 +387,80 @@
     // $ajoutLot =3 ==> L'affiche possède une extension non autorisée
     // $ajoutLot =4 ==> Le nom de l'affiche contient des retours à la ligne ou des caractères non autorisés
     // $ajoutLot =5 ==> Le nom de l'affiche contient .php, php. ou .exe, donc tentative d'upload malveillante
-                    if(!empty($_POST["add_lot_id"]) && !empty($_POST["add_lot_composition"]) && !empty($_POST["add_lot_caution"]) && $_SESSION["authentifie"]){
-                        if(!empty($_FILES["add_lot_photo"]) && $_FILES["add_lot_photo"]["name"] != ""){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['add_lot_photo']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['add_lot_photo']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['add_lot_photo']['name']))
-                                {
-                                    $ajoutLot = 4;
-                                }
-                                else if(strstr($_FILES['add_lot_photo']['name'], ".php") || strstr($_FILES['add_lot_photo']['name'], "php.") || strstr($_FILES['add_lot_photo']['name'], ".exe") ){
-                                    $ajoutLot = 5;
-                                }
-                                else{
-                                    $nom = md5(uniqid(rand(), true));
-                                    $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                    $nom = compress($_FILES['add_lot_photo']['tmp_name'],$nom,70);
-                                    //$resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
-                                }
-                            }
-                            else{
-                                $ajoutLot = 3;
-                            }
-                        }
-
-
-                        if(isset($nom)){
-                            if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])) $ajoutLot = 1;
-                            else $ajoutLot = 2;
-                        }
-                    }
+    if(!empty($_POST["add_lot_id"]) && !empty($_POST["add_lot_composition"]) && !empty($_POST["add_lot_caution"]) && $_SESSION["authentifie"]){
+        if(!empty($_FILES["add_lot_photo"]) && $_FILES["add_lot_photo"]["name"] != ""){
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['add_lot_photo']['name'], '.')  ,1)  );
+            if ( in_array($extension_upload,$extensions_valides) ){
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['add_lot_photo']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['add_lot_photo']['name']))
+                {
+                    $ajoutLot = 4;
+                }
+                else if(strstr($_FILES['add_lot_photo']['name'], ".php") || strstr($_FILES['add_lot_photo']['name'], "php.") || strstr($_FILES['add_lot_photo']['name'], ".exe") ){
+                    $ajoutLot = 5;
+                }
+                else{
+                    $nom = md5(uniqid(rand(), true));
+                    $nom = "../Images/lot/".$nom.".".$extension_upload;
+                    $nom = compress($_FILES['add_lot_photo']['tmp_name'],$nom,70);
+                    //$resultat = move_uploaded_file($_FILES['add_lot_photo']['tmp_name'],$nom);
+                }
+            }
+            else{
+                $ajoutLot = 3;
+            }
+        }
+        if(isset($nom)){
+            if(addLot($_POST["add_lot_id"],$_POST["add_lot_composition"],$nom,$_POST["add_lot_caution"])) $ajoutLot = 1;
+            else $ajoutLot = 2;
+        }
+    }
 
     //MODIFICATION DE LOTS
-
-                    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
-                        $nom = "";
-                        if(!empty($_FILES["modif_lot_photo"]) && $_FILES["modif_lot_photo"]["name"] != ""){
-                            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-                            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
-                            if ( in_array($extension_upload,$extensions_valides) ){
-                                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['modif_lot_photo']['name']) )
-                                {
-                                    $modifie = false;
-                                }
-                                else if(strstr($_FILES['modif_lot_photo']['name'], ".php") || strstr($_FILES['modif_lot_photo']['name'], "php.") || strstr($_FILES['modif_lot_photo']['name'], ".exe") ){
-                                    $modifie = false;
-                                }
-                                else{
-                                    $nom = md5(uniqid(rand(), true));
-                                    $nom = "../Images/lot/".$nom.".".$extension_upload;
-                                    $nom = compress($_FILES['modif_lot_photo']['tmp_name'],$nom,70);
-                                    //$resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
-                                }
-                            }
-                            else{
-                                $modifie = false;
-                            }
-                        }
-
-
-                        if(empty($modifie)){
-                            if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
-                                $modifie = true;
-                            }
-                            else{
-                                $modifie = false;
-                            }
-                        }
-                    }
+    if(!empty($_POST["modif_lot_id"]) && !empty($_POST["modif_lot_compo"]) && !empty($_POST["modif_lot_id_old"]) && !empty($_POST["modif_lot_caution"]) && $_SESSION["authentifie"]){
+        $nom = "";
+        if(!empty($_FILES["modif_lot_photo"]) && $_FILES["modif_lot_photo"]["name"] != ""){
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['modif_lot_photo']['name'], '.')  ,1)  );
+            if ( in_array($extension_upload,$extensions_valides) ){
+                if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['modif_lot_photo']['name']) )
+                {
+                    $modifie = false;
+                }
+                else if(strstr($_FILES['modif_lot_photo']['name'], ".php") || strstr($_FILES['modif_lot_photo']['name'], "php.") || strstr($_FILES['modif_lot_photo']['name'], ".exe") ){
+                    $modifie = false;
+                }
+                else{
+                    $nom = md5(uniqid(rand(), true));
+                    $nom = "../Images/lot/".$nom.".".$extension_upload;
+                    $nom = compress($_FILES['modif_lot_photo']['tmp_name'],$nom,70);
+                    //$resultat = move_uploaded_file($_FILES['modif_lot_photo']['tmp_name'],$nom);
+                }
+            }
+            else{
+                $modifie = false;
+            }
+          }
+          if(empty($modifie)){
+              if(modifLot($_POST["modif_lot_id"],$_POST["modif_lot_compo"],$_POST["modif_lot_caution"],$nom,$_POST["modif_lot_id_old"])){
+                  $modifie = true;
+              }
+              else{
+                  $modifie = false;
+              }
+          }
+      }
 
 
         //SUPPRESSION DE LOTS
-                if(!empty($_POST["suppr_lot"]) && $_SESSION["authentifie"]){
-                    if(supprLot($_POST["suppr_lot"])) $supprLot = 1;
-                    else $supprLot = 2;
-                }
+      if(!empty($_POST["suppr_lot"]) && $_SESSION["authentifie"]){
+          if(supprLot($_POST["suppr_lot"])) $supprLot = 1;
+          else $supprLot = 2;
+      }
 
-        if(!empty($_POST["reset_lots"]) && $_SESSION["authentifie"]){
-            resetDispo();
-        }
+      if(!empty($_POST["reset_lots"]) && $_SESSION["authentifie"]){
+          resetDispo();
+      }
 
 
         //GESTION DE LA RENDU DES LOTS
@@ -496,31 +496,31 @@
             }
         }
 
-//Nb of admin or 'lot' or projection
-
-    //Nr d'admin
+      //Nb of admin or 'lot' or projection
+      //REFAIRE LE COMPTAGE DES PROJECTIONS ET LOTS
+      //Nombre d'admin
         $nbradmin = 0;
         $temp = recupAdmin();
         $nbradmin = count($temp);
 
-    //Nr de proj
+        //Nombre de projections
         $nbrproj = 0;
         $temp = recupProjDesc();
-                while ($row = $temp->fetch_array(MYSQLI_ASSOC))
-                {
-                    $nbrproj++;
-                }
-                $temp->close();
+        while ($row = $temp->fetch_array(MYSQLI_ASSOC))
+        {
+            $nbrproj++;
+        }
+        $temp->close();
 
 
-    //Nr de lot
+        //Nombre de lots
         $nbrLot = 0;
         $temp = recupLot();
-                while ($row = $temp->fetch_array(MYSQLI_ASSOC))
-                {
-                    $nbrLot++;
-                }
-                $temp->close();
+        while ($row = $temp->fetch_array(MYSQLI_ASSOC))
+        {
+            $nbrLot++;
+        }
+        $temp->close();
 
 ?>
 <!doctype html>
@@ -533,8 +533,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 
-	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
-	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
+	  <link rel="stylesheet" type="text/css" href="../CSS/index.css">
+	  <link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../CSS/jquery.datetimepicker.css"/ >
     <?php
         include '../includes/include_on_all_page.php';

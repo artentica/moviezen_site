@@ -1,9 +1,12 @@
 <?php
     session_start();
     include_once("../includes/fonctions.php");
-include_once("../includes/function_global.php");
+    include_once("../includes/function_global.php");
     connect();
 
+    //Protection contre faille XSS et attaques HTML-JS
+    //Pour tableau POST (et GET au cas où)
+    //On parcourt la totalité du tableau POST et GET et pour chaque variable, on enlève les éléments "génants"
     foreach( $_POST as $cle=>$value )
         {
             if(is_array($_POST[$cle])) {
@@ -29,11 +32,12 @@ include_once("../includes/function_global.php");
             }
 
         }
-    
+
+    //Si l'utilisateur n'est pas authentifié, on redirige directement vers l'index du site
     if(!$_SESSION["authentifie"]){
-         header('Location: ../index.php'); 
+         header('Location: ../index.php');
     }
-    
+
 ?>
 <!doctype html>
 <html>
@@ -45,9 +49,9 @@ include_once("../includes/function_global.php");
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 
-	<link rel="stylesheet" type="text/css" href="../CSS/index.css">
+	  <link rel="stylesheet" type="text/css" href="../CSS/index.css">
     <link rel="stylesheet" type="text/css" href="../CSS/menu.css">
-	<link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
+	  <link rel="stylesheet" type="text/css" href="../CSS/bootstrap.css">
 	 <?php
         include '../includes/include_on_all_page.php';
     ?>
@@ -70,7 +74,7 @@ background-size: cover;">
 
         </div>
 	</div>
-    
-    
+
+
 </body>
 </html>
