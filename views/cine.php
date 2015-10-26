@@ -210,7 +210,8 @@ background-size: cover;">
 
                 if(isset($description)){
                    echo('<h1>'.$nom_actif.' ('.$langue.')</h1>
-                <h3>projeté le '.$date_projection.' au multiplexe Liberté Brest<br><br>Prix : '.$prix.'&euro;</h3>
+                <h3>Projection le '.$date_projection.' au multiplexe Liberté Brest<br><br>Prix : '.$prix.'&euro;</h3>
+                <h5>Apéritif commencant à 18h30 au ciné café, puis projection des courts métrages à partir de 20h</h5>
                 <img src="'.$affiche.'" alt="affiche" class="affiche" style=""/>
                 <p class="description">'.$description.'</p>
                 <p class="description">'.$commentaires.'</p>
