@@ -39,8 +39,9 @@
 
         $_SESSION["inscrit"]=0;
 
-        //PROTECTION CONTRE XSS
-
+        //Protection contre faille XSS et attaques HTML-JS
+        //Pour tableau POST (et GET au cas où)
+        //On parcourt la totalité du tableau POST et GET et pour chaque variable, on enlève les éléments "génants"
         foreach( $_POST as $cle=>$value )
         {
             if(is_array($_POST[$cle])) {
