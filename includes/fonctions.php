@@ -1328,4 +1328,44 @@
 		return $destination;
 	}
 
+//################################################################################################################################################################
+
+    //FONCTIONS GESTION DES SORTIES DE LA SEMAINE
+
+    //Format de la table des sorties de la semaine en BDD
+        //Titre : titre d'un des films de la sortie de la semaine. Format String
+        //Realisteur : réalisateur du film. Format String
+        //Acteurs : les acteurs .... Format String
+        //description : le synopsys du film . Format String
+        //Points forts : Les + que l'on attribue au film. Format String
+        //Points faibles: Les - que l'on attribue au film. Format String
+        //Date : La semaine de sortie des sorties de la semaine dans lesquelles ce film est apparu. Format indéfini pour le moment.
+        //Affiche : l'affiche du film. Format String contenant l'URL du fichier image
+
+    function ajoutSortie($titre,$acteurs,$realisateur,$description,$pts_forts,$pts_faibles,$appreciation,$date,affiche){
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO sorties_semaine VALUES(?,?,?,?,?,?,?,?,?)");
+        $query->bind_param('sssssssss',$titre,$acteurs,$realisateur,$description,$pts_forts,$pts_faibles,$appreciation,$date,$affiche);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    function supprSortie($titre,$date){
+        $query = $GLOBALS["bdd"]->prepare("DELETE INTO sorties_semaine where titre=? and date=?");
+        $query->bind_param('ss',$titre,$date);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+    function modifSortie($titre,$date,$nouveau_titre,$nouveaux_acteurs,$nouveau_realisateur,$nouveau_description,$nouveaux_pts_forts,$nouveaux_pts_faibles,$nouvelles_appreciation,$nouvelle_date,$nouvelle_affiche){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE sorties_semaine SET titre=?, acteurs=?, realisateur=?, description=?, pts_forts=?, pts_faibles=?, appreciation=?, date=?, affiche=? where titre=? and date=?");
+        $query->bind_param('sssssssssss',$nouveau_titre,$nouveaux_acteurs,$nouveau_realisateur,$nouveau_description,$nouveaux_pts_forts,$nouveaux_pts_faibles,$nouvelles_appreciation,$nouvelle_date,$titre,$date,$affiche);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+
+
 ?>
