@@ -174,7 +174,7 @@
         //Si une ligne est retournée et qu'une des infos ne correspond plus à celles enregistrées, on fait un UPDATE
         if($temp==1 and ($nom !==$temp_nom or $prenom !== $temp_prenom or $tel!==$temp_tel or $classe!==$temp_classe)){
             $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits SET nom=?, prenom=?, tel=?, classe=? WHERE mail=?");
-            $query->bind_param('sssss', $nom, $prenom, $tel $classe,$mail);
+            $query->bind_param('sssss', $nom, $prenom, $tel, $classe,$mail);
             $query->execute();
             $query->close();
 
@@ -716,7 +716,7 @@
                 //On récupère donc les lots ayant correspondus à ces critères afin d'informer l'utilisateur de quels lots ne sont pas disponibles
                 $chaine_erreur = "";
                 while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                    $chaine_erreur .= "Le lot ".$row["lots"]." n'est pas disponible dans la période que vous avez demandé, ayant déja été emprunté du ".$row["date_emprunt"]. " au ".$row["date_retour"]".\n";
+                    $chaine_erreur .= "Le lot ".$row["lots"]." n'est pas disponible dans la période que vous avez demandé, ayant déja été emprunté du ".$row["date_emprunt"]. " au ".$row["date_retour"].".\n";
                 }
                 $result->close();
                 return $chaine_erreur;
@@ -788,7 +788,7 @@
             //Erreur rencontrée durant le nouvel emprunt
             //On restaure donc l'ancien état des emprunts (Attention, faire gaffe si emprunts concurrents, il peut y avoir un problème après la restauration)
             foreach($save as $restore){
-                $insert = "INSERT INTO inscrits_lots VALUES ('".$restore['inscrit_mail']."','".$restore['lots']."','$restore['date_emprunt']','".$restore['date_retour']."')";
+                $insert = "INSERT INTO inscrits_lots VALUES ('".$restore['inscrit_mail']."','".$restore['lots']."','".$restore['date_emprunt']."','".$restore['date_retour']."')";
                 $query = $GLOBALS["bdd"]->prepare($insert);
                 $query->execute();
                 $query->close();
@@ -1526,7 +1526,7 @@
         //Date : La semaine de sortie des sorties de la semaine dans lesquelles ce film est apparu. Format indéfini pour le moment.
         //Affiche : l'affiche du film. Format String contenant l'URL du fichier image
 
-    function ajoutSortie($titre,$acteurs,$realisateur,$description,$pts_forts,$pts_faibles,$appreciation,$date,affiche){
+    function ajoutSortie($titre,$acteurs,$realisateur,$description,$pts_forts,$pts_faibles,$appreciation,$date,$affiche){
         $query = $GLOBALS["bdd"]->prepare("INSERT INTO sorties_semaine VALUES(?,?,?,?,?,?,?,?,?)");
         $query->bind_param('sssssssss',$titre,$acteurs,$realisateur,$description,$pts_forts,$pts_faibles,$appreciation,$date,$affiche);
         $query->execute();
