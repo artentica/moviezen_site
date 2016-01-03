@@ -161,34 +161,22 @@
 
     //AJOUT D'INSCRITS A UNE PROJECTION (UTILISATEUR)
     function ajoutInscrit($nom,$prenom,$mail,$classe,$projection){
-
-        $count = $GLOBALS["bdd"]->prepare("SELECT COUNT( * ) FROM  `inscrits` WHERE  `mail` =?");
+        //On regarde si l'utilisateur est déja marqué comme inscrit
+        $count = $GLOBALS["bdd"]->prepare("SELECT COUNT( * ),nom, prenom,tel,classe FROM  `inscrits` WHERE  `mail` =?");
         $count->bind_param('s',$mail);
         $count->execute();
 
         $count->store_result();
-        $count->bind_result($temp);
+        $count->bind_result($count,$temp_nom,$temp_prenom,$temp_tel,$temp_classe);
 
         $count->fetch();
         $count->close();
-        if($temp==1){
-
-            $count = $GLOBALS["bdd"]->prepare("SELECT COUNT( * ) FROM  `inscrits` WHERE  `mail` =? AND `classe`=?");
-            $count->bind_param('ss',$mail,$classe);
-            $count->execute();
-
-            $count->store_result();
-            $count->bind_result($temp);
-
-            $count->fetch();
-            $count->close();
-
-                if($temp==0){
-                    $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits SET  classe=? WHERE mail=?");
-                    $query->bind_param('ss', $classe,$mail);
-                    $query->execute();
-                    $query->close();
-                }
+        //Si une ligne est retournée et qu'une des infos ne correspond plus à celles enregistrées, on fait un UPDATE
+        if($temp==1 and ($nom !==$temp_nom or $prenom !== $temp_prenom or $tel!==$temp_tel or $classe!==$temp_classe)){
+            $query = $GLOBALS["bdd"]->prepare("UPDATE inscrits SET nom=?, prenom=?, tel=?, classe=? WHERE mail=?");
+            $query->bind_param('sssss', $nom, $prenom, $tel $classe,$mail);
+            $query->execute();
+            $query->close();
 
         }else{
             $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, '', ?, ?)");
@@ -197,7 +185,6 @@
             $query->close();
 
         }
-
         $count = $GLOBALS["bdd"]->prepare("SELECT COUNT(*) FROM projections_inscrits WHERE inscrit_mail=? AND projection=?");
         $count->bind_param("ss",$mail,$projection);
         $count->execute();
@@ -212,9 +199,7 @@
             $query2->bind_param('ss', $mail, $projection);
             $query2->execute();
             $query2->close();
-
             return 1;
-
         }
         else return 2;      ////////////////A fiNIR
 
@@ -315,6 +300,10 @@
         }
     }*/
 
+
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////// FONCTIONS D'EMPRUNTS VERSION SALE ///////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
     //FONCTION AJOUT D'EMPRUNT (TEST AVEC TABLE DISPONIBILITES)
     // PS : ca marche et logiquement, tous les cas sont prévus sooooo
     // Don't touch, magic is at work here !
@@ -626,7 +615,6 @@
         return true;
     }
 
-
     //FONCTION DE RECUPERATION DES EMPRUNTS EFFECTUES PAR UN INSCRIT
     function recupEmprunt($mail){
         $tab = array();
@@ -676,6 +664,202 @@
         $i=0;
         $query = $GLOBALS["bdd"]->prepare("SELECT lots FROM inscrits_lots WHERE inscrit_mail=? AND date_emprunt=? AND date_retour=?");
         $query->bind_param('sss',$mail,$date[0],$date[1]);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($temp);
+        while($query->fetch()){
+            $tab[$i] = $temp;
+            $i++;
+        }
+        $query->close();
+        return $tab;
+    }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// FONCTIONS D'EMPRUNTS VERSION TIMESTAMP /////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+    //FONCTION AJOUT EMPRUNT UTILISATEUR VERSION TIMESTAMP
+    //Paramètres :
+    // nom : nom de l'utilisateur qui emprunte (chaine)
+    // prenom : prenom de l'utilisateur qui emprunte (chaine)
+    // tel : numéro de téléphone de l'utilisateur qui emprunte (chaine)
+    // mail : identifiant mail ISEN de l'utilisateur qui emprunte (chaine)
+    // classe : classe de l'utilisateur (chaine)
+    // lots : chaine de caractères du style "A,B,C,D,E"
+    // date_emprunt : date de début de l'emprunt sous forme de timestamp
+    // date_retour : date de retour de l'emprunt sous forme de timestamp
+
+    // Retour :
+    //  chaine : vide si aucune erreur, erreur rencontrée sinon (lot X déja emprunté durant la période, lot X inexistant, etc...)
+    function ajoutEmpruntTimestamp($nom,$prenom,$tel,$mail,$classe,$lots,$date_emprunt,$date_retour){
+        //ON VERIFIE QUE LES DATES D'EMPRUNTS NE SONT PAS ABERRANTES (Emprunt dans trois mois, etc....)
+        $timestamp_ajd = time();
+        $timestamp_ajd = $timestamp_ajd - 86400; // On ote un jour à la date d'aujourd'hui, car c'est la limite basse de l'emprunt (impossible d'emprunter pour hier)
+        $timestamp_futur = $timestamp_ajd + (86400*91); // On fixe comme limite d'emprunt 3 mois dans le futur (86400 étant le nombre de secondes par jour)
+        //Si les dates sont correctes, on autorise la vérification de la disponibilité des lots
+        if($date_emprunt > $timestamp_ajd && $date_retour > $timestamp_ajd && $date_emprunt < $timestamp_futur && $date_retour < $timestamp_futur){
+            $chaine = "";
+            //ON CREE UNE CHAINE POUR LE SELECT DU TYPE "lots='A' OR lots='B' OR lots='C' OR "
+            foreach($lots as $lot){
+                $lot = protect($lot);
+                $chaine .= "lots='".$lot."' OR ";
+            }
+            $chaine = substr($chaine,0,-4); // ON OTE LE DERNIER OR ET LES ESPACES
+            //ON crée le select SQL récupérant tous les emprunts concernant les lots désignés et qui ont des dates d'emprunt ou de retour situées entre les dates d'emprunts souhaitées par l'utilisateur
+            //Ou étant une sous-section d'un emprunt déja fait (un emprunt d'une durée plus petite situé au milieu d'un emprunt plus grand déja effectué)
+            $select = "SELECT * from inscrits_lots WHERE (".$chaine.") AND ((date_emprunt BETWEEN ".$date_emprunt." AND ".$date_retour.") OR (date_retour BETWEEN ".$date_emprunt." AND ".$date_retour.") OR (date_emprunt <= ".$date_emprunt." AND date_retour >= ".$date_retour.") )";
+            //Si le select retourne vide, les lots sont disponibles à cette date, on peut donc commencer l'emprunt
+            //Sinon on renvoie comme erreur une chaine disant quels lots ne sont pas disponibles car étant déja empruntés de tant à tant
+            if($result = $GLOBALS["bdd"]->query($select)){
+                //Un ou plusieurs lots ont déja été empruntés, vu que le resultat du SELECT n'est pas nul
+                //On récupère donc les lots ayant correspondus à ces critères afin d'informer l'utilisateur de quels lots ne sont pas disponibles
+                $chaine_erreur = "";
+                while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                    $chaine_erreur .= "Le lot ".$row["lots"]." n'est pas disponible dans la période que vous avez demandé, ayant déja été emprunté du ".$row["date_emprunt"]. " au ".$row["date_retour"]".\n";
+                }
+                $result->close();
+                return $chaine_erreur;
+            }
+            else{ //Tout va bien, les dates d'emprunts correspondent à une période valide pour tous les lots
+                //ON AJOUTE LA PERSONNE QUI EMPRUNTE A LA BDD
+                $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits VALUES (?, ?, ?, ?, ?)");
+                $query->bind_param('sssss', $nom,$prenom,$tel,$mail,$classe);
+                $query->execute();
+                $query->close();
+                foreach($lots as $lot){
+                    //ON AJOUTE L'EMPRUNT LUI-MEME A LA BDD
+                    $query = $GLOBALS["bdd"]->prepare("INSERT INTO inscrits_lots VALUES (?, ?, ?, ?)");
+                    $query->bind_param('ssss', $mail,$lot,$date_emprunt,$date_retour);
+                    $query->execute();
+                    $query->close();
+                }
+                return 1;
+            }
+        }
+        else{
+            $chaine_erreur = "Erreur. Vous avez entré des dates d'emprunts invalides (emprunté hier, emprunté durant plus de 3 mois,...)";
+            return $chaine_erreur;
+        }
+    }
+
+    //FONCTION MODIFICATION D'UN EMPRUNT(UTILISATEUR) VERSION TIMESTAMP
+    //On récupère les infos de l'utilisateur qui change son emprunt, on effectue un backup des anciens emprunts, on les supprime et on tente d'effectuer un nouvel emprunt
+    // avec les nouvelles dates. Si une erreur est rencontrée durant ce nouvel emprunt, on restaure les anciens emprunts et on remonte l'erreur rencontrée
+    //Paramètres :
+    // lots : chaine contenant les lots empruntés
+    // date_emprunt : ancien timestamp de début de l'emprunt
+    // mail : identifiant mail ISEN de l'utilisateur qui emprunte
+    // new_date_emprunt : nouveau timestamp de début de l'emprunt
+    // new_date_retour :  nouveau timestamp de fin de l'emprunt
+
+    // Retour :
+    //  chaine : 1 si aucune erreur durant toutes les opérations, contient l'erreur rencontrée sinon remontée depuis la fonction d'ajout (lot X déja emprunté durant la période, lot X inexistant, etc...)
+    function modifEmpruntTimestamp($lots,$date_emprunt,$mail,$new_date_emprunt,$new_date_retour){
+        //on récupére les infos personnelles de l'emprunteur
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits WHERE mail=?");
+        $query->bind_param('s',$mail);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($nom,$prenom,$tel,$mail,$classe);
+        $query->close();
+        //On prépare la sauvegarde des anciennes données
+        $tab = array();
+        $save = array();
+        $i = 0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE inscrit_mail=? AND date_emprunt=?");
+        $query->bind_param('si',$mail,$date_emprunt);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
+        while($query->fetch()){
+            $save[$i]["inscrit_mail"] = $tab["inscrit_mail"];
+            $save[$i]["lots"] = $tab["lots"];
+            $save[$i]["date_emprunt"] = $tab["date_emprunt"];
+            $save[$i]["date_retour"] = $tab["date_retour"];
+            $i++;
+        }
+        $query->close();
+        //Une fois les données sauvegardées, on supprime l'ancien emprunt
+        supprEmpruntTimestamp($mail,$date_emprunt);
+        //On tente de faire un nouvel emprunt avec les nouvelles dates
+        $chaine = ajoutEmpruntTimestamp($nom,$prenom,$tel,$mail,$classe,$lots,$new_date_emprunt,$new_date_retour);
+        if($chaine != 1){
+            //Erreur rencontrée durant le nouvel emprunt
+            //On restaure donc l'ancien état des emprunts (Attention, faire gaffe si emprunts concurrents, il peut y avoir un problème après la restauration)
+            foreach($save as $restore){
+                $insert = "INSERT INTO inscrits_lots VALUES ('".$restore['inscrit_mail']."','".$restore['lots']."','$restore['date_emprunt']','".$restore['date_retour']."')";
+                $query = $GLOBALS["bdd"]->prepare($insert);
+                $query->execute();
+                $query->close();
+            }
+            //et on fait remonter l'erreur rencontrée
+            return $chaine;
+        }
+        else{
+            //Sinon, tout s'est bien passé, on renvoie 1
+            return 1;
+        }
+    }
+
+    //FONCTION SUPPRESSION D'UN EMPRUNT(UTILISATEUR) VERSION TIMESTAMP
+    //Paramètres :
+    // mail : identifiant mail ISEN de l'utilisateur qui emprunte
+    // date : timestamp de début de l'emprunt visé
+
+    // Retour :
+    //  chaine : true si aucune erreur, contient l'erreur rencontrée
+    function supprEmpruntTimestamp($mail,$date){
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM inscrits_lots WHERE inscrit_mail=? AND date_emprunt=?");
+        $query->bind_param('si',$mail,$date_emprunt);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
+
+
+    //FONCTION DE RECUPERATION DES EMPRUNTS NON EFFECTUES ENCORE EN VERSION TIMESTAMP
+    //Paramètres :
+    // mail : identifiant mail ISEN de l'utilisateur qui emprunte
+
+    // Retour :
+    //  final : tableau double (type final[3]["inscrit_mail"]) contenant tout les emprunts effectués par quelqu'un qui n'ont pas encore commencés
+    function recupEmpruntAjdTimestamp($mail){
+        $tab = array();
+        $final = array();
+        $i=0;
+        $date_ajd = time();
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM inscrits_lots WHERE inscrit_mail=? and date_emprunt>=?  GROUP BY date_emprunt");
+        $query->bind_param('si',$mail,$date_ajd);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["inscrit_mail"],$tab["lots"],$tab["date_emprunt"],$tab["date_retour"]);
+        while($query->fetch()){
+            $final[$i]["inscrit_mail"] = $tab["inscrit_mail"];
+            $final[$i]["lots"] = $tab["lots"];
+            $final[$i]["date_emprunt"] = $tab["date_emprunt"];
+            $final[$i]["date_retour"] = $tab["date_retour"];
+            $i++;
+        }
+        $query->close();
+        return $final;
+    }
+
+
+
+    //FONCTION DE RECUPERATION DES EMPRUNTS EFFECTUES PAR UN INSCRIT à UNE DATE PRECISE VERSION TIMESTAMP
+    //Paramètres :
+    // mail : identifiant mail ISEN de l'utilisateur qui emprunte
+    // date : timestamp de début de l'emprunt visé
+
+    // Retour :
+    //  tab : tableau contenant tous les lots empruntés aux dates précisées
+    function recupEmpruntDateTimestamp($mail,$date_emprunt,$date_retour){
+        $tab = array();
+        $i=0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT lots FROM inscrits_lots WHERE inscrit_mail=? AND date_emprunt=? AND date_retour=?");
+        $query->bind_param('sii',$mail,$date_emprunt,$date_emprunt);
         $query->execute();
         $query->store_result();
         $query->bind_result($temp);
