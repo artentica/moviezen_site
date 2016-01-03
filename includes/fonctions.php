@@ -1214,7 +1214,7 @@
         return $tab;
     }
 
-    //FONCTION VERIFIANT SI L'UTILISATEUR EST CONNU OU NON
+    //FONCTION RECUPERANT TOUT LES ADMINS RESPONSABLES DES EMPRUNTS
     function recupAdmin(){
         $tab = array();
         $final = array();
@@ -1517,39 +1517,72 @@
     //FONCTIONS GESTION DES SORTIES DE LA SEMAINE
 
     //Format de la table des sorties de la semaine en BDD
-        //Titre : titre d'un des films de la sortie de la semaine. Format String
-        //Realisteur : réalisateur du film. Format String
-        //Acteurs : les acteurs .... Format String
+        //Semaine : Chaine sous-forme XX-AAAA où XX représente le numéro de la semaine dans l'année
         //description : le synopsys du film . Format String
-        //Points forts : Les + que l'on attribue au film. Format String
-        //Points faibles: Les - que l'on attribue au film. Format String
-        //Date : La semaine de sortie des sorties de la semaine dans lesquelles ce film est apparu. Format indéfini pour le moment.
         //Affiche : l'affiche du film. Format String contenant l'URL du fichier image
 
-    function ajoutSortie($titre,$acteurs,$realisateur,$description,$pts_forts,$pts_faibles,$appreciation,$date,$affiche){
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO sorties_semaine VALUES(?,?,?,?,?,?,?,?,?)");
-        $query->bind_param('sssssssss',$titre,$acteurs,$realisateur,$description,$pts_forts,$pts_faibles,$appreciation,$date,$affiche);
+    function ajoutSortie($description,$affiche){
+        $semaine = date("W-Y");
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO sorties_semaine VALUES(?,?,?)");
+        $query->bind_param('sss',$semaine,$description,$affiche);
         $query->execute();
         $query->close();
         return true;
     }
 
-    function supprSortie($titre,$date){
-        $query = $GLOBALS["bdd"]->prepare("DELETE INTO sorties_semaine where titre=? and date=?");
-        $query->bind_param('ss',$titre,$date);
+    function supprSortie($semaine){
+        $query = $GLOBALS["bdd"]->prepare("SELECT  affiche FROM  sorties_semaine WHERE  semaine=?");
+        $query->bind_param("s",$semaine);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($imagetodelete);
+        $query->fetch();
+        unlink($imagetodelete);
+        $query->close();
+        $query = $GLOBALS["bdd"]->prepare("DELETE INTO sorties_semaine where semaine=?");
+        $query->bind_param('s',$semaine);
         $query->execute();
         $query->close();
         return true;
     }
 
-    function modifSortie($titre,$date,$nouveau_titre,$nouveaux_acteurs,$nouveau_realisateur,$nouveau_description,$nouveaux_pts_forts,$nouveaux_pts_faibles,$nouvelles_appreciation,$nouvelle_date,$nouvelle_affiche){
-        $query = $GLOBALS["bdd"]->prepare("UPDATE sorties_semaine SET titre=?, acteurs=?, realisateur=?, description=?, pts_forts=?, pts_faibles=?, appreciation=?, date=?, affiche=? where titre=? and date=?");
-        $query->bind_param('sssssssssss',$nouveau_titre,$nouveaux_acteurs,$nouveau_realisateur,$nouveau_description,$nouveaux_pts_forts,$nouveaux_pts_faibles,$nouvelles_appreciation,$nouvelle_date,$titre,$date,$affiche);
+    function modifSortie($semaine,$nouvelle_semaine,$nouvelle_description,$nouvelle_affiche){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE sorties_semaine SET semaine=?, description=?,affiche=? where semaine=?");
+        $query->bind_param('sss',$nouvelle_semaine, $nouvelle_description,$nouvelle_affiche,$semaine);
         $query->execute();
         $query->close();
         return true;
     }
 
+    function recupSortieSemaine(){
+        $semaine = date("W-o");
+        $tab = array();
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM sorties_semaine WHERE semaine=?");
+        $query->bind_param('s',$semaine);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["semaine"],$tab["description"],$tab["affiche"]);
+        $query->fetch();
+        $query->close();
+        return $tab;
+    }
 
+    function recupToutesSortiesSemaine(){
+        $tab = array();
+        $final = array();
+        $i = 0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM sorties_semaine");
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["semaine"],$tab["description"],$tab["affiche"]);
+        while($query->fetch()){
+            $final[$i]["semaine"] = $tab["semaine"];
+            $final[$i]["description"] = $tab["description"];
+            $final[$i]["affiche"] = $tab["affiche"];
+            $i++;
+        }
+        $query->close();
+        return $final;
+    }
 
 ?>

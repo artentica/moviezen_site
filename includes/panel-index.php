@@ -19,7 +19,7 @@ echo'
                                             <li><a href="views/cine.php" class="nav-btn">Coté Ciné de l\'ISEN</a></li>
 
                                             <li><a href="views/emprunt.php" class="nav-btn">Emprunt de matériel</a></li>
-
+                                            <li><a href="views/sorties.php" class="nav-btn">Sorties de la semaine</a></li>
                                             <li><a href="views/calendrier.php" class="nav-btn">Calendrier des emprunts</a></li>';
                                             if(!empty($_SESSION["authentifie"])){
                                             echo '<li><a href="views/projection.php" class="nav-btn">Espace liste de projection</a></li>';

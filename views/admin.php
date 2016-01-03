@@ -496,6 +496,41 @@
             }
         }
 
+//AJOUT DE SORTIES DE LA SEMAINE
+if(!empty($_POST["add_sortie_description"])){
+    if(!empty($_FILES["add_sortie_affiche"]) && !empty($_FILES["add_sortie_affiche"]["name"])){
+        $extensions_valides = array( 'jpg','jpeg','png' );
+        $extension_upload = strtolower(  substr(  strrchr($_FILES['add_sortie_affiche']['name'], '.')  ,1)  );
+        if ( in_array($extension_upload,$extensions_valides) ){
+            if( preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $_FILES['add_sortie_affiche']['name']) || preg_match("/[\x{202E}]+/u", $_FILES['add_sortie_affiche']['name']))
+            {
+                $ajoutSortie = false;
+            }
+            else if(strstr($_FILES['add_sortie_affiche']['name'], ".php") || strstr($_FILES['add_sortie_affiche']['name'], "php.") || strstr($_FILES['add_sortie_affiche']['name'], ".exe") ){
+                $ajoutSortie = false;
+            }
+            else{
+                $nom = md5(uniqid(rand(), true));
+                $nom = "../Images/affiche/".$nom.".".$extension_upload;
+                $nom = compress($_FILES['add_sortie_affiche']['tmp_name'],$nom,50);
+            }
+        }
+        else{
+            $modifProj = false;
+        }
+        if(!empty($nom)){
+            $ajoutSortie = ajoutSortie($_POST["add_sortie_description"],$nom);
+        }
+        else{
+            $ajoutSortie = false;
+        }
+    }
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
       //Nb of admin or 'lot' or projection
       //REFAIRE LE COMPTAGE DES PROJECTIONS ET LOTS
       //Nombre d'admin
@@ -584,6 +619,11 @@ background-size: cover;">
             if(!empty($_SESSION["authentifie"])){
                 if($_SESSION["authentifie"]){
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//GESTION DES ADMINISTRATEURS
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     echo('
                     <a title="Deconnexion button" type="button" class="btn" id="decoInAdmin" href="?deco=1"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
                     <h1>Gestion des administrateurs</h1>
@@ -743,6 +783,14 @@ background-size: cover;">
                         if($supprAdmin == 3){
                             echo('<div class="alert alert-danger message">Vous ne pouvez pas vous supprimer vous même !</div>');
                         }
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//GESTION DES PROJECTIONS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     echo '</div></div><div class="panel panel-default">
 		<div class="panel-body">';
@@ -1063,11 +1111,15 @@ background-size: cover;">
                         }
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//GESTION DES COURTS METRAGES
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 echo '</div></div><div class="panel panel-default">
 		<div class="panel-body">';
-                    //GESTION DES COURTS METRAGES
+
 
         echo('<h1>Gestion des courts-métrages</h1>
 
@@ -1149,13 +1201,16 @@ echo '</div></div><div class="panel panel-default">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite lors de la suppression de la projection: "'.$_POST["del_court_projection"].'"</div>');
                     }
 
-                echo('
-                </div></div><div class="panel panel-default">
-		<div class="panel-body">');
-                    //GESTION DES LOTS
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//GESTION DES LOTS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+                    echo('
+                    </div></div><div class="panel panel-default">
+                    <div class="panel-body">');
 
 
                     echo('
@@ -1323,7 +1378,164 @@ echo '</div></div><div class="panel panel-default">
 
 
             echo '</div></div>EN TRAVAUX EN DESSOUS!!!';
-                //GESTION DES INSCRITS
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//GESTION DES SORTIES DE LA SEMAINE
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            //CREATION DES SORTIES
+            echo'<div class="panel panel-default">
+                <div class="panel-body">';
+            echo('<h1>Gestion des Sorties de la semaine</h1>');
+            echo('
+                        <form method="post" action="admin.php#ajoute_sortie" class="form-register" enctype="multipart/form-data">
+                        <fieldset>
+                        <legend id="ajoute_sortie">Publier une sortie de la semaine</legend>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_sortie_description">Description ou courte présentation de la semaine: </label></span><textarea name="add_sortie_description" id="add_sortie_description" placeholder="Voici les sorties pour cette semaine : " class="form-control" required></textarea></div>
+                            <div class="input-group max center"><input type="file" name="add_sortie_affiche" id="add_sortie_affiche" class="img_lot form-control" required/></div>
+                            <input type="submit" class="button dark_grey" value="Publier la sortie de cette semaine"/>
+                        </fieldset></form>
+                        ');
+
+            //FEEDBACK SUR LA CREATION DE LA SORTIE
+            if(!empty($ajoutSortie)){
+                if($ajoutSortie){
+                    echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Cette sortie a bien été créée dans la base de données.</div>');
+                }
+                else{
+                    echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite durant la création de cette sortie.</div>');
+                }
+            }
+
+            echo('<form method="post" action="admin.php#modif_sortie" class="form-register"><fieldset>
+<legend id="modifie_lot">Modifier une sortie</legend>
+            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_sortie">Sortie : </label></span><select name="modif_sortie" id="modif_sortie">
+                                 ');
+
+
+            $result = recupToutesSortiesSemaine();
+            foreach($result as $sortie){
+                echo('<option value="'.$sortie["semaine"].'">'.$sortie["semaine"].', composé de '.$sortie["description"].'</option>');
+            }
+              echo('
+                            </select></div>
+                            <input type="submit" class="button dark_grey" value="Modifier cette sortie"');
+                        if($nbrLot == 0)echo " disabled ";
+                        echo('/>
+                        </fieldset></form>
+
+                  ');
+
+                if(!empty($_POST["modif_lot"]) &&  $_SESSION["authentifie"]){
+                    $result = recupUniqueLot($_POST["modif_lot"]);
+                    $id = $result["id"];
+                    $composition = $result["compo"];
+                    $caution = $result["caution"];
+                     echo('<form method="post" action="admin.php#modifie_lot" class="form-register" enctype="multipart/form-data">
+
+                        <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
+                        <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required value="'.$id.'"/></div>
+                         <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_compo">Description: </label></span><textarea name="modif_lot_compo" id="modif_lot_compo" placeholder="Caméra sony avec 3 batteries" class="form-control" required>'.$composition.'</textarea></div>
+                        <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150&euro;" class="form-control" required value="'.$caution.'"/></div>
+                        <div class="input-group max center"><!--<span class="input-group-addon form-label start_span"><label for="modif_lot_photo">Photo du lot: </label></span>--><input type="file" name="modif_lot_photo" id="modif_lot_photo" class="img_lot form-control"/></div>
+                        <input type="submit" class="button dark_grey" value="Sauvegarder les changements"/>
+
+
+
+                        </form>
+                        ');
+
+                }
+
+                if(!empty($modifie)){
+                    if($modifie){
+                        echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["modif_lot_id"].'" a été correctement modifié !</div>');
+                    }
+                    else{
+                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["modif_lot_id"].'" n\'a pas pu être modifié !</div>');
+                    }
+                }
+                    echo('
+
+                        <form method="post" action="admin.php#supprimer_lot" class="form-register"><fieldset>
+<legend id="supprimer_lot">Supprimer un lot</legend>
+<p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Attention, cette action est irréversible<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Lot(s) : </label></span><select name="suppr_lot" id="suppr_lot">');
+            $result = recupLot();
+            while ($row = $result->fetch_array(MYSQLI_ASSOC))
+            {
+                $id = $row["id"];
+                $composition = $row["composition"];
+                echo('<option value="'.$id.'">'.$id.', composé de '.$composition.'</option>');
+            }
+            $result->close();
+                echo('</select></div>
+
+                                                            <!-- Button trigger modal -->
+<button type="button" class="button dark_grey" data-toggle="modal" onClick="suppr_lot_conf()"');
+                        if($nbrLot == 0)echo " disabled ";
+                        echo('>
+Confirmer suppression
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="lotModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="lotModalLabel"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Suppression de Lot<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></h4>
+  </div>
+  <div id="lot_texte_suppr" class="modal-body">
+
+      <input type="text" id="lot_proj_to_suppr" placeholder="Nom du lot" onkeyup="verif_same($(this))" class="form-control" required>
+
+
+  </div>
+  <div class="modal-footer">
+    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span><input type="submit" class="button dark_grey" value="Supprimer ce lot" disabled/><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+  </div>
+</div>
+</div>
+</div>
+                        </fieldset></form>
+            ');
+
+            //SUPPRESSION DE LOTS
+
+                if($supprLot == 1){
+                    echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" a bien été supprimé !</div>');
+                }
+                elseif($supprLot == 2){
+                    echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" n\'a pas pu être supprimé !</div>');
+                }
+
+            // RESET A 1 DES LOTS POUR TOUTE L'ANNEE
+            echo('<div>
+                <form method="post" action="admin.php#reset_lot" class="form-register"><fieldset>
+                <legend id="reset_lot">Remettre la disponibilité des lots à 1 pour tout le monde</legend>
+                <p>ATTENTION, CETTE ACTION VA ENTRAINER LE RESET DE TOUT LES EMPRUNTS EFFECTUES POUR LE MATERIEL MOVIEZEN !! N\'EFFECTUEZ CETTE ACTION QUE SI VOUS SAVEZ RÉELLEMENT CE QUE VOUS FAITES !</p>
+                <input type="hidden" name="reset_lots" id="reset_lots" value="1"/>
+                <input type="submit" class="button dark_grey" value="Resetter les disponibilités de tout les lots !"/>
+            </fieldset></form></div>');
+
+
+        echo '</div></div>';
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//GESTION DES INSCRITS
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 echo '<div class="panel panel-default">
 		<div class="panel-body">
         <h1>Gestion des inscrits</h1>
@@ -1435,6 +1647,9 @@ echo('
             </form>');
             }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ?>
 
 

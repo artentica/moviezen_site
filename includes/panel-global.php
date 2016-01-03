@@ -27,6 +27,9 @@ echo'
                                             echo '<li';
             if($page=="emprunt.php")echo(" class=current_page_item");
     echo'><a href="emprunt.php" class="nav-btn">Emprunt de matériel</a></li>';
+    echo '<li';
+if($page=="sorties.php")echo(" class=current_page_item");
+echo'><a href="sorties.php" class="nav-btn">Sorties de la semaine</a></li>';
                                             echo '<li';
 
             if($page=="calendrier.php")echo(" class=current_page_item");
