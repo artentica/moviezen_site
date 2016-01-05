@@ -1521,10 +1521,11 @@
         //description : le synopsys du film . Format String
         //Affiche : l'affiche du film. Format String contenant l'URL du fichier image
 
-    function ajoutSortie($description,$affiche){
+    function ajoutSortie($description,$affiche,$active){
         $semaine = date("W-Y");
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO sorties_semaine VALUES(?,?,?)");
-        $query->bind_param('sss',$semaine,$description,$affiche);
+        $timestamp = time();
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO sorties_semaine VALUES(?,?,?,?,?)");
+        $query->bind_param('sssii',$semaine,$description,$affiche,$active,$timestamp);
         $query->execute();
         $query->close();
         return true;
@@ -1539,29 +1540,28 @@
         $query->fetch();
         unlink($imagetodelete);
         $query->close();
-        $query = $GLOBALS["bdd"]->prepare("DELETE INTO sorties_semaine where semaine=?");
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM sorties_semaine where semaine=?");
         $query->bind_param('s',$semaine);
         $query->execute();
         $query->close();
         return true;
     }
 
-    function modifSortie($semaine,$nouvelle_semaine,$nouvelle_description,$nouvelle_affiche){
-        $query = $GLOBALS["bdd"]->prepare("UPDATE sorties_semaine SET semaine=?, description=?,affiche=? where semaine=?");
-        $query->bind_param('sss',$nouvelle_semaine, $nouvelle_description,$nouvelle_affiche,$semaine);
+    function modifSortie($semaine,$nouvelle_semaine,$nouvelle_description,$nouvelle_affiche,$active,$timestamp){
+        $timestamp = time();
+        $query = $GLOBALS["bdd"]->prepare("UPDATE sorties_semaine SET semaine=?, description=?,affiche=?,active=?, timestamp=? where semaine=?");
+        $query->bind_param('sss',$nouvelle_semaine, $nouvelle_description,$nouvelle_affiche,$active,$timestamp,$semaine);
         $query->execute();
         $query->close();
         return true;
     }
 
     function recupSortieSemaine(){
-        $semaine = date("W-o");
         $tab = array();
-        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM sorties_semaine WHERE semaine=?");
-        $query->bind_param('s',$semaine);
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM sorties_semaine WHERE active=1");
         $query->execute();
         $query->store_result();
-        $query->bind_result($tab["semaine"],$tab["description"],$tab["affiche"]);
+        $query->bind_result($tab["semaine"],$tab["description"],$tab["affiche"],$tab["active"],$tab["timestamp_ajout"]);
         $query->fetch();
         $query->close();
         return $tab;
@@ -1574,15 +1574,29 @@
         $query = $GLOBALS["bdd"]->prepare("SELECT * FROM sorties_semaine");
         $query->execute();
         $query->store_result();
-        $query->bind_result($tab["semaine"],$tab["description"],$tab["affiche"]);
+        $query->bind_result($tab["semaine"],$tab["description"],$tab["affiche"],$tab["active"],$tab["timestamp_ajout"]);
         while($query->fetch()){
             $final[$i]["semaine"] = $tab["semaine"];
             $final[$i]["description"] = $tab["description"];
             $final[$i]["affiche"] = $tab["affiche"];
+            $final[$i]["active"] = $tab["active"];
+            $final[$i]["timestamp_ajout"] = $tab["timestamp_ajout"];
             $i++;
         }
         $query->close();
         return $final;
+    }
+
+    function recupSortieSemainePrecise($semaine){
+        $tab = array();
+        $query = $GLOBALS["bdd"]->prepare("SELECT * FROM sorties_semaine WHERE semaine=?");
+        $query->bind_param('s',$semaine);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["semaine"],$tab["description"],$tab["affiche"],$tab["active"],$tab["timestamp_ajout"]);
+        $query->fetch();
+        $query->close();
+        return $tab;
     }
 
 ?>

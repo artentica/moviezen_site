@@ -530,7 +530,18 @@ if(!empty($_POST["add_sortie_description"])){
             $modifProj = false;
         }
         if(!empty($nom)){
-            $ajoutSortie = ajoutSortie($_POST["add_sortie_description"],$nom);
+            if(!empty($_POST["add_sortie_active"])){
+                if($_POST["add_sortie_active"]){
+                    $active = 1;
+                }
+                else{
+                    $active = 0;
+                }
+            }
+            else{
+                $active = 0;
+            }
+            $ajoutSortie = ajoutSortie($_POST["add_sortie_description"],$nom,$active);
         }
         else{
             $ajoutSortie = false;
@@ -1412,6 +1423,7 @@ if(!empty($_SESSION["admin_sorties_semaine"])){
                         <legend id="ajoute_sortie">Publier une sortie de la semaine</legend>
                             <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_sortie_description">Description ou courte présentation de la semaine: </label></span><textarea name="add_sortie_description" id="add_sortie_description" placeholder="Voici les sorties pour cette semaine : " class="form-control" required></textarea></div>
                             <div class="input-group max center"><input type="file" name="add_sortie_affiche" id="add_sortie_affiche" class="img_lot form-control" required/></div>
+                            <label class="checkbox" for="add_sortie_active"><input type="checkbox" id="add_sortie_active" name="add_sortie_active" value="1" style="">Activer cette sortie de la semaine ?</label>
                             <input type="submit" class="button dark_grey" value="Publier la sortie de cette semaine"/>
                         </fieldset></form>
                         ');
@@ -1441,20 +1453,20 @@ if(!empty($_SESSION["admin_sorties_semaine"])){
               echo('
                             </select></div>
                             <input type="submit" class="button dark_grey" value="Modifier cette sortie"');
-                        if($nbrLot == 0)echo " disabled ";
+                        if(count($result) == 0)echo " disabled ";
                         echo('/>
                         </fieldset></form>
 
                   ');
 
-                if(!empty($_POST["modif_lot"]) &&  $_SESSION["authentifie"]){
-                    $result = recupUniqueLot($_POST["modif_lot"]);
-                    $id = $result["id"];
-                    $composition = $result["compo"];
-                    $caution = $result["caution"];
-                     echo('<form method="post" action="admin.php#modifie_lot" class="form-register" enctype="multipart/form-data">
+                if(!empty($_POST["modif_sortie"]) &&  $_SESSION["authentifie"]){
+                    $result = recupSortieSemainePrecise($_POST["modif_lot"]);
+                    $semaine = $result["semaine"];
+                    $description = $result["description"];
+                    $active = $result["active"];
+                     echo('<form method="post" action="admin.php#modifie_sortie" class="form-register" enctype="multipart/form-data">
 
-                        <input type="hidden" value="'.$id.'" name="modif_lot_id_old" id="modif_lot_id_old"/>
+                        <input type="hidden" value="'.$semaine.'" name="modif_sortie_semaine_old" id="modif_sortie_semaine_old"/>
                         <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_id"><span title="Identifiant">Id</span> du lot : </label></span><input name="modif_lot_id" id="modif_lot_id" type="text" placeholder="Lettre majuscule (A,B,K,...)" class="form-control" required value="'.$id.'"/></div>
                          <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_compo">Description: </label></span><textarea name="modif_lot_compo" id="modif_lot_compo" placeholder="Caméra sony avec 3 batteries" class="form-control" required>'.$composition.'</textarea></div>
                         <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="modif_lot_caution"><span title="en euro (&euro;)">Caution du lot : </label></span><input type="number" name="modif_lot_caution" id="modif_lot_caution" placeholder="150&euro;" class="form-control" required value="'.$caution.'"/></div>

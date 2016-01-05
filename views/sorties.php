@@ -5,6 +5,7 @@
 
     connect();
     $tab = recupSortieSemaine();
+
 ?>
 <!doctype html>
 <html>
@@ -40,11 +41,13 @@ background-size: cover;">
     <div class="">
         <?php
             if(!empty($tab["semaine"])){
-                echo'<h1>Nos sorties de la semaine</h1><br><h4>(sorties du '.$tab["semaine"].')</h4>';
+                echo'<h1>Nos sorties de la semaine</h1><br><h4>(sorties du '.date("d/m/Y",strtotime($tab["timestamp_ajout"])).')</h4>';
                 echo'<p>'.$tab["description"].'<p>';
-                echo'<img src="'.$tab["affiche"].'" alt="Image des films et résumé">';
+                echo'<img src="'.$tab["affiche"].'" alt="Image des films et résumé" class="image_sortie"/>';
             }
-
+            else{
+                echo'<h3>Désolé, il semblerait qu\'aucune sortie n\'ait été activée encore ! Revenez bientôt.</h3>';
+            }
 
         ?>
     </div>
