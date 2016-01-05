@@ -43,6 +43,30 @@
         }
       }
 
+      //change resp Admin
+      //LAISSER CA ICI, SINON LES CHANGEMENTS EN BDD NE SERONT PAS REPERCUTES
+      //LORS DU LOGIN PLUS BAS
+      if(!empty($_POST["add_respons_id_emprunts"]) && isset($_POST["add_respons_emprunts"])){
+          if(changeAdminEmprunts($_POST["add_respons_id_emprunts"],$_POST["add_respons_emprunts"])) $changeRespEmprunts = 1;
+          else $changeRespEmprunts = 2;
+
+      }
+      if(!empty($_POST["add_respons_id_sys"]) && isset($_POST["add_respons_sys"])){
+          if(changeAdminSys($_POST["add_respons_id_sys"],$_POST["add_respons_sys"])) $changeRespSys = 1;
+          else $changeRespSys = 2;
+
+      }
+      if(!empty($_POST["add_respons_id_cine"]) && isset($_POST["add_respons_cine"])){
+          if(changeAdminCine($_POST["add_respons_id_cine"],$_POST["add_respons_cine"])) $changeRespCine = 1;
+          else $changeRespCine = 2;
+
+      }
+      if(!empty($_POST["add_respons_id_sorties"]) && isset($_POST["add_respons_sorties"])){
+          if(changeAdminSorties($_POST["add_respons_id_sorties"],$_POST["add_respons_sorties"])) $changeRespSorties = 1;
+          else $changeRespSorties = 2;
+
+      }
+
     // PARTIE AUTHENTIFICATION AVEC MDP CRYPTE
 
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
@@ -69,10 +93,6 @@
                 $_SESSION["admin_emprunts"] = $admin_emprunts;
                 $_SESSION["admin_cine"] = $admin_cine;
                 $_SESSION["admin_sorties_semaine"] = $admin_sorties_semaine;
-                echo $admin_sys;
-                echo $admin_emprunts;
-                echo $admin_cine;
-                echo $admin_sorties_semaine;
             }
             else{
                 unset($_SESSION["authentifie"]);
@@ -82,6 +102,19 @@
         else{
             $wrongIDMDP = 1;
         }
+    }
+    elseif(!empty($_SESSION["id"])){
+        $query = $GLOBALS["bdd"]->prepare("SELECT responsable_sys, responsable_emprunt, responsable_cine, responsable_sorties_semaine FROM admin WHERE identifiant=?");
+        $query->bind_param("s",$_SESSION["id"]);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($admin_sys,$admin_emprunts,$admin_cine,$admin_sorties_semaine);
+        $query->fetch();
+        $query->close();
+        $_SESSION["admin_sys"] = $admin_sys;
+        $_SESSION["admin_emprunts"] = $admin_emprunts;
+        $_SESSION["admin_cine"] = $admin_cine;
+        $_SESSION["admin_sorties_semaine"] = $admin_sorties_semaine;
     }
 
 
@@ -145,27 +178,7 @@
          else $addAdmini = 2;
      }
 
-    //change resp Admin
-    if(!empty($_POST["add_respons_id_emprunts"]) && isset($_POST["add_respons_emprunts"])){
-        if(changeAdminEmprunts($_POST["add_respons_id_emprunts"],$_POST["add_respons_emprunts"])) $changeRespEmprunts = 1;
-        else $changeRespEmprunts = 2;
 
-    }
-    if(!empty($_POST["add_respons_id_sys"]) && isset($_POST["add_respons_sys"])){
-        if(changeAdminSys($_POST["add_respons_id_sys"],$_POST["add_respons_sys"])) $changeRespSys = 1;
-        else $changeRespSys = 2;
-
-    }
-    if(!empty($_POST["add_respons_id_cine"]) && isset($_POST["add_respons_cine"])){
-        if(changeAdminCine($_POST["add_respons_id_cine"],$_POST["add_respons_cine"])) $changeRespCine = 1;
-        else $changeRespCine = 2;
-
-    }
-    if(!empty($_POST["add_respons_id_sorties"]) && isset($_POST["add_respons_sorties"])){
-        if(changeAdminSorties($_POST["add_respons_id_sorties"],$_POST["add_respons_sorties"])) $changeRespSorties = 1;
-        else $changeRespSorties = 2;
-
-    }
 
     //Supprimer Admin
     if(!empty($_POST["suppr_admin"]) && $_SESSION["authentifie"]){
@@ -750,8 +763,9 @@ background-size: cover;">
 
 
 
-                    echo('
-
+                    echo('<br>
+                    <h1>Changement des permissions</h1>
+                    
                             <form method="post" action="admin.php#change_respons_emprunts" class="form-register">
                             <fieldset>
     <legend id="change_respons_emprunts">Mettre un administrateur responsable des emprunts</legend>
