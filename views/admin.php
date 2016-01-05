@@ -11,7 +11,10 @@
 
     $wrongIDMDP = 0;
     $return = 0;
-
+    $admin_sys = 0;
+    $admin_emprunts = 0;
+    $admin_cine = 0;
+    $admin_sorties_semaine = 0;
     //Protection contre faille XSS et attaques HTML-JS
     //Pour tableau POST (et GET au cas où)
     //On parcourt la totalité du tableau POST et GET et pour chaque variable, on enlève les éléments "génants"
@@ -45,11 +48,11 @@
     if(!empty($_POST["id"]) && !empty($_POST["mdp"])){
         usleep(200000); // Protection contre brute-force, maximum 5 requetes par seconde
         $mdp = protect($_POST["mdp"]);
-        $query = $GLOBALS["bdd"]->prepare("SELECT identifiant , mdp FROM admin WHERE identifiant=?");
+        $query = $GLOBALS["bdd"]->prepare("SELECT identifiant , mdp, responsable_sys, responsable_emprunt, responsable_cine, responsable_sorties_semaine FROM admin WHERE identifiant=?");
         $query->bind_param("s",$_POST["id"]);
         $query->execute();
         $query->store_result();
-        $query->bind_result($id,$hash);
+        $query->bind_result($id,$hash,$admin_sys,$admin_emprunts,$admin_cine,$admin_sorties_semaine);
         //Attention ! changement effectué ici, mais encore non vérifié !
         //A vérifier avant le déploiement
         /*while($query->fetch()){
@@ -62,6 +65,14 @@
             if(password_verify($mdp, $hash) && strcmp($id,$_POST["id"])==0){
                 $_SESSION["authentifie"]=true;
                 $_SESSION["id"] = $id;
+                $_SESSION["admin_sys"] = $admin_sys;
+                $_SESSION["admin_emprunts"] = $admin_emprunts;
+                $_SESSION["admin_cine"] = $admin_cine;
+                $_SESSION["admin_sorties_semaine"] = $admin_sorties_semaine;
+                echo $admin_sys;
+                echo $admin_emprunts;
+                echo $admin_cine;
+                echo $admin_sorties_semaine;
             }
             else{
                 unset($_SESSION["authentifie"]);
@@ -615,9 +626,10 @@ background-size: cover;">
 		<div class="panel-body">
 
             <?php
-
             if(!empty($_SESSION["authentifie"])){
                 if($_SESSION["authentifie"]){
+                    if(!empty($_SESSION["admin_sys"])){
+                        if($_SESSION["admin_sys"]){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -685,7 +697,7 @@ background-size: cover;">
                               L\'administrateur "'.protect($_POST["add_id"]).'" n\'a pas pu être ajouté à la base de données !
                             </div>');
                         }
-                    }
+
 
 
                     echo('
@@ -783,9 +795,10 @@ background-size: cover;">
                         if($supprAdmin == 3){
                             echo('<div class="alert alert-danger message">Vous ne pouvez pas vous supprimer vous même !</div>');
                         }
-
-
-
+                    }
+                }
+                if(!empty($_SESSION["admin_cine"])){
+                    if($_SESSION["admin_cine"]){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GESTION DES PROJECTIONS
@@ -1110,7 +1123,6 @@ background-size: cover;">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite lors de la suppression de: "'.$_POST["suppr_proj"].'" </div>');
                         }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GESTION DES COURTS METRAGES
@@ -1200,14 +1212,16 @@ echo '</div></div><div class="panel panel-default">
                         echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite lors de la suppression de la projection: "'.$_POST["del_court_projection"].'"</div>');
                     }
-
+                }
+            }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GESTION DES LOTS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+if(!empty($_SESSION["admin_emprunts"])){
+    if($_SESSION["admin_emprunts"]){
                     echo('
                     </div></div><div class="panel panel-default">
                     <div class="panel-body">');
@@ -1378,13 +1392,16 @@ echo '</div></div><div class="panel panel-default">
 
 
             echo '</div></div>EN TRAVAUX EN DESSOUS!!!';
+        }
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GESTION DES SORTIES DE LA SEMAINE
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+if(!empty($_SESSION["admin_sorties_semaine"])){
+    if($_SESSION["admin_sorties_semaine"]){
             //CREATION DES SORTIES
             echo'<div class="panel panel-default">
                 <div class="panel-body">';
@@ -1530,7 +1547,8 @@ Confirmer suppression
 
         echo '</div></div>';
 
-
+    }
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GESTION DES INSCRITS
@@ -1634,7 +1652,8 @@ echo('
 
 
 
-}
+            }
+        }
             else{
                 echo('<h1>Espace d\'administration</h1>');
                 if($wrongIDMDP == 1) echo ('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
@@ -1646,6 +1665,7 @@ echo('
                 <input type="submit" class="button dark_grey" value="Se connecter"/>
             </form>');
             }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
