@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
--- Client: localhost
--- Généré le: Mar 24 Février 2015 à 13:47
--- Version du serveur: 5.5.41-0ubuntu0.14.04.1
--- Version de PHP: 5.5.9-1ubuntu4.6
+-- Client :  127.0.0.1
+-- Généré le :  Mar 05 Janvier 2016 à 21:09
+-- Version du serveur :  5.6.17
+-- Version de PHP :  5.5.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de données: `moviezen`
+-- Base de données :  `moviezen`
 --
 
 -- --------------------------------------------------------
@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `mdp` text COLLATE utf8_bin NOT NULL,
   `mail` text COLLATE utf8_bin NOT NULL,
   `responsable_emprunt` tinyint(1) NOT NULL DEFAULT '0',
+  `responsable_cine` tinyint(1) NOT NULL DEFAULT '0',
+  `responsable_sys` tinyint(1) NOT NULL DEFAULT '0',
+  `responsable_sorties_semaine` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`identifiant`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -38,12 +41,38 @@ CREATE TABLE IF NOT EXISTS `admin` (
 -- Contenu de la table `admin`
 --
 
-INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`) VALUES
-('AlexF', '$2y$10$FEtjUvCtEZKDYs8AC99vSePN8kRoq6jyUa71s1b3NRiTbiLMyZRlC', 'alexandre.ferreira@isen-bretagne.fr', 1),
-('Artentica', '$2y$10$ZD1R1mcxcDQguhZR8FBq6efRqwhTo4aj3.MvG58D42g2Mx35zl1ne', 'yolo@penis.com', 1),
-('Fanch', '$2y$10$qWEPaFJNPHx64YauKxTXae7eOQzakxeNziSvIKpCZeWXf1zQUr9/6', 'fanch.toquer@laposte.net', 0),
-('elisbihani.oumeima', '$2y$10$lZKM3WXY/Qefl76BGzJLN.NjarZ1RmoMP0/DwZwFb544MzKhA/g96', 'elisbihani.oumeima17@hotmail.fr', 0),
-('ned29', '$2y$10$vDUBYRoTMqMlzFS1ynSz0OhUB0sl2ilMbyqpaQaKXCg2HJCXRj5oW', 'antoinenedelec21@gmail.com', 0);
+INSERT INTO `admin` (`identifiant`, `mdp`, `mail`, `responsable_emprunt`, `responsable_cine`, `responsable_sys`, `responsable_sorties_semaine`) VALUES
+('AlexF', '$2y$10$FEtjUvCtEZKDYs8AC99vSePN8kRoq6jyUa71s1b3NRiTbiLMyZRlC', 'alexandre.ferreira@isen-bretagne.fr', 1, 0, 1, 0),
+('Artentica', '$2y$10$ZD1R1mcxcDQguhZR8FBq6efRqwhTo4aj3.MvG58D42g2Mx35zl1ne', 'artentica@gmail.com', 1, 0, 1, 1),
+('Fanch', '$2y$10$qWEPaFJNPHx64YauKxTXae7eOQzakxeNziSvIKpCZeWXf1zQUr9/6', 'fanch.toquer@laposte.net', 1, 1, 1, 1),
+('elisbihani.oumeima', '$2y$10$lZKM3WXY/Qefl76BGzJLN.NjarZ1RmoMP0/DwZwFb544MzKhA/g96', 'elisbihani.oumeima17@hotmail.fr', 0, 1, 0, 1),
+('ned29', '$2y$10$vDUBYRoTMqMlzFS1ynSz0OhUB0sl2ilMbyqpaQaKXCg2HJCXRj5oW', 'antoinenedelec21@gmail.com', 0, 1, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `courts`
+--
+
+CREATE TABLE IF NOT EXISTS `courts` (
+  `titre` text COLLATE utf8_bin NOT NULL,
+  `description` text COLLATE utf8_bin NOT NULL,
+  `projection_liee` varchar(255) COLLATE utf8_bin NOT NULL,
+  `video` text COLLATE utf8_bin NOT NULL,
+  `affiche` text COLLATE utf8_bin NOT NULL,
+  `annee` year(4) NOT NULL,
+  KEY `projection_courts` (`projection_liee`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `courts`
+--
+
+INSERT INTO `courts` (`titre`, `description`, `projection_liee`, `video`, `affiche`, `annee`) VALUES
+('Test', 'fsdfsdfvsfvsdvds', 'atstAmerican Sniper (VOST)', 'https://www.youtube.com/embed/PCs2x4-v_RQ', '../Images/logo.jpg', 0000),
+('Baoualag ar brezel', 'dsqdqsdqsdqcqscqcqscqcsq', 'atstAmerican Sniper (VOST)', 'https://www.youtube.com/embed/PCs2x4-v_RQ', '../Images/url.jpg', 0000),
+('Yolo', 'qsdsqdscqscqscqscd', 'atstAmerican Sniper (VOST)', 'https://www.youtube.com/embed/PCs2x4-v_RQ', '../Images/url2.jpg', 0000),
+('Youpiiiiiiiiiiii', 'dqsdqsdaqscacaqcsxqcscds', 'atstAmerican Sniper (VOST)', 'https://www.youtube.com/embed/PCs2x4-v_RQ', '../Images/affiche/f072f033c3ebec56f4072299daabe2e6.jpg', 0000);
 
 -- --------------------------------------------------------
 
@@ -66,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `desinscription` (
 --
 
 INSERT INTO `desinscription` (`mail`, `desinscription_code`, `raison`, `done`, `projection`, `last_send`) VALUES
-('ftoque17@isen-bretagne.fr', 'e2ca7ce304f494565d4c21fddee9c1d0', NULL, 0, 'American Sniper (VOST)', 1424723313);
+('ftoque17@isen-bretagne.fr', 'e2ca7ce304f494565d4c21fddee9c1d0', NULL, 0, 'atstAmerican Sniper (VOST)', 1424723313);
 
 -- --------------------------------------------------------
 
@@ -77,7 +106,7 @@ INSERT INTO `desinscription` (`mail`, `desinscription_code`, `raison`, `done`, `
 CREATE TABLE IF NOT EXISTS `dispo` (
   `jour` int(11) NOT NULL AUTO_INCREMENT,
   `B` tinyint(1) NOT NULL DEFAULT '1',
-  `A` tinyint(1) NOT NULL DEFAULT '1',
+  `cc` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`jour`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=367 ;
 
@@ -85,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `dispo` (
 -- Contenu de la table `dispo`
 --
 
-INSERT INTO `dispo` (`jour`, `B`, `A`) VALUES
+INSERT INTO `dispo` (`jour`, `B`, `cc`) VALUES
 (1, 1, 1),
 (2, 1, 1),
 (3, 1, 1),
@@ -475,9 +504,25 @@ CREATE TABLE IF NOT EXISTS `inscrits` (
 INSERT INTO `inscrits` (`nom`, `prenom`, `tel`, `mail`, `classe`) VALUES
 ('Ferreira', 'Alexandre', '', 'alexandre.ferreira@isen-bretagne.fr', 'CSI3'),
 ('Nédélec', 'Antoine', '', 'antoinenedelec21@gmail.com', 'M1'),
+('<script>alert(document.cookie);</script>', 'cxcsxc', '', 'cqsq@orange.fr', 'CIR3'),
+('&lt;script&gt;alert(document.cookie);&lt;/script&gt;', 'cxsxc', '', 'cxcqx@orange.fr', 'classe'),
+('&lt;script&gt;alert(document.cookie);&lt;/script&gt;', 'csxxqxcq', '', 'cxqcqxc@isen.fr', 'CIR3'),
+('&lt;script&gt;alert(document.cookie);&lt;/script&gt;', 'xcxcxcxcx', '', 'cxsddsc@orange.fr', 'CIR3'),
+('&lt;script&gt;alert(document.cookie);&lt;/script&gt;', 'cxxscqxcs', '', 'cxwxccdsz@orange.fr', 'CIR3'),
+('&lt;script&gt;alert(document.cookie);&lt;/script&gt;', 'xwqsdxsqdsq', '', 'dedqz@orange.fr', 'CIR3'),
+('Todsqdsd', 'dsqdqd', '', 'dqd@orange.fr', 'CIR3'),
+('csdqsdsq', 'dsqdsqdsqd', '', 'dqsdqsd@orange.fr', 'CIR3'),
+('&lt;script&gt;alert(document.cookie);&lt;/script&gt;', 'dqsdsqd', '', 'dqsdsqdqzd@orange.fr', 'CIR3'),
+('&lt;script&gt;alert(document.cookie);&lt;/script&gt;', 'qsdqsdsqd', '', 'dqssdqaz@orange.fr', 'CIR3'),
+('<script>alert(document.cookie);</script>', 'qssdqds', '', 'dsdqs@orange.fr', 'CIR3'),
+('<script>alert(document.cookie);</script>', 'sqdqdqsd', '', 'dsqdqez@free.fr', 'CIR3'),
+('<script>alert(document.cookie);</script>', 'dqqdsdsqd', '', 'dsqdqzdz@isen.fr', 'CIR3'),
+('&amp;lt;script&amp;gt;alert(document.cookie);&amp;lt;/script&amp;gt;', 'qsdqsdqsd', '', 'fafaffafafafafafaf@orange.fr', 'CIR3'),
+('&lt;script&gt;alert(document.cookie);&lt;/script&gt;', 'dsqdqdsqdq', '', 'free@free.fr', 'CIR3'),
 ('Toquer', 'Francois', '', 'ftoque17@isen-bretagne.fr', 'CIR3'),
 ('Riouallon', 'Vincent', '', 'riouallonvincent@gmail.com', 'CIR3'),
-('Toqier', 'Fanch', '', 'tart@isen-bretagne.fr', 'CIR3');
+('Toqier', 'Fanch', '', 'tart@isen-bretagne.fr', 'CIR3'),
+('CIR3', 'cxcsxcs', '', 'test@orange.fr', 'CIR3');
 
 -- --------------------------------------------------------
 
@@ -508,6 +553,14 @@ CREATE TABLE IF NOT EXISTS `lots` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Contenu de la table `lots`
+--
+
+INSERT INTO `lots` (`id`, `composition`, `image`, `caution`) VALUES
+('B', 'dsqdsqd', '../Images/lot/5c2559da231d2c82ad1ab6ae188a0789.png', 50),
+('cc', 'dsdsfds', '../Images/lot/20b3a720242dd1059796ee63ae88895f.jpg', 280);
+
 -- --------------------------------------------------------
 
 --
@@ -526,6 +579,7 @@ CREATE TABLE IF NOT EXISTS `projections` (
   `langue` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT 'VF',
   `prix` float NOT NULL DEFAULT '4',
   `bande_annonce` text COLLATE utf8_bin NOT NULL,
+  `fin_annee` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -533,8 +587,9 @@ CREATE TABLE IF NOT EXISTS `projections` (
 -- Contenu de la table `projections`
 --
 
-INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`, `langue`, `prix`, `bande_annonce`) VALUES
-('American Sniper (VOST)', 1424235600, 1424995800, '           Tireur d\\''élite des Navy SEAL, Chris Kyle est envoyé en Irak dans un seul but : protéger ses camarades. Sa précision chirurgicale sauve d\\''innombrables vies humaines sur le champ de bataille et, tandis que les récits de ses exploits se multiplient, il décroche le surnom de \\"La Légende\\". Cependant, sa réputation se propage au-delà des lignes ennemies, si bien que sa tête est mise à prix et qu\\''il devient une cible privilégiée des insurgés. Malgré le danger, et l\\''angoisse dans laquelle vit sa famille, Chris participe à quatre batailles décisives parmi les plus terribles de la guerre en Irak, s\\''imposant ainsi comme l\\''incarnation vivante de la devise des SEAL : \\"Pas de quartier \\" Mais en rentrant au pays, Chris prend conscience qu\\''il ne parvient pas à retrouver une vie normale.', '', '../Images/affiche/758dd493503f0fc006d309db67951041.jpg', 1, '../Images/affiche/f130b49fd814f9b429bcb1c65f469c99.png', 'VO sous-titré français', 4, 'https://www.youtube.com/embed/p-7cwVPTNBw');
+INSERT INTO `projections` (`nom`, `date_release`, `date_projection`, `description`, `commentaires`, `affiche`, `active`, `back_affiche`, `langue`, `prix`, `bande_annonce`, `fin_annee`) VALUES
+('atstAmerican Sniper (VOST)', 1423198800, 1423267800, 'est envoy&eacute; en Irak dans un seul but : prot&eacute;ger ses camarades. Sa pr&eacute;cision chirurgicale sauve d&#039;innombrables vies humaines sur le champ de bataille et, tandis que les r&eacute;cits de ses exploits se multiplient, il d&eacute;croche le surnom de &quot;La L&eacute;gende&quot;. Cependant, sa r&eacute;putation se propage au-del&agrave; des lignes ennemies, si bien que sa t&ecirc;te est mise &agrave; prix et qu&#039;il devient une cible privil&eacute;gi&eacute;e des insurg&eacute;s. Malgr&eacute; le danger, et l&#039;angoisse dans laquelle vit sa famille, Chris participe &agrave; quatre batailles d&eacute;cisives parmi les plus terribles de la guerre en Irak, s&#039;imposant ainsi comme l&#039;incarnation vivante de la devise des SEAL : &quot;Pas de quartier &quot; Mais en rentrant au pays, Chris prend conscience qu&#039;il ne parvient pas &agrave; retrouver une vie normale.', 'SQQSqsqS', '../Images/affiche/325c7e43ef4da43a57324d7ca043db69.jpg', 1, '../Images/affiche/f7b389cd502b359f55252b81cdd76300.png', 'VF', 50, '0', 1),
+('fsdfdsdfdsfd', 1423761960, 1425057960, 'fsdfdsf', 'fsdfdsf', '../Images/affiche/630a7597d4e9729d215f141af28ba2c6.jpg', 0, '../Images/affiche/9aa70b1e185aa3aec4726a7828c241af.png', 'VF', 20, '0', 0);
 
 -- --------------------------------------------------------
 
@@ -554,10 +609,9 @@ CREATE TABLE IF NOT EXISTS `projections_inscrits` (
 --
 
 INSERT INTO `projections_inscrits` (`inscrit_mail`, `projection`) VALUES
-('riouallonvincent@gmail.com', 'American Sniper (VOST)'),
-('alexandre.ferreira@isen-bretagne.fr', 'American Sniper (VOST)'),
-('antoinenedelec21@gmail.com', 'American Sniper (VOST)'),
-('ftoque17@isen-bretagne.fr', 'American Sniper (VOST)');
+('antoinenedelec21@gmail.com', 'atstAmerican Sniper (VOST)'),
+('ftoque17@isen-bretagne.fr', 'atstAmerican Sniper (VOST)'),
+('dqd@orange.fr', 'atstAmerican Sniper (VOST)');
 
 -- --------------------------------------------------------
 
@@ -592,9 +646,47 @@ INSERT INTO `promotion` (`id`, `promotion`) VALUES
 (10, 'M1'),
 (12, 'M2');
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `sorties_semaine`
+--
+
+CREATE TABLE IF NOT EXISTS `sorties_semaine` (
+  `semaine` varchar(7) COLLATE utf8_bin NOT NULL,
+  `description` text COLLATE utf8_bin NOT NULL,
+  `affiche` text COLLATE utf8_bin NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `timestamp_ajout` timestamp NOT NULL,
+  UNIQUE KEY `semaine` (`semaine`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `sorties_semaine`
+--
+
+INSERT INTO `sorties_semaine` (`semaine`, `description`, `affiche`, `active`, `timestamp_ajout`) VALUES
+('01-2016', 'Test', '../Images/affiche/b14c7047d39555303ffd0e30958a62fa.jpg', 1, '2016-01-05 18:46:36');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `test`
+--
+
+CREATE TABLE IF NOT EXISTS `test` (
+  `a` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Contraintes pour les tables exportées
 --
+
+--
+-- Contraintes pour la table `courts`
+--
+ALTER TABLE `courts`
+  ADD CONSTRAINT `constr_proj_courts` FOREIGN KEY (`projection_liee`) REFERENCES `projections` (`nom`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `inscrits_lots`

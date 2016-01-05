@@ -1215,7 +1215,7 @@
     }
 
     //FONCTION RECUPERANT TOUT LES ADMINS RESPONSABLES DES EMPRUNTS
-    function recupAdmin(){
+    function recupAdminEmprunts(){
         $tab = array();
         $final = array();
         $i = 0;
@@ -1231,12 +1231,63 @@
         return $final;
     }
 
+    //FONCTION RECUPERANT TOUT LES ADMINS RESPONSABLES DES EMPRUNTS
+    function recupAdminSys(){
+        $tab = array();
+        $final = array();
+        $i = 0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT identifiant, responsable_sys FROM admin");
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["identifiant"],$tab["responsable_sys"]);
+        while($query->fetch()){
+            $final[$i] = array($tab["identifiant"],$tab["responsable_sys"]);
+            $i++;
+        }
+        $query->close();
+        return $final;
+    }
+
+    //FONCTION RECUPERANT TOUT LES ADMINS RESPONSABLES DES EMPRUNTS
+    function recupAdminCine(){
+        $tab = array();
+        $final = array();
+        $i = 0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT identifiant, responsable_cine FROM admin");
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["identifiant"],$tab["responsable_cine"]);
+        while($query->fetch()){
+            $final[$i] = array($tab["identifiant"],$tab["responsable_cine"]);
+            $i++;
+        }
+        $query->close();
+        return $final;
+    }
+
+    //FONCTION RECUPERANT TOUT LES ADMINS RESPONSABLES DES EMPRUNTS
+    function recupAdminSorties(){
+        $tab = array();
+        $final = array();
+        $i = 0;
+        $query = $GLOBALS["bdd"]->prepare("SELECT identifiant, responsable_sorties_semaine FROM admin");
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($tab["identifiant"],$tab["responsable_sorties"]);
+        while($query->fetch()){
+            $final[$i] = array($tab["identifiant"],$tab["responsable_sorties"]);
+            $i++;
+        }
+        $query->close();
+        return $final;
+    }
+
 
     //FONCTION D'AJOUT D'UN ADMIN DANS LA BASE
-    function addAdmin($identifiant,$mdp,$mail,$respons){
+    function addAdmin($identifiant,$mdp,$mail,$respons_emprunts,$respons_sys,$respons_cine,$respons_sorties){
         $mdp = password_hash($mdp,PASSWORD_DEFAULT);
-        $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?,?,?)");
-        $query->bind_param('sssi',$identifiant,$mdp,$mail,$respons);
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO admin VALUES(?,?,?,?,?,?,?)");
+        $query->bind_param('sssiiii',$identifiant,$mdp,$mail,$respons_emprunts,$respons_cine,$respons_sys,$respons_sorties);
         $query->execute();
         $query->close();
         return true;
@@ -1275,8 +1326,29 @@
     }
 
     //FONCTION DE CHANGEMENT DE RESPONSABILITES POUR UN ADMINISTRATEUR (devenir responsable emprunts pour le moment)
-    function changeAdmin($identifiant, $respons){
+    function changeAdminEmprunts($identifiant, $respons){
         $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET responsable_emprunt=? WHERE identifiant=?");
+        $query->bind_param('is',$respons,$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+    function changeAdminSys($identifiant, $respons){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET responsable_sys=? WHERE identifiant=?");
+        $query->bind_param('is',$respons,$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+    function changeAdminCine($identifiant, $respons){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET responsable_cine=? WHERE identifiant=?");
+        $query->bind_param('is',$respons,$identifiant);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+    function changeAdminSorties($identifiant, $respons){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE admin SET responsable_sorties_semaine=? WHERE identifiant=?");
         $query->bind_param('is',$respons,$identifiant);
         $query->execute();
         $query->close();

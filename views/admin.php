@@ -91,7 +91,10 @@
 
     $modifMDP = 0;
     $addAdmini = 0;
-    $changeResp = 0;
+    $changeRespEmprunts = 0;
+    $changeRespSys = 0;
+    $changeRespCine = 0;
+    $changeRespSorties = 0;
     $supprAdmin = 0;
     $addProjection = 0;
     $addCourt = 0;
@@ -114,20 +117,53 @@
 
     //Ajout Admin
      if(!empty($_POST["add_id"]) && !empty($_POST["add_mdp"]) && !empty($_POST["add_mail"]) && $_SESSION["authentifie"]){
-            if(!empty($_POST["add_respons"])){
-                $respons = 1;
+            if(!empty($_POST["add_respons_emprunts"])){
+                $respons_emprunts = 1;
             }
             else{
-                $respons = 0;
+                $respons_emprunts = 0;
             }
-         if(addAdmin($_POST["add_id"],$_POST["add_mdp"],$_POST["add_mail"],$respons)) $addAdmini=1;
+            if(!empty($_POST["add_respons_sys"])){
+                $respons_sys = 1;
+            }
+            else{
+                $respons_sys = 0;
+            }
+            if(!empty($_POST["add_respons_cine"])){
+                $respons_cine = 1;
+            }
+            else{
+                $respons_cine = 0;
+            }
+            if(!empty($_POST["add_respons_sorties"])){
+                $respons_sorties = 1;
+            }
+            else{
+                $respons_sorties = 0;
+            }
+         if(addAdmin($_POST["add_id"],$_POST["add_mdp"],$_POST["add_mail"],$respons_emprunts,$respons_sys,$respons_cine,$respons_sorties)) $addAdmini=1;
          else $addAdmini = 2;
      }
 
     //change resp Admin
-    if(!empty($_POST["add_respons_id"]) && isset($_POST["add_respons"])){
-        if(changeAdmin($_POST["add_respons_id"],$_POST["add_respons"])) $changeResp = 1;
-        else $changeResp = 2;
+    if(!empty($_POST["add_respons_id_emprunts"]) && isset($_POST["add_respons_emprunts"])){
+        if(changeAdminEmprunts($_POST["add_respons_id_emprunts"],$_POST["add_respons_emprunts"])) $changeRespEmprunts = 1;
+        else $changeRespEmprunts = 2;
+
+    }
+    if(!empty($_POST["add_respons_id_sys"]) && isset($_POST["add_respons_sys"])){
+        if(changeAdminSys($_POST["add_respons_id_sys"],$_POST["add_respons_sys"])) $changeRespSys = 1;
+        else $changeRespSys = 2;
+
+    }
+    if(!empty($_POST["add_respons_id_cine"]) && isset($_POST["add_respons_cine"])){
+        if(changeAdminCine($_POST["add_respons_id_cine"],$_POST["add_respons_cine"])) $changeRespCine = 1;
+        else $changeRespCine = 2;
+
+    }
+    if(!empty($_POST["add_respons_id_sorties"]) && isset($_POST["add_respons_sorties"])){
+        if(changeAdminSorties($_POST["add_respons_id_sorties"],$_POST["add_respons_sorties"])) $changeRespSorties = 1;
+        else $changeRespSorties = 2;
 
     }
 
@@ -557,7 +593,7 @@ if(!empty($_POST["add_sortie_description"])){
       //REFAIRE LE COMPTAGE DES PROJECTIONS ET LOTS
       //Nombre d'admin
         $nbradmin = 0;
-        $temp = recupAdmin();
+        $temp = recupAdminEmprunts();
         $nbradmin = count($temp);
 
         //Nombre de projections
@@ -578,8 +614,6 @@ if(!empty($_POST["add_sortie_description"])){
             $nbrLot++;
         }
         $temp->close();
-
-        $supprSortie = 0;
 
 ?>
 <!doctype html>
@@ -689,7 +723,10 @@ background-size: cover;">
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_id">Identifiant : </label></span><input name="add_id" id="add_id" type="text" placeholder="Nom" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mdp">Mot de passe : </label></span><input type="password" name="add_mdp" id="add_mdp" placeholder="p4$$w08d" class="form-control" required/></div>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_mail">Adresse mail : </label></span><input type="email" name="add_mail" id="add_mail" placeholder="admin@gmail.com" class="form-control" required/></div>
-                                <label class="checkbox"><input type="checkbox" name="add_respons" value="1" style="">Faire de cet administrateur un responsable des emprunts ?</label>
+                                <label class="checkbox"><input type="checkbox" name="add_respons_emprunts" value="1" style="">Faire de cet administrateur un responsable des emprunts ?</label>
+                                <label class="checkbox"><input type="checkbox" name="add_respons_sys" value="1" style="">Faire de cet administrateur un responsable du site en lui-même (gestion des admins) ?</label>
+                                <label class="checkbox"><input type="checkbox" name="add_respons_cine" value="1" style="">Faire de cet administrateur un responsable du ciné de l\"ISEN ?</label>
+                                <label class="checkbox"><input type="checkbox" name="add_respons_sorties" value="1" style="">Faire de cet administrateur un responsable des sorties de la semaine ?</label>
                                 <input type="submit" class="button dark_grey" value="Ajouter un administrateur"/>
                             </fieldset></form>
                         ');
@@ -715,11 +752,11 @@ background-size: cover;">
 
                     echo('
 
-                            <form method="post" action="admin.php#change_respons" class="form-register">
+                            <form method="post" action="admin.php#change_respons_emprunts" class="form-register">
                             <fieldset>
-    <legend id="change_respons">Mettre un administrateur responsable des emprunts</legend>
-                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id">Identifiant : </label></span><select name="add_respons_id" id="add_respons_id">');
-                        $result = recupAdmin();
+    <legend id="change_respons_emprunts">Mettre un administrateur responsable des emprunts</legend>
+                                <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id_emprunts">Identifiant : </label></span><select name="add_respons_id_emprunts" id="add_respons_id_emprunts">');
+                        $result = recupAdminEmprunts();
                         foreach($result as $ligne){
                             $id = $ligne[0];
                             $resp = $ligne[1];
@@ -728,33 +765,129 @@ background-size: cover;">
                             echo('</option>');
                         }
 
+                        echo('</select></div>
+                                    <label class="checkbox"><input type="radio" name="add_respons_emprunts" value="1" checked>Faire de cet administrateur un responsable des emprunts</label>
+                                    <label class="checkbox"><input type="radio" name="add_respons_emprunts" value="0">Ne plus faire de cet administrateur un responsable des emprunts</label>
+                                    <input type="submit" class="button dark_grey" value="Modifier la responsabilité"');
+                                if($nbradmin == 0)echo " disabled ";
+                                echo('/>
+                                </fieldset></form>');
+                                if($changeRespEmprunts == 1){
+                                        echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                      L\'administrateur "'.protect($_POST["add_respons_id_emprunts"]).'" ');
+
+                                        if($_POST["add_respons_emprunts"])echo('est maintenant responsable des emprunts</div>');
+                                        else echo('n\'est plus responsable des emprunts</div>');
+                                    }
+                                    elseif($changeRespEmprunts == 2) echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
+                    echo('<form method="post" action="admin.php#change_respons_sys" class="form-register">
+                        <fieldset>
+        <legend id="change_respons_sys">Mettre un administrateur responsable du site</legend>
+        <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id_sys">Identifiant : </label></span><select name="add_respons_id_sys" id="add_respons_id_sys">');
+                            $result = recupAdminSys();
+                            foreach($result as $ligne){
+                                $id = $ligne[0];
+                                $resp = $ligne[1];
+                                echo('<option value="'.$id.'">'.$id);
+                                if($resp) echo('   (Responsable)');
+                                echo('</option>');
+                            }
+
+                            echo('</select></div>
+                                        <label class="checkbox"><input type="radio" name="add_respons_sys" value="1" checked>Faire de cet administrateur un responsable système du site</label>
+                                        <label class="checkbox"><input type="radio" name="add_respons_sys" value="0">Ne plus faire de cet administrateur un responsable système du site</label>
+                                        <input type="submit" class="button dark_grey" value="Modifier la responsabilité"');
+                                    if($nbradmin == 0)echo " disabled ";
+                                    echo('/>
+                                    </fieldset></form>');
+                                    if($changeRespSys == 1){
+                                            echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                          L\'administrateur "'.protect($_POST["add_respons_id_sys"]).'" ');
+
+                                            if($_POST["add_respons_sys"])echo('est maintenant responsable du site et des administrateurs</div>');
+                                            else echo('n\'est plus responsable du site</div>');
+                                        }
+                                        elseif($changeRespSys == 2) echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
+                            echo('
+
+                                    <form method="post" action="admin.php#change_respons_cine" class="form-register">
+                                    <fieldset>
+            <legend id="change_respons_cine">Mettre un administrateur responsable du cine de l\'ISEN</legend>
+                                        <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id_cine">Identifiant : </label></span><select name="add_respons_id_cine" id="add_respons_id_cine">');
+                                $result = recupAdminCine();
+                                foreach($result as $ligne){
+                                    $id = $ligne[0];
+                                    $resp = $ligne[1];
+                                    echo('<option value="'.$id.'">'.$id);
+                                    if($resp) echo('   (Responsable)');
+                                    echo('</option>');
+                                }
+
+
+                                echo('</select></div>
+                                            <label class="checkbox"><input type="radio" name="add_respons_cine" value="1" checked>Faire de cet administrateur un responsable du cine de l\'ISEN</label>
+                                            <label class="checkbox"><input type="radio" name="add_respons_cine" value="0">Ne plus faire de cet administrateur un responsable du cine de l\'ISEN</label>
+                                            <input type="submit" class="button dark_grey" value="Modifier la responsabilité"');
+                                        if($nbradmin == 0)echo " disabled ";
+                                        echo('/>
+                                        </fieldset></form>');
+                                        if($changeRespCine == 1){
+                                                echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                              L\'administrateur "'.protect($_POST["add_respons_id_cine"]).'" ');
+
+                                                if($_POST["add_respons_cine"])echo('est maintenant responsable du cine de l\'ISEN</div>');
+                                                else echo('n\'est plus responsable du cine de l\'ISEN</div>');
+                                            }
+                                            elseif($changeRespCine == 2) echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
+                                echo('
+
+                                        <form method="post" action="admin.php#change_respons_sorties" class="form-register">
+                                        <fieldset>
+                <legend id="change_respons_sorties">Mettre un administrateur responsable des sorties de la semaine</legend>
+                                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="add_respons_id_sorties">Identifiant : </label></span><select name="add_respons_id_sorties" id="add_respons_id_sorties">');
+                                    $result = recupAdminSorties();
+                                    foreach($result as $ligne){
+                                        $id = $ligne[0];
+                                        $resp = $ligne[1];
+                                        echo('<option value="'.$id.'">'.$id);
+                                        if($resp) echo('   (Responsable)');
+                                        echo('</option>');
+                                    }
 
                     echo('</select></div>
-                                <label class="checkbox"><input type="radio" name="add_respons" value="1" checked>Faire de cet administrateur un responsable des emprunts</label>
-                                <label class="checkbox"><input type="radio" name="add_respons" value="0">Ne plus faire de cet administrateur un responsable des emprunts</label>
+                                <label class="checkbox"><input type="radio" name="add_respons_sorties" value="1" checked>Faire de cet administrateur un responsable des sorties de la semaine</label>
+                                <label class="checkbox"><input type="radio" name="add_respons_sorties" value="0">Ne plus faire de cet administrateur un responsable des sorties de la semaine</label>
                                 <input type="submit" class="button dark_grey" value="Modifier la responsabilité"');
                             if($nbradmin == 0)echo " disabled ";
                             echo('/>
                             </fieldset></form>');
+
+                            if($changeRespSorties == 1){
+                                    echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                  L\'administrateur "'.protect($_POST["add_respons_id_sorties"]).'" ');
+
+                                    if($_POST["add_respons_sorties"])echo('est maintenant responsable des sorties de la semaine</div>');
+                                    else echo('n\'est plus responsable des sorties de la semaine</div>');
+                                }
+                                elseif($changeRespSorties == 2) echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
                             //Changer Resp Admin
 
-                        if($changeResp == 1){
-                                echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                              L\'administrateur "'.protect($_POST["add_respons_id"]).'" ');
 
-                                if($_POST["add_respons"])echo('est maintenant responsable des emprunts</div>');
-                                else echo('n\'est plus responsable des emprunts</div>');
-                            }
-                            elseif($changeResp == 2) echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Une erreur s\'est produite en essayant de supprimer cet administrateur</div>');
 
                         echo('
                             <form method="post" action="admin.php#del_admin" class="form-register"><fieldset>
     <legend id="del_admin">Supprimer un administrateur</legend>
     <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Attention, cette action est irréversible <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
                                 <div class="input-group max center"><span class="input-group-addon form-label start_span"><label for="suppr_admin">Identifiant : </label></span><select name="suppr_admin" id="suppr_admin">');
-                     $result = recupAdmin();
+                     $result = recupAdminEmprunts();
                         foreach($result as $ligne){
                             $id = $ligne[0];
                             echo('<option value="'.$id.'">'.$id.'</option>');
@@ -1539,7 +1672,7 @@ Confirmer suppression
             ');
 
             //SUPPRESSION DE LOTS
-
+            if(!empty($supprSortie)){
                 if($supprSortie){
                     echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Cette sortie a bien été supprimée !</div>');
@@ -1548,7 +1681,7 @@ Confirmer suppression
                     echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Cette sortie n\'a pas pu être supprimée !</div>');
                 }
-
+            }
 
 
         echo '</div></div>';
