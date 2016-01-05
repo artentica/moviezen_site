@@ -579,6 +579,8 @@ if(!empty($_POST["add_sortie_description"])){
         }
         $temp->close();
 
+        $supprSortie = 0;
+
 ?>
 <!doctype html>
 <html>
@@ -1480,30 +1482,30 @@ if(!empty($_SESSION["admin_sorties_semaine"])){
 
                 }
 
-                if(!empty($modifie)){
-                    if($modifie){
+                if(!empty($modifie_sortie)){
+                    if($modifie_sortie){
                         echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["modif_lot_id"].'" a été correctement modifié !</div>');
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Cette sortie a été correctement modifiée !</div>');
                     }
                     else{
                         echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["modif_lot_id"].'" n\'a pas pu être modifié !</div>');
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Cette sortie n\'a pas pu être modifié !</div>');
                     }
                 }
                     echo('
 
-                        <form method="post" action="admin.php#supprimer_lot" class="form-register"><fieldset>
-<legend id="supprimer_lot">Supprimer un lot</legend>
+                        <form method="post" action="admin.php#supprimer_sortie" class="form-register"><fieldset>
+<legend id="supprimer_sortie">Supprimer une sortie</legend>
 <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>Attention, cette action est irréversible<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
-                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Lot(s) : </label></span><select name="suppr_lot" id="suppr_lot">');
-            $result = recupLot();
-            while ($row = $result->fetch_array(MYSQLI_ASSOC))
-            {
-                $id = $row["id"];
-                $composition = $row["composition"];
-                echo('<option value="'.$id.'">'.$id.', composé de '.$composition.'</option>');
+                            <div class="input-group max center"><span class="input-group-addon form-label start_span"><label>Sortie(s) : </label></span><select name="suppr_sortie" id="suppr_sortie">');
+            $result = recupToutesSortiesSemaine();
+            foreach($result as $sortie){
+                $semaine = $sortie["semaine"];
+                $description = $sortie["description"];
+                $active = $sortie["active"];
+                $timestamp_ajout = $sortie["timestamp_ajout"];
+                echo('<option value="'.$semaine.'">'.date("d/m/Y",strtotime($timestamp_ajout)).'</option>');
             }
-            $result->close();
                 echo('</select></div>
 
                                                             <!-- Button trigger modal -->
@@ -1538,23 +1540,15 @@ Confirmer suppression
 
             //SUPPRESSION DE LOTS
 
-                if($supprLot == 1){
+                if($supprSortie){
                     echo('<div class="alert message alert-success alert-dismissible fade in" role="alert">
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" a bien été supprimé !</div>');
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Cette sortie a bien été supprimée !</div>');
                 }
-                elseif($supprLot == 2){
+                else{
                     echo('<div class="alert message alert-danger alert-dismissible fade in" role="alert">
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Le lot: "'.$_POST["suppr_lot"].'" n\'a pas pu être supprimé !</div>');
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Cette sortie n\'a pas pu être supprimée !</div>');
                 }
 
-            // RESET A 1 DES LOTS POUR TOUTE L'ANNEE
-            echo('<div>
-                <form method="post" action="admin.php#reset_lot" class="form-register"><fieldset>
-                <legend id="reset_lot">Remettre la disponibilité des lots à 1 pour tout le monde</legend>
-                <p>ATTENTION, CETTE ACTION VA ENTRAINER LE RESET DE TOUT LES EMPRUNTS EFFECTUES POUR LE MATERIEL MOVIEZEN !! N\'EFFECTUEZ CETTE ACTION QUE SI VOUS SAVEZ RÉELLEMENT CE QUE VOUS FAITES !</p>
-                <input type="hidden" name="reset_lots" id="reset_lots" value="1"/>
-                <input type="submit" class="button dark_grey" value="Resetter les disponibilités de tout les lots !"/>
-            </fieldset></form></div>');
 
 
         echo '</div></div>';
