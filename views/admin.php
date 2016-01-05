@@ -763,9 +763,9 @@ background-size: cover;">
 
 
 
-                    echo('<br>
+                    echo('<hr><br>
                     <h1>Changement des permissions</h1>
-                    
+
                             <form method="post" action="admin.php#change_respons_emprunts" class="form-register">
                             <fieldset>
     <legend id="change_respons_emprunts">Mettre un administrateur responsable des emprunts</legend>
@@ -896,7 +896,7 @@ background-size: cover;">
 
 
 
-                        echo('
+                        echo('<hr>
                             <form method="post" action="admin.php#del_admin" class="form-register"><fieldset>
     <legend id="del_admin">Supprimer un administrateur</legend>
     <p class="be_aware"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Attention, cette action est irréversible <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span></p>
