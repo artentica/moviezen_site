@@ -33,10 +33,12 @@
 
         }
 
+    //On initialise la variable d'emprunt si celle-ci n'existe pas
     if(empty($_SESSION["emprunteur"])){
         $_SESSION["emprunteur"]=0;
     }
 
+    //Si l'utilisateur cherche à supprimer son emprunt
     if(!empty($_POST["del_mail"])){
         if(supprEmprunt($_POST["del_mail"],$_POST["del_date"])){
             $_SESSION["emprunteur"]=0;
@@ -44,6 +46,7 @@
         }
     }
 
+    //On connecte l'utilisateur
     if(!empty($_POST["conn_mail"])){
         $tab = dejaInscrit($_POST["conn_mail"]);
         if(!empty($tab["nom"])){
@@ -52,6 +55,7 @@
         }
     }
 
+    //On ajoute l'emprunt si tous les champs sont présents
     if(!empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["mail"]) && !empty($_POST["tel"]) && !empty($_POST["classe"]) && !empty($_POST["lots"]) && !empty($_POST["date_emprunt"]) && !empty($_POST["date_retour"]) && $_POST["accepter"]  && !empty($_POST["emprunter"]))
     {
                     if(ajoutEmprunt2($_POST["nom"],$_POST["prenom"],$_POST["tel"],$_POST["mail"], $_POST["classe"],$_POST["lots"],$_POST["date_emprunt"],$_POST["date_retour"])){
