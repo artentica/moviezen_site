@@ -156,6 +156,46 @@
 
 //################################################################################################################################################################
 
+    //FONCTIONS GESTION DES CRITIQUES
+    /*
+    Structure de la table Critique:
+        -auteur : login ISEN de l'auteur de la critique, non modifiable (String)
+        -idCritique : Identifiant auto incrémenté de la critique (Entier)
+        -titre : Titre du film (String)
+        -critique : bloc texte de la critique (String)
+
+
+        Optionnel :
+            -Affiche ? (String, chemin vers l'image récupérée)
+            -Réalisateur ? (String)
+            -Acteurs ?  (String)
+    //PENSER A INCLURE LE POC CONCERNANT LA RECUPERATION AUTOMATIQUE DES FILMS ==> récupération automatique des affiches, réalisateurs et acteurs
+    */
+
+    function ajoutCritique($login,$idCritique,$titre,$critique){
+        $query = $GLOBALS["bdd"]->prepare("INSERT INTO critiques (auteur,idCritique,titre,critique) VALUES (?,?,?,?)");
+        $query->bind_param('siss',$login,$idCritique,$titre,$critique);
+        $query->execute();
+        $query->close();
+    }
+
+    function deleteCritique($login,$idCritique){
+        $query = $GLOBALS["bdd"]->prepare("DELETE FROM critiques WHERE auteur=? AND idCritique=?");
+        $count->bind_param('si',$login,$idCritique);
+        $count->execute();
+        $query->close();
+    }
+
+    function updateCritique($login,$idCritique,$newTitre,$newCritique){
+        $query = $GLOBALS["bdd"]->prepare("UPDATE critiques SET titre=?, critique=? WHERE auteur=? AND idCritique=?");
+        $count->bind_param('sssi',$newTitre,$newCritique,$login,$idCritique);
+        $count->execute();
+        $query->close();
+    }
+
+
+//################################################################################################################################################################
+
     //FONCTIONS GESTION DES INSCRITS
 
 
