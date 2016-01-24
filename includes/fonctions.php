@@ -153,7 +153,63 @@
          // Envoi
          return mail($to, $subject, $message, $headers);
     }
+//################################################################################################################################################################
 
+        //FONCTIONS GESTION DES BLACKLIST
+        /*
+        Tebles blacklist :
+            Modulaires:
+                -Une table pour les emprunts (pour les mauvais payeurs ou personnes à problèmes)
+                -Une table pour les projections (pour les trolls et autres)
+                -Une table pour les critiques (pour ceux qui s'amuseraient à publier du gros caca)
+            Toujours le même format :
+                -login ISEN : login ISEN (mail) de l'ISEN de la personne blacklistée
+
+            Pas plus simple
+
+        */
+        //Reste à implémenter le système sur les pages cine.php, emprunts.php et critiques.php
+        function addToEmpruntsBlacklist($mail){
+            $query = $GLOBALS["bdd"]->prepare("INSERT INTO emprunts_blacklist (mail) VALUES (?)");
+            $query->bind_param('s',$mail);
+            $query->execute();
+            $query->close();
+        }
+
+        function deleteFromEmpruntsBlacklist($mail){
+            $query = $GLOBALS["bdd"]->prepare("DELETE FROM emprunts_blacklist WHERE mail=?");
+            $query->bind_param('s',$mail);
+            $query->execute();
+            $query->close();
+        }
+
+        function addToProjectionsBlacklist($mail){
+            $query = $GLOBALS["bdd"]->prepare("INSERT INTO projections_blacklist (mail) VALUES (?)");
+            $query->bind_param('s',$mail);
+            $query->execute();
+            $query->close();
+        }
+
+        function deleteFromProjectionsBlacklist($mail){
+            $query = $GLOBALS["bdd"]->prepare("DELETE FROM projections_blacklist WHERE mail=?");
+            $query->bind_param('s',$mail);
+            $query->execute();
+            $query->close();
+        }
+
+        function addToCritiquesBlacklist($mail){
+            $query = $GLOBALS["bdd"]->prepare("INSERT INTO critiques_blacklist (mail) VALUES (?)");
+            $query->bind_param('s',$mail);
+            $query->execute();
+            $query->close();
+        }
+
+        function deleteFromCritiquesBlacklist($mail){
+            $query = $GLOBALS["bdd"]->prepare("DELETE FROM critiques_blacklist WHERE mail=?");
+            $query->bind_param('s',$mail);
+            $query->execute();
+            $query->close();
+        }
 //################################################################################################################################################################
 
     //FONCTIONS GESTION DES CRITIQUES
