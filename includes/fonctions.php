@@ -167,6 +167,9 @@
 
         Optionnel :
             -Affiche ? (String, chemin vers l'image récupérée)
+            -Synopsys ?
+            -Date de sortie ?
+            -Note moyenne ?
             -Réalisateur ? (String)
             -Acteurs ?  (String)
     //PENSER A INCLURE LE POC CONCERNANT LA RECUPERATION AUTOMATIQUE DES FILMS ==> récupération automatique des affiches, réalisateurs et acteurs
@@ -191,6 +194,55 @@
         $count->bind_param('sssi',$newTitre,$newCritique,$login,$idCritique);
         $count->execute();
         $query->close();
+    }
+
+
+    //FONCTION DE RECUPERATION DES INFORMATIONS SUR UN FILM VIA UN SIMPLE FORMULAIRE
+    /*
+    Entrées :
+        $titre = String, contenant le titre ou morceau du titre du film ("Skyfall", "La reine des")
+
+    Sorties :
+        $final = tableau contenant toutes les informations sur les films trouvés (titre, affiche, synopsys, Note moyenne)
+                Les informations non disponibles sont le réalisateur et les acteurs.
+    */
+    function recupInfos($titre){
+        $url=utf8_encode("https://api.themoviedb.org/3/search/movie?api_key=ebcdbb93668857d48040b4bbb0695a32&query=".str_replace(" ","%20",$titre)."&language=fr&include_image_language=fr");
+        // Tableau contenant les options de téléchargement
+        $options=array(
+            CURLOPT_URL            => $url, // Url cible (l'url la page que vous voulez télécharger)
+            CURLOPT_RETURNTRANSFER => true,     // return web page
+            CURLOPT_HEADER         => false,    // don't return headers
+            CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+            CURLOPT_ENCODING       => "",       // handle all encodings
+            CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+            CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+            CURLOPT_TIMEOUT        => 120,      // timeout on response
+            CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+            CURLOPT_SSL_VERIFYPEER => false     // Disabled SSL Cert checks
+        );
+
+        // Création d'un nouvelle ressource cURL
+        $CURL=curl_init();
+        // Configuration des options de téléchargement
+        curl_setopt_array($CURL,$options);
+        // Exécution de la requête
+        $content=curl_exec($CURL);      // Le contenu téléchargé est enregistré dans la variable $content
+        // Fermeture de la session cURL
+        curl_close($CURL);
+
+        $obj = json_decode($content,true);
+        $final = array();
+        $i = 0;
+        foreach ($obj["results"] as $key) {
+            $final[$i]['release_date'] = $key['release_date'];
+            $final[$i]['affiche'] = "http://image.tmdb.org/t/p/w500/".$key['poster_path'];
+            $final[$i]['overview'] = $key['overview'];
+            $final[$i]['title'] = $key['title'];
+            $final[$i]['vote_average'] = $key['vote_average'];
+            $i++;
+        }
+        return $final;
     }
 
 
